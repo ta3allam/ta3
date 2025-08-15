@@ -21,8 +21,8 @@ const TopBar = ({ title }: TopBarProps) => {
   return (
     <header className="sticky top-0 z-20 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
       <Helmet>
-        <title>{title ? `${title} | تعلّم` : "تعلّم | منصة إدارة التعلّم"}</title>
-        <meta name="description" content="منصة عربية لإدارة التعلّم بواجهات RTL للمدير والمعلم والطالب" />
+        <title>{title ? `${title} | تعلّم` : "تعلـم الـيوم, قـد الـغد"}</title>
+        <meta name="description" content=" Welcome to Ta3" />
         <link rel="canonical" href={pathname} />
       </Helmet>
       <div className="container h-14 flex items-center justify-between flex-row-reverse">
@@ -30,7 +30,12 @@ const TopBar = ({ title }: TopBarProps) => {
         <div className="flex items-center gap-3">
           <SidebarTrigger className="order-2" />
           <NavLink to="/" className="text-lg font-extrabold">
-            <span className="bg-gradient-primary bg-clip-text text-transparent animate-gradient-x">تعلّم</span>
+            {/* <span className="bg-gradient-primary bg-clip-text text-transparent animate-gradient-x">تعلّم</span> */}
+            <img
+              src="/ta3/logo.png"
+              alt="تعلّم"
+              className="h-8 w-auto inline-block align-middle"
+            />
           </NavLink>
         </div>
 
