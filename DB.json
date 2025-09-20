@@ -1,0 +1,417 @@
+{
+  "universities": [
+    {
+      "id": 1,
+      "name": "جامعة دمشق",
+      "location": "دمشق"
+    },
+    {
+      "id": 2,
+      "name": "جامعة حلب",
+      "location": "حلب"
+    },
+    {
+      "id": 3,
+      "name": "جامعة تشرين",
+      "location": "اللاذقية"
+    },
+    {
+      "id": 4,
+      "name": "جامعة البعث",
+      "location": "حمص"
+    },
+    {
+      "id": 5,
+      "name": "جامعة الفرات",
+      "location": "دير الزور"
+    }
+  ],
+  "departments": [
+    {
+      "id": 1,
+      "name": "الهندسة المعلوماتية",
+      "head": "د. أحمد العلي",
+      "universityId": 1
+    },
+    {
+      "id": 2,
+      "name": "الطب البشري",
+      "head": "د. سارة يوسف",
+      "universityId": 1
+    },
+    { "id": 3, "name": "الحقوق", "head": "د. محمد درويش", "universityId": 1 },
+    { "id": 4, "name": "الاقتصاد", "head": "د. ريم منصور", "universityId": 1 },
+    { "id": 5, "name": "الآداب", "head": "د. خالد حسن", "universityId": 1 },
+
+    {
+      "id": 6,
+      "name": "الهندسة المدنية",
+      "head": "د. سامر جابر",
+      "universityId": 2
+    },
+    { "id": 7, "name": "العلوم", "head": "د. ليلى عيسى", "universityId": 2 },
+    { "id": 8, "name": "الزراعة", "head": "د. فادي شحادة", "universityId": 2 },
+    {
+      "id": 9,
+      "name": "الطب البيطري",
+      "head": "د. هبة عمار",
+      "universityId": 2
+    },
+    { "id": 10, "name": "التربية", "head": "د. نادر عيسى", "universityId": 2 },
+
+    {
+      "id": 11,
+      "name": "الهندسة الكهربائية",
+      "head": "د. هاني يوسف",
+      "universityId": 3
+    },
+    { "id": 12, "name": "التمريض", "head": "د. منى عيسى", "universityId": 3 },
+    {
+      "id": 13,
+      "name": "الرياضيات",
+      "head": "د. سامي جابر",
+      "universityId": 3
+    },
+    {
+      "id": 14,
+      "name": "الفيزياء",
+      "head": "د. هالة منصور",
+      "universityId": 3
+    },
+    { "id": 15, "name": "الكيمياء", "head": "د. زياد حسن", "universityId": 3 },
+
+    {
+      "id": 16,
+      "name": "الهندسة الميكانيكية",
+      "head": "د. رامي عمار",
+      "universityId": 4
+    },
+    {
+      "id": 17,
+      "name": "اللغة الإنجليزية",
+      "head": "د. هبة يوسف",
+      "universityId": 4
+    },
+    {
+      "id": 18,
+      "name": "اللغة الفرنسية",
+      "head": "د. سامر منصور",
+      "universityId": 4
+    },
+    { "id": 19, "name": "التاريخ", "head": "د. ليلى حسن", "universityId": 4 },
+    {
+      "id": 20,
+      "name": "الجغرافيا",
+      "head": "د. خالد عيسى",
+      "universityId": 4
+    },
+
+    {
+      "id": 21,
+      "name": "الهندسة الزراعية",
+      "head": "د. فادي منصور",
+      "universityId": 5
+    },
+    {
+      "id": 22,
+      "name": "العلوم السياسية",
+      "head": "د. ريم جابر",
+      "universityId": 5
+    },
+    { "id": 23, "name": "الاقتصاد", "head": "د. سامي عمار", "universityId": 5 },
+    { "id": 24, "name": "الآداب", "head": "د. هالة يوسف", "universityId": 5 },
+    { "id": 25, "name": "الحقوق", "head": "د. زياد عيسى", "universityId": 5 }
+  ],
+  "subjects": [
+    {
+      "id": 1,
+      "name": "برمجة 1",
+      "code": "INF101",
+      "credits": 3,
+      "description": "مقدمة في البرمجة",
+      "season": "الخريف",
+      "departmentId": 1
+    },
+    {
+      "id": 2,
+      "name": "هياكل بيانات",
+      "code": "INF102",
+      "credits": 3,
+      "description": "دراسة هياكل البيانات",
+      "season": "الربيع",
+      "departmentId": 1
+    },
+    {
+      "id": 3,
+      "name": "قواعد بيانات",
+      "code": "INF103",
+      "credits": 3,
+      "description": "مقدمة في قواعد البيانات",
+      "season": "الخريف",
+      "departmentId": 1
+    },
+    {
+      "id": 4,
+      "name": "شبكات الحاسوب",
+      "code": "INF104",
+      "credits": 3,
+      "description": "أساسيات الشبكات",
+      "season": "الربيع",
+      "departmentId": 1
+    },
+    {
+      "id": 5,
+      "name": "أنظمة تشغيل",
+      "code": "INF105",
+      "credits": 3,
+      "description": "مقدمة في أنظمة التشغيل",
+      "season": "الخريف",
+      "departmentId": 1
+    },
+
+    {
+      "id": 6,
+      "name": "تشريح 1",
+      "code": "MED101",
+      "credits": 4,
+      "description": "تشريح جسم الإنسان",
+      "season": "الخريف",
+      "departmentId": 2
+    },
+    {
+      "id": 7,
+      "name": "علم الأدوية",
+      "code": "MED102",
+      "credits": 3,
+      "description": "مقدمة في علم الأدوية",
+      "season": "الربيع",
+      "departmentId": 2
+    },
+    {
+      "id": 8,
+      "name": "علم الأمراض",
+      "code": "MED103",
+      "credits": 3,
+      "description": "دراسة الأمراض",
+      "season": "الخريف",
+      "departmentId": 2
+    },
+    {
+      "id": 9,
+      "name": "جراحة عامة",
+      "code": "MED104",
+      "credits": 4,
+      "description": "أساسيات الجراحة",
+      "season": "الربيع",
+      "departmentId": 2
+    },
+    {
+      "id": 10,
+      "name": "طب الأطفال",
+      "code": "MED105",
+      "credits": 3,
+      "description": "مقدمة في طب الأطفال",
+      "season": "الخريف",
+      "departmentId": 2
+    },
+
+    {
+      "id": 11,
+      "name": "قانون مدني",
+      "code": "LAW101",
+      "credits": 3,
+      "description": "مبادئ القانون المدني",
+      "season": "الخريف",
+      "departmentId": 3
+    },
+    {
+      "id": 12,
+      "name": "قانون جنائي",
+      "code": "LAW102",
+      "credits": 3,
+      "description": "مبادئ القانون الجنائي",
+      "season": "الربيع",
+      "departmentId": 3
+    },
+    {
+      "id": 13,
+      "name": "قانون تجاري",
+      "code": "LAW103",
+      "credits": 3,
+      "description": "مبادئ القانون التجاري",
+      "season": "الخريف",
+      "departmentId": 3
+    },
+    {
+      "id": 14,
+      "name": "قانون دولي",
+      "code": "LAW104",
+      "credits": 3,
+      "description": "مبادئ القانون الدولي",
+      "season": "الربيع",
+      "departmentId": 3
+    },
+    {
+      "id": 15,
+      "name": "قانون إداري",
+      "code": "LAW105",
+      "credits": 3,
+      "description": "مبادئ القانون الإداري",
+      "season": "الخريف",
+      "departmentId": 3
+    }
+  ],
+  "teachers": [
+    {
+      "id": 1,
+      "name": "د. يوسف سلامة",
+      "email": "ysalama@univ.edu",
+      "subjectId": 1
+    },
+    {
+      "id": 2,
+      "name": "د. هالة شحادة",
+      "email": "hshahada@univ.edu",
+      "subjectId": 1
+    },
+    {
+      "id": 3,
+      "name": "د. سامر عيسى",
+      "email": "saissa@univ.edu",
+      "subjectId": 2
+    },
+    {
+      "id": 4,
+      "name": "د. ريم منصور",
+      "email": "rmansour@univ.edu",
+      "subjectId": 2
+    },
+    {
+      "id": 5,
+      "name": "د. خالد حسن",
+      "email": "khasan@univ.edu",
+      "subjectId": 3
+    },
+    {
+      "id": 6,
+      "name": "د. ليلى عمار",
+      "email": "lamar@univ.edu",
+      "subjectId": 3
+    },
+    {
+      "id": 7,
+      "name": "د. فادي منصور",
+      "email": "fmansour@univ.edu",
+      "subjectId": 4
+    },
+    {
+      "id": 8,
+      "name": "د. منى يوسف",
+      "email": "myousef@univ.edu",
+      "subjectId": 4
+    },
+    {
+      "id": 9,
+      "name": "د. سامي جابر",
+      "email": "sjaber@univ.edu",
+      "subjectId": 5
+    },
+    {
+      "id": 10,
+      "name": "د. هبة عيسى",
+      "email": "haissa@univ.edu",
+      "subjectId": 5
+    }
+  ],
+  "admins": [
+    {
+      "id": 1,
+      "name": "أحمد درويش",
+      "email": "adarwish@univ.edu",
+      "subjectId": 1
+    },
+    {
+      "id": 2,
+      "name": "سارة منصور",
+      "email": "smansour@univ.edu",
+      "subjectId": 2
+    },
+    { "id": 3, "name": "محمد حسن", "email": "mhasan@univ.edu", "subjectId": 3 },
+    {
+      "id": 4,
+      "name": "ليلى عيسى",
+      "email": "laissa@univ.edu",
+      "subjectId": 4
+    },
+    { "id": 5, "name": "خالد جابر", "email": "kjaber@univ.edu", "subjectId": 5 }
+  ],
+  "students": [
+    {
+      "id": 1,
+      "name": "علي يوسف",
+      "email": "ayousef@student.edu",
+      "subjectId": 1
+    },
+    {
+      "id": 2,
+      "name": "منى حسن",
+      "email": "mhasan@student.edu",
+      "subjectId": 1
+    },
+    {
+      "id": 3,
+      "name": "سامي منصور",
+      "email": "smansour@student.edu",
+      "subjectId": 1
+    },
+    {
+      "id": 4,
+      "name": "هبة عمار",
+      "email": "hamar@student.edu",
+      "subjectId": 1
+    },
+    {
+      "id": 5,
+      "name": "فادي جابر",
+      "email": "fjaber@student.edu",
+      "subjectId": 1
+    }
+  ],
+  "assignments": [
+    {
+      "id": 1,
+      "title": "مشروع برمجة",
+      "deadline": "2024-12-01",
+      "description": "إنشاء برنامج بسيط",
+      "subjectId": 1
+    },
+    {
+      "id": 2,
+      "title": "تقرير هياكل بيانات",
+      "deadline": "2024-12-10",
+      "description": "كتابة تقرير عن هياكل البيانات",
+      "subjectId": 2
+    },
+    {
+      "id": 3,
+      "title": "مشروع قواعد بيانات",
+      "deadline": "2024-12-15",
+      "description": "تصميم قاعدة بيانات",
+      "subjectId": 3
+    },
+    {
+      "id": 4,
+      "title": "اختبار شبكات",
+      "deadline": "2024-12-20",
+      "description": "اختبار عملي في الشبكات",
+      "subjectId": 4
+    },
+    {
+      "id": 5,
+      "title": "بحث أنظمة تشغيل",
+      "deadline": "2024-12-25",
+      "description": "بحث حول أنظمة التشغيل",
+      "subjectId": 5
+    }
+  ]
+}
