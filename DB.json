@@ -29,389 +29,859 @@
   "departments": [
     {
       "id": 1,
-      "name": "الهندسة المعلوماتية",
-      "head": "د. أحمد العلي",
-      "universityId": 1
+      "name": "كلية الهندسة المعلوماتية",
+      "head": "د. محمد أحمد",
+      "university_id": 1
     },
     {
       "id": 2,
-      "name": "الطب البشري",
-      "head": "د. سارة يوسف",
-      "universityId": 1
-    },
-    { "id": 3, "name": "الحقوق", "head": "د. محمد درويش", "universityId": 1 },
-    { "id": 4, "name": "الاقتصاد", "head": "د. ريم منصور", "universityId": 1 },
-    { "id": 5, "name": "الآداب", "head": "د. خالد حسن", "universityId": 1 },
-
-    {
-      "id": 6,
-      "name": "الهندسة المدنية",
-      "head": "د. سامر جابر",
-      "universityId": 2
-    },
-    { "id": 7, "name": "العلوم", "head": "د. ليلى عيسى", "universityId": 2 },
-    { "id": 8, "name": "الزراعة", "head": "د. فادي شحادة", "universityId": 2 },
-    {
-      "id": 9,
-      "name": "الطب البيطري",
-      "head": "د. هبة عمار",
-      "universityId": 2
-    },
-    { "id": 10, "name": "التربية", "head": "د. نادر عيسى", "universityId": 2 },
-
-    {
-      "id": 11,
-      "name": "الهندسة الكهربائية",
-      "head": "د. هاني يوسف",
-      "universityId": 3
-    },
-    { "id": 12, "name": "التمريض", "head": "د. منى عيسى", "universityId": 3 },
-    {
-      "id": 13,
-      "name": "الرياضيات",
-      "head": "د. سامي جابر",
-      "universityId": 3
-    },
-    {
-      "id": 14,
-      "name": "الفيزياء",
-      "head": "د. هالة منصور",
-      "universityId": 3
-    },
-    { "id": 15, "name": "الكيمياء", "head": "د. زياد حسن", "universityId": 3 },
-
-    {
-      "id": 16,
-      "name": "الهندسة الميكانيكية",
-      "head": "د. رامي عمار",
-      "universityId": 4
-    },
-    {
-      "id": 17,
-      "name": "اللغة الإنجليزية",
-      "head": "د. هبة يوسف",
-      "universityId": 4
-    },
-    {
-      "id": 18,
-      "name": "اللغة الفرنسية",
-      "head": "د. سامر منصور",
-      "universityId": 4
-    },
-    { "id": 19, "name": "التاريخ", "head": "د. ليلى حسن", "universityId": 4 },
-    {
-      "id": 20,
-      "name": "الجغرافيا",
-      "head": "د. خالد عيسى",
-      "universityId": 4
-    },
-
-    {
-      "id": 21,
-      "name": "الهندسة الزراعية",
-      "head": "د. فادي منصور",
-      "universityId": 5
-    },
-    {
-      "id": 22,
-      "name": "العلوم السياسية",
-      "head": "د. ريم جابر",
-      "universityId": 5
-    },
-    { "id": 23, "name": "الاقتصاد", "head": "د. سامي عمار", "universityId": 5 },
-    { "id": 24, "name": "الآداب", "head": "د. هالة يوسف", "universityId": 5 },
-    { "id": 25, "name": "الحقوق", "head": "د. زياد عيسى", "universityId": 5 }
-  ],
-  "subjects": [
-    {
-      "id": 1,
-      "name": "برمجة 1",
-      "code": "INF101",
-      "credits": 3,
-      "description": "مقدمة في البرمجة",
-      "season": "الخريف",
-      "departmentId": 1
-    },
-    {
-      "id": 2,
-      "name": "هياكل بيانات",
-      "code": "INF102",
-      "credits": 3,
-      "description": "دراسة هياكل البيانات",
-      "season": "الربيع",
-      "departmentId": 1
+      "name": "كلية الطب",
+      "head": "د. فاطمة علي",
+      "university_id": 1
     },
     {
       "id": 3,
-      "name": "قواعد بيانات",
-      "code": "INF103",
-      "credits": 3,
-      "description": "مقدمة في قواعد البيانات",
-      "season": "الخريف",
-      "departmentId": 1
+      "name": "كلية الاقتصاد",
+      "head": "د. خالد محمود",
+      "university_id": 1
     },
     {
       "id": 4,
-      "name": "شبكات الحاسوب",
-      "code": "INF104",
-      "credits": 3,
-      "description": "أساسيات الشبكات",
-      "season": "الربيع",
-      "departmentId": 1
+      "name": "كلية الآداب",
+      "head": "د. نور الهدى",
+      "university_id": 1
     },
     {
       "id": 5,
-      "name": "أنظمة تشغيل",
-      "code": "INF105",
-      "credits": 3,
-      "description": "مقدمة في أنظمة التشغيل",
-      "season": "الخريف",
-      "departmentId": 1
+      "name": "كلية العلوم",
+      "head": "د. أحمد سعيد",
+      "university_id": 1
     },
-
     {
       "id": 6,
-      "name": "تشريح 1",
-      "code": "MED101",
-      "credits": 4,
-      "description": "تشريح جسم الإنسان",
-      "season": "الخريف",
-      "departmentId": 2
+      "name": "كلية الهندسة المدنية",
+      "head": "د. سامر حسن",
+      "university_id": 2
     },
     {
       "id": 7,
-      "name": "علم الأدوية",
-      "code": "MED102",
-      "credits": 3,
-      "description": "مقدمة في علم الأدوية",
-      "season": "الربيع",
-      "departmentId": 2
+      "name": "كلية الصيدلة",
+      "head": "د. مريم خالد",
+      "university_id": 2
     },
     {
       "id": 8,
-      "name": "علم الأمراض",
-      "code": "MED103",
-      "credits": 3,
-      "description": "دراسة الأمراض",
-      "season": "الخريف",
-      "departmentId": 2
+      "name": "كلية التجارة",
+      "head": "د. عمار يوسف",
+      "university_id": 2
     },
     {
       "id": 9,
-      "name": "جراحة عامة",
-      "code": "MED104",
+      "name": "كلية التربية",
+      "head": "د. سلمى أحمد",
+      "university_id": 2
+    },
+    {
+      "id": 10,
+      "name": "كلية الحقوق",
+      "head": "د. محمد نور",
+      "university_id": 2
+    },
+    {
+      "id": 11,
+      "name": "كلية الزراعة",
+      "head": "د. حسام الدين",
+      "university_id": 3
+    },
+    {
+      "id": 12,
+      "name": "كلية الهندسة الميكانيكية",
+      "head": "د. رانيا صالح",
+      "university_id": 3
+    },
+    {
+      "id": 13,
+      "name": "كلية الآثار",
+      "head": "د. عبد الرحمن",
+      "university_id": 3
+    },
+    {
+      "id": 14,
+      "name": "كلية الفنون الجميلة",
+      "head": "د. لينا محمد",
+      "university_id": 3
+    },
+    {
+      "id": 15,
+      "name": "كلية الإعلام",
+      "head": "د. طارق عبدالله",
+      "university_id": 3
+    },
+    {
+      "id": 16,
+      "name": "كلية الهندسة الكهربائية",
+      "head": "د. وليد حمود",
+      "university_id": 4
+    },
+    {
+      "id": 17,
+      "name": "كلية طب الأسنان",
+      "head": "د. دينا سالم",
+      "university_id": 4
+    },
+    {
+      "id": 18,
+      "name": "كلية العلوم السياسية",
+      "head": "د. ماجد فارس",
+      "university_id": 4
+    },
+    {
+      "id": 19,
+      "name": "كلية الشريعة",
+      "head": "د. عائشة موسى",
+      "university_id": 4
+    },
+    {
+      "id": 20,
+      "name": "كلية الرياضة",
+      "head": "د. سمير عادل",
+      "university_id": 4
+    },
+    {
+      "id": 21,
+      "name": "كلية البترول والتعدين",
+      "head": "د. عماد حسين",
+      "university_id": 5
+    },
+    {
+      "id": 22,
+      "name": "كلية الطب البيطري",
+      "head": "د. هبة كريم",
+      "university_id": 5
+    },
+    {
+      "id": 23,
+      "name": "كلية العمارة",
+      "head": "د. بسام نعيم",
+      "university_id": 5
+    },
+    {
+      "id": 24,
+      "name": "كلية الصحافة",
+      "head": "د. غادة رشيد",
+      "university_id": 5
+    },
+    {
+      "id": 25,
+      "name": "كلية اللغات",
+      "head": "د. نادية قاسم",
+      "university_id": 5
+    }
+  ],
+  "courses": [
+    {
+      "id": 1,
+      "name": "برمجة الحاسوب",
+      "code": "CS101",
+      "credits": 3,
+      "description": "مقدمة في برمجة الحاسوب باستخدام لغة البايثون",
+      "season": "الفصل الأول",
+      "materials": {
+        "pdfs": ["أساسيات_البرمجة.pdf", "مذكرات_المحاضرات.pdf", "تمارين_عملية.pdf"],
+        "videos": ["مقدمة_البرمجة.mp4", "متغيرات_ودوال.mp4", "البرمجة_الكائنية.mp4"]
+      },
+      "announcements": "سيتم عقد امتحان منتصف الفصل يوم الأحد القادم",
+      "department_id": 1
+    },
+    {
+      "id": 2,
+      "name": "هياكل البيانات",
+      "code": "CS201",
       "credits": 4,
-      "description": "أساسيات الجراحة",
-      "season": "الربيع",
-      "departmentId": 2
+      "description": "دراسة هياكل البيانات الأساسية والخوارزميات",
+      "season": "الفصل الثاني",
+      "materials": {
+        "pdfs": ["هياكل_البيانات.pdf", "الخوارزميات_المتقدمة.pdf", "أمثلة_تطبيقية.pdf"],
+        "videos": ["مقدمة_هياكل_البيانات.mp4", "المصفوفات_والقوائم.mp4", "الأشجار_والرسوم.mp4"]
+      },
+      "announcements": "تم تأجيل موعد تسليم المشروع إلى الأسبوع القادم",
+      "department_id": 1
+    },
+    {
+      "id": 3,
+      "name": "قواعد البيانات",
+      "code": "CS301",
+      "credits": 3,
+      "description": "تصميم وإدارة قواعد البيانات العلائقية",
+      "season": "الفصل الأول",
+      "materials": {
+        "pdfs": ["قواعد_البيانات_العلائقية.pdf", "تصميم_قواعد_البيانات.pdf", "SQL_المتقدم.pdf"],
+        "videos": ["مقدمة_قواعد_البيانات.mp4", "تصميم_الجداول.mp4", "الاستعلامات_المعقدة.mp4"]
+      },
+      "announcements": "ورشة عمل إضافية يوم الخميس حول SQL",
+      "department_id": 1
+    },
+    {
+      "id": 4,
+      "name": "الذكاء الاصطناعي",
+      "code": "CS401",
+      "credits": 4,
+      "description": "مفاهيم وتقنيات الذكاء الاصطناعي والتعلم الآلي",
+      "season": "الفصل الثاني",
+      "materials": {
+        "pdfs": ["الذكاء_الاصطناعي_الأساسي.pdf", "التعلم_الآلي.pdf", "الشبكات_العصبية.pdf"],
+        "videos": ["مقدمة_الذكاء_الاصطناعي.mp4", "خوارزميات_التعلم.mp4", "التطبيقات_العملية.mp4"]
+      },
+      "announcements": "مطلوب تسليم مشروع التعلم الآلي نهاية الشهر",
+      "department_id": 1
+    },
+    {
+      "id": 5,
+      "name": "أمان الشبكات",
+      "code": "CS501",
+      "credits": 3,
+      "description": "تقنيات حماية الشبكات والأمان السيبراني",
+      "season": "الفصل الأول",
+      "materials": {
+        "pdfs": ["أمان_الشبكات.pdf", "الحماية_السيبرانية.pdf", "بروتوكولات_الأمان.pdf"],
+        "videos": ["مقدمة_أمان_الشبكات.mp4", "أنواع_الهجمات.mp4", "تطبيق_الحماية.mp4"]
+      },
+      "announcements": "محاضرة خاصة مع خبير أمان سيبراني يوم الثلاثاء",
+      "department_id": 1
+    },
+    {
+      "id": 6,
+      "name": "التشريح البشري",
+      "code": "MED101",
+      "credits": 5,
+      "description": "دراسة تشريح جسم الإنسان وأجهزته المختلفة",
+      "season": "الفصل الأول",
+      "materials": {
+        "pdfs": ["أطلس_التشريح_البشري.pdf", "تشريح_الأجهزة.pdf", "الصور_التشريحية.pdf"],
+        "videos": ["مقدمة_التشريح.mp4", "الجهاز_العصبي.mp4", "الجهاز_الدوري.mp4"]
+      },
+      "announcements": "جلسة تشريح عملية في المختبر يوم السبت",
+      "department_id": 2
+    },
+    {
+      "id": 7,
+      "name": "علم وظائف الأعضاء",
+      "code": "MED201",
+      "credits": 4,
+      "description": "دراسة وظائف أعضاء وأجهزة جسم الإنسان",
+      "season": "الفصل الثاني",
+      "materials": {
+        "pdfs": ["علم_وظائف_الأعضاء.pdf", "الفسيولوجيا_التطبيقية.pdf", "التجارب_المختبرية.pdf"],
+        "videos": ["وظائف_القلب.mp4", "الجهاز_التنفسي.mp4", "الكلى_والإخراج.mp4"]
+      },
+      "announcements": "امتحان عملي في المختبر الأسبوع القادم",
+      "department_id": 2
+    },
+    {
+      "id": 8,
+      "name": "الأمراض الباطنية",
+      "code": "MED301",
+      "credits": 6,
+      "description": "تشخيص وعلاج الأمراض الباطنية الشائعة",
+      "season": "الفصل الأول",
+      "materials": {
+        "pdfs": ["الأمراض_الباطنية.pdf", "التشخيص_السريري.pdf", "بروتوكولات_العلاج.pdf"],
+        "videos": ["فحص_المريض.mp4", "الأمراض_الشائعة.mp4", "خطط_العلاج.mp4"]
+      },
+      "announcements": "زيارة ميدانية للمستشفى يوم الأربعاء",
+      "department_id": 2
+    },
+    {
+      "id": 9,
+      "name": "الجراحة العامة",
+      "code": "MED401",
+      "credits": 7,
+      "description": "أساسيات الجراحة العامة والعمليات الجراحية",
+      "season": "الفصل الثاني",
+      "materials": {
+        "pdfs": ["الجراحة_العامة.pdf", "تقنيات_الجراحة.pdf", "العناية_بعد_العملية.pdf"],
+        "videos": ["أساسيات_الجراحة.mp4", "غرفة_العمليات.mp4", "العمليات_الشائعة.mp4"]
+      },
+      "announcements": "تدريب عملي في غرفة العمليات بدءاً من الأسبوع القادم",
+      "department_id": 2
     },
     {
       "id": 10,
       "name": "طب الأطفال",
-      "code": "MED105",
-      "credits": 3,
-      "description": "مقدمة في طب الأطفال",
-      "season": "الخريف",
-      "departmentId": 2
-    },
-
-    {
-      "id": 11,
-      "name": "قانون مدني",
-      "code": "LAW101",
-      "credits": 3,
-      "description": "مبادئ القانون المدني",
-      "season": "الخريف",
-      "departmentId": 3
-    },
-    {
-      "id": 12,
-      "name": "قانون جنائي",
-      "code": "LAW102",
-      "credits": 3,
-      "description": "مبادئ القانون الجنائي",
-      "season": "الربيع",
-      "departmentId": 3
-    },
-    {
-      "id": 13,
-      "name": "قانون تجاري",
-      "code": "LAW103",
-      "credits": 3,
-      "description": "مبادئ القانون التجاري",
-      "season": "الخريف",
-      "departmentId": 3
-    },
-    {
-      "id": 14,
-      "name": "قانون دولي",
-      "code": "LAW104",
-      "credits": 3,
-      "description": "مبادئ القانون الدولي",
-      "season": "الربيع",
-      "departmentId": 3
-    },
-    {
-      "id": 15,
-      "name": "قانون إداري",
-      "code": "LAW105",
-      "credits": 3,
-      "description": "مبادئ القانون الإداري",
-      "season": "الخريف",
-      "departmentId": 3
+      "code": "MED501",
+      "credits": 5,
+      "description": "رعاية وعلاج الأطفال والرضع",
+      "season": "الفصل الأول",
+      "materials": {
+        "pdfs": ["طب_الأطفال.pdf", "نمو_وتطور_الطفل.pdf", "التطعيمات.pdf"],
+        "videos": ["فحص_الأطفال.mp4", "أمراض_الطفولة.mp4", "التغذية_السليمة.mp4"]
+      },
+      "announcements": "ندوة حول التطعيمات يوم الجمعة",
+      "department_id": 2
     }
   ],
   "teachers": [
     {
       "id": 1,
-      "name": "د. يوسف سلامة",
-      "email": "ysalama@univ.edu",
-      "subjectId": 1
+      "name": "د. عبد الله أحمد",
+      "email": "abdullah.ahmad@damascus.edu.sy"
     },
     {
       "id": 2,
-      "name": "د. هالة شحادة",
-      "email": "hshahada@univ.edu",
-      "subjectId": 1
+      "name": "د. سارة محمد",
+      "email": "sarah.mohammad@damascus.edu.sy"
     },
     {
       "id": 3,
-      "name": "د. سامر عيسى",
-      "email": "saissa@univ.edu",
-      "subjectId": 2
+      "name": "د. محمود حسن",
+      "email": "mahmoud.hassan@damascus.edu.sy"
     },
     {
       "id": 4,
-      "name": "د. ريم منصور",
-      "email": "rmansour@univ.edu",
-      "subjectId": 2
+      "name": "د. ريم خالد",
+      "email": "reem.khalid@damascus.edu.sy"
     },
     {
       "id": 5,
-      "name": "د. خالد حسن",
-      "email": "khasan@univ.edu",
-      "subjectId": 3
+      "name": "د. أيمن صالح",
+      "email": "ayman.saleh@damascus.edu.sy"
     },
     {
       "id": 6,
-      "name": "د. ليلى عمار",
-      "email": "lamar@univ.edu",
-      "subjectId": 3
+      "name": "د. لمى عبدالله",
+      "email": "lama.abdullah@damascus.edu.sy"
     },
     {
       "id": 7,
-      "name": "د. فادي منصور",
-      "email": "fmansour@univ.edu",
-      "subjectId": 4
+      "name": "د. حازم يوسف",
+      "email": "hazem.youssef@damascus.edu.sy"
     },
     {
       "id": 8,
-      "name": "د. منى يوسف",
-      "email": "myousef@univ.edu",
-      "subjectId": 4
+      "name": "د. نادين علي",
+      "email": "nadine.ali@damascus.edu.sy"
     },
     {
       "id": 9,
-      "name": "د. سامي جابر",
-      "email": "sjaber@univ.edu",
-      "subjectId": 5
+      "name": "د. باسل محمود",
+      "email": "basel.mahmoud@damascus.edu.sy"
     },
     {
       "id": 10,
-      "name": "د. هبة عيسى",
-      "email": "haissa@univ.edu",
-      "subjectId": 5
+      "name": "د. هديل سامي",
+      "email": "hadeel.sami@damascus.edu.sy"
+    },
+    {
+      "id": 11,
+      "name": "د. طلال أحمد",
+      "email": "talal.ahmad@damascus.edu.sy"
+    },
+    {
+      "id": 12,
+      "name": "د. ياسمين حسام",
+      "email": "yasmin.hussam@damascus.edu.sy"
+    },
+    {
+      "id": 13,
+      "name": "د. راني عبدالرحمن",
+      "email": "rani.abdelrahman@damascus.edu.sy"
+    },
+    {
+      "id": 14,
+      "name": "د. سلام نور",
+      "email": "salam.nour@damascus.edu.sy"
+    },
+    {
+      "id": 15,
+      "name": "د. وائل حمدان",
+      "email": "wael.hamdan@damascus.edu.sy"
+    },
+    {
+      "id": 16,
+      "name": "د. جنان كريم",
+      "email": "jinan.kareem@damascus.edu.sy"
+    },
+    {
+      "id": 17,
+      "name": "د. معاذ سعيد",
+      "email": "muaz.saeed@damascus.edu.sy"
+    },
+    {
+      "id": 18,
+      "name": "د. رؤى فارس",
+      "email": "roa.fares@damascus.edu.sy"
+    },
+    {
+      "id": 19,
+      "name": "د. عمر نبيل",
+      "email": "omar.nabeel@damascus.edu.sy"
+    },
+    {
+      "id": 20,
+      "name": "د. إيمان صادق",
+      "email": "iman.sadiq@damascus.edu.sy"
     }
   ],
   "admins": [
     {
       "id": 1,
-      "name": "أحمد درويش",
-      "email": "adarwish@univ.edu",
-      "subjectId": 1
+      "name": "أ. مصطفى الأحمد",
+      "email": "mustafa.ahmad@damascus.edu.sy"
     },
     {
       "id": 2,
-      "name": "سارة منصور",
-      "email": "smansour@univ.edu",
-      "subjectId": 2
+      "name": "أ. فريال محمد",
+      "email": "farial.mohammad@damascus.edu.sy"
     },
-    { "id": 3, "name": "محمد حسن", "email": "mhasan@univ.edu", "subjectId": 3 },
+    {
+      "id": 3,
+      "name": "أ. سامر حسن",
+      "email": "samer.hassan@damascus.edu.sy"
+    },
     {
       "id": 4,
-      "name": "ليلى عيسى",
-      "email": "laissa@univ.edu",
-      "subjectId": 4
+      "name": "أ. نورا علي",
+      "email": "nora.ali@damascus.edu.sy"
     },
-    { "id": 5, "name": "خالد جابر", "email": "kjaber@univ.edu", "subjectId": 5 }
+    {
+      "id": 5,
+      "name": "أ. حسام الدين",
+      "email": "hussam.aldin@damascus.edu.sy"
+    },
+    {
+      "id": 6,
+      "name": "أ. روان خالد",
+      "email": "rawan.khalid@damascus.edu.sy"
+    },
+    {
+      "id": 7,
+      "name": "أ. بشار يوسف",
+      "email": "bashar.youssef@damascus.edu.sy"
+    },
+    {
+      "id": 8,
+      "name": "أ. دعاء سليم",
+      "email": "duaa.saleem@damascus.edu.sy"
+    },
+    {
+      "id": 9,
+      "name": "أ. كريم عبدالله",
+      "email": "kareem.abdullah@damascus.edu.sy"
+    },
+    {
+      "id": 10,
+      "name": "أ. ملك أحمد",
+      "email": "malik.ahmad@damascus.edu.sy"
+    }
   ],
   "students": [
     {
       "id": 1,
-      "name": "علي يوسف",
-      "email": "ayousef@student.edu",
-      "subjectId": 1
+      "name": "أحمد محمد علي",
+      "email": "ahmad.mohammad@student.damascus.edu.sy"
     },
     {
       "id": 2,
-      "name": "منى حسن",
-      "email": "mhasan@student.edu",
-      "subjectId": 1
+      "name": "فاطمة حسن خالد",
+      "email": "fatima.hassan@student.damascus.edu.sy"
     },
     {
       "id": 3,
-      "name": "سامي منصور",
-      "email": "smansour@student.edu",
-      "subjectId": 1
+      "name": "محمد عبد الرحمن",
+      "email": "mohammad.abdelrahman@student.damascus.edu.sy"
     },
     {
       "id": 4,
-      "name": "هبة عمار",
-      "email": "hamar@student.edu",
-      "subjectId": 1
+      "name": "نور الهدى سعيد",
+      "email": "nour.alhuda@student.damascus.edu.sy"
     },
     {
       "id": 5,
-      "name": "فادي جابر",
-      "email": "fjaber@student.edu",
-      "subjectId": 1
+      "name": "خالد يوسف أحمد",
+      "email": "khalid.youssef@student.damascus.edu.sy"
+    },
+    {
+      "id": 6,
+      "name": "مريم محمود علي",
+      "email": "mariam.mahmoud@student.damascus.edu.sy"
+    },
+    {
+      "id": 7,
+      "name": "عمر حسام الدين",
+      "email": "omar.hussam@student.damascus.edu.sy"
+    },
+    {
+      "id": 8,
+      "name": "سارة عبدالله محمد",
+      "email": "sarah.abdullah@student.damascus.edu.sy"
+    },
+    {
+      "id": 9,
+      "name": "حسن علي خالد",
+      "email": "hassan.ali@student.damascus.edu.sy"
+    },
+    {
+      "id": 10,
+      "name": "ليلى أحمد يوسف",
+      "email": "laila.ahmad@student.damascus.edu.sy"
+    },
+    {
+      "id": 11,
+      "name": "طارق محمد حسن",
+      "email": "tareq.mohammad@student.damascus.edu.sy"
+    },
+    {
+      "id": 12,
+      "name": "رنا سعيد علي",
+      "email": "rana.saeed@student.damascus.edu.sy"
+    },
+    {
+      "id": 13,
+      "name": "يوسف عبدالرحمن",
+      "email": "youssef.abdelrahman@student.damascus.edu.sy"
+    },
+    {
+      "id": 14,
+      "name": "دينا خالد محمود",
+      "email": "dina.khalid@student.damascus.edu.sy"
+    },
+    {
+      "id": 15,
+      "name": "معاذ أحمد حسن",
+      "email": "muaz.ahmad@student.damascus.edu.sy"
+    },
+    {
+      "id": 16,
+      "name": "ريم يوسف علي",
+      "email": "reem.youssef@student.damascus.edu.sy"
+    },
+    {
+      "id": 17,
+      "name": "سامر محمد خالد",
+      "email": "samer.mohammad@student.damascus.edu.sy"
+    },
+    {
+      "id": 18,
+      "name": "هبة حسام سعيد",
+      "email": "hiba.hussam@student.damascus.edu.sy"
+    },
+    {
+      "id": 19,
+      "name": "باسل عبدالله أحمد",
+      "email": "basel.abdullah@student.damascus.edu.sy"
+    },
+    {
+      "id": 20,
+      "name": "نادين علي محمد",
+      "email": "nadine.ali@student.damascus.edu.sy"
+    },
+    {
+      "id": 21,
+      "name": "وائل خالد يوسف",
+      "email": "wael.khalid@student.damascus.edu.sy"
+    },
+    {
+      "id": 22,
+      "name": "لينا أحمد حسن",
+      "email": "lina.ahmad@student.damascus.edu.sy"
+    },
+    {
+      "id": 23,
+      "name": "حازم محمد علي",
+      "email": "hazem.mohammad@student.damascus.edu.sy"
+    },
+    {
+      "id": 24,
+      "name": "سلمى عبدالرحمن",
+      "email": "salma.abdelrahman@student.damascus.edu.sy"
+    },
+    {
+      "id": 25,
+      "name": "عماد سعيد خالد",
+      "email": "emad.saeed@student.damascus.edu.sy"
+    },
+    {
+      "id": 26,
+      "name": "جنان يوسف أحمد",
+      "email": "jinan.youssef@student.damascus.edu.sy"
+    },
+    {
+      "id": 27,
+      "name": "فادي محمود علي",
+      "email": "fadi.mahmoud@student.damascus.edu.sy"
+    },
+    {
+      "id": 28,
+      "name": "روان حسن محمد",
+      "email": "rawan.hassan@student.damascus.edu.sy"
+    },
+    {
+      "id": 29,
+      "name": "نبيل عبدالله خالد",
+      "email": "nabeel.abdullah@student.damascus.edu.sy"
+    },
+    {
+      "id": 30,
+      "name": "غادة أحمد يوسف",
+      "email": "ghada.ahmad@student.damascus.edu.sy"
+    },
+    {
+      "id": 31,
+      "name": "راني سعيد حسن",
+      "email": "rani.saeed@student.damascus.edu.sy"
+    },
+    {
+      "id": 32,
+      "name": "إيمان محمد علي",
+      "email": "iman.mohammad@student.damascus.edu.sy"
+    },
+    {
+      "id": 33,
+      "name": "صالح خالد أحمد",
+      "email": "saleh.khalid@student.damascus.edu.sy"
+    },
+    {
+      "id": 34,
+      "name": "منى يوسف حسام",
+      "email": "mona.youssef@student.damascus.edu.sy"
+    },
+    {
+      "id": 35,
+      "name": "بسام عبدالرحمن",
+      "email": "bassam.abdelrahman@student.damascus.edu.sy"
+    },
+    {
+      "id": 36,
+      "name": "رؤى محمد خالد",
+      "email": "roa.mohammad@student.damascus.edu.sy"
+    },
+    {
+      "id": 37,
+      "name": "عادل أحمد حسن",
+      "email": "adel.ahmad@student.damascus.edu.sy"
+    },
+    {
+      "id": 38,
+      "name": "هديل سعيد علي",
+      "email": "hadeel.saeed@student.damascus.edu.sy"
+    },
+    {
+      "id": 39,
+      "name": "مازن يوسف محمد",
+      "email": "mazen.youssef@student.damascus.edu.sy"
+    },
+    {
+      "id": 40,
+      "name": "سندس خالد أحمد",
+      "email": "sondos.khalid@student.damascus.edu.sy"
+    },
+    {
+      "id": 41,
+      "name": "كريم حسام علي",
+      "email": "kareem.hussam@student.damascus.edu.sy"
+    },
+    {
+      "id": 42,
+      "name": "آية محمد يوسف",
+      "email": "aya.mohammad@student.damascus.edu.sy"
+    },
+    {
+      "id": 43,
+      "name": "زياد عبدالله حسن",
+      "email": "ziad.abdullah@student.damascus.edu.sy"
+    },
+    {
+      "id": 44,
+      "name": "تالا أحمد سعيد",
+      "email": "tala.ahmad@student.damascus.edu.sy"
+    },
+    {
+      "id": 45,
+      "name": "علاء خالد محمد",
+      "email": "alaa.khalid@student.damascus.edu.sy"
+    },
+    {
+      "id": 46,
+      "name": "رنيم يوسف علي",
+      "email": "raneem.youssef@student.damascus.edu.sy"
+    },
+    {
+      "id": 47,
+      "name": "محمود حسن أحمد",
+      "email": "mahmoud.hassan@student.damascus.edu.sy"
+    },
+    {
+      "id": 48,
+      "name": "شام محمد خالد",
+      "email": "sham.mohammad@student.damascus.edu.sy"
+    },
+    {
+      "id": 49,
+      "name": "أسامة عبدالرحمن",
+      "email": "osama.abdelrahman@student.damascus.edu.sy"
+    },
+    {
+      "id": 50,
+      "name": "جود سعيد يوسف",
+      "email": "joud.saeed@student.damascus.edu.sy"
     }
   ],
   "assignments": [
     {
       "id": 1,
-      "title": "مشروع برمجة",
-      "deadline": "2024-12-01",
-      "description": "إنشاء برنامج بسيط",
-      "subjectId": 1
+      "title": "مشروع تطبيق ويب بسيط",
+      "deadline": "2025-10-15",
+      "description": "تطوير تطبيق ويب باستخدام HTML, CSS, و JavaScript يحتوي على نماذج تفاعلية",
+      "course_id": 1
     },
     {
       "id": 2,
-      "title": "تقرير هياكل بيانات",
-      "deadline": "2024-12-10",
-      "description": "كتابة تقرير عن هياكل البيانات",
-      "subjectId": 2
+      "title": "تنفيذ خوارزميات الفرز",
+      "deadline": "2025-10-22",
+      "description": "برمجة وتحليل خوارزميات الفرز المختلفة ومقارنة أدائها",
+      "course_id": 2
     },
     {
       "id": 3,
-      "title": "مشروع قواعد بيانات",
-      "deadline": "2024-12-15",
-      "description": "تصميم قاعدة بيانات",
-      "subjectId": 3
+      "title": "تصميم قاعدة بيانات لنظام مكتبة",
+      "deadline": "2025-11-05",
+      "description": "تصميم وتنفيذ قاعدة بيانات كاملة لنظام إدارة مكتبة مع جميع العمليات الأساسية",
+      "course_id": 3
     },
     {
       "id": 4,
-      "title": "اختبار شبكات",
-      "deadline": "2024-12-20",
-      "description": "اختبار عملي في الشبكات",
-      "subjectId": 4
+      "title": "مشروع التعرف على الصور",
+      "deadline": "2025-11-20",
+      "description": "تطوير نموذج تعلم آلي للتعرف على الصور باستخدام الشبكات العصبية",
+      "course_id": 4
     },
     {
       "id": 5,
-      "title": "بحث أنظمة تشغيل",
-      "deadline": "2024-12-25",
-      "description": "بحث حول أنظمة التشغيل",
-      "subjectId": 5
+      "title": "تحليل أمان الشبكة",
+      "deadline": "2025-10-30",
+      "description": "إجراء تحليل أمني لشبكة وتقديم تقرير عن نقاط الضعف والحلول المقترحة",
+      "course_id": 5
+    },
+    {
+      "id": 6,
+      "title": "تشريح الجهاز العضلي",
+      "deadline": "2025-10-18",
+      "description": "دراسة مفصلة لعضلات جسم الإنسان ووظائفها مع رسوم توضيحية",
+      "course_id": 6
+    },
+    {
+      "id": 7,
+      "title": "تجارب وظائف الأعضاء",
+      "deadline": "2025-11-10",
+      "description": "إجراء تجارب مختبرية لقياس وظائف أعضاء جسم الإنسان وتحليل النتائج",
+      "course_id": 7
+    },
+    {
+      "id": 8,
+      "title": "دراسة حالة مرضية",
+      "deadline": "2025-11-25",
+      "description": "تحليل حالة مرضية شاملة مع التشخيص وخطة العلاج المقترحة",
+      "course_id": 8
+    },
+    {
+      "id": 9,
+      "title": "إجراءات الجراحة الأساسية",
+      "deadline": "2025-12-05",
+      "description": "تعلم وممارسة الإجراءات الجراحية الأساسية في بيئة المحاكاة",
+      "course_id": 9
+    },
+    {
+      "id": 10,
+      "title": "بحث في طب الأطفال",
+      "deadline": "2025-11-15",
+      "description": "إعداد بحث علمي حول أحد أمراض الطفولة الشائعة وطرق علاجها",
+      "course_id": 10
     }
+  ],
+  "course_teachers": [
+    {"course_id": 1, "teacher_id": 1},
+    {"course_id": 1, "teacher_id": 2},
+    {"course_id": 2, "teacher_id": 3},
+    {"course_id": 2, "teacher_id": 4},
+    {"course_id": 3, "teacher_id": 5},
+    {"course_id": 3, "teacher_id": 6},
+    {"course_id": 4, "teacher_id": 7},
+    {"course_id": 4, "teacher_id": 8},
+    {"course_id": 5, "teacher_id": 9},
+    {"course_id": 5, "teacher_id": 10},
+    {"course_id": 6, "teacher_id": 11},
+    {"course_id": 6, "teacher_id": 12},
+    {"course_id": 7, "teacher_id": 13},
+    {"course_id": 7, "teacher_id": 14},
+    {"course_id": 8, "teacher_id": 15},
+    {"course_id": 8, "teacher_id": 16},
+    {"course_id": 9, "teacher_id": 17},
+    {"course_id": 9, "teacher_id": 18},
+    {"course_id": 10, "teacher_id": 19},
+    {"course_id": 10, "teacher_id": 20}
+  ],
+  "course_admins": [
+    {"course_id": 1, "admin_id": 1},
+    {"course_id": 2, "admin_id": 2},
+    {"course_id": 3, "admin_id": 3},
+    {"course_id": 4, "admin_id": 4},
+    {"course_id": 5, "admin_id": 5},
+    {"course_id": 6, "admin_id": 6},
+    {"course_id": 7, "admin_id": 7},
+    {"course_id": 8, "admin_id": 8},
+    {"course_id": 9, "admin_id": 9},
+    {"course_id": 10, "admin_id": 10}
+  ],
+  "course_students": [
+    {"course_id": 1, "student_id": 1},
+    {"course_id": 1, "student_id": 2},
+    {"course_id": 1, "student_id": 3},
+    {"course_id": 1, "student_id": 4},
+    {"course_id": 1, "student_id": 5},
+    {"course_id": 2, "student_id": 6},
+    {"course_id": 2, "student_id": 7},
+    {"course_id": 2, "student_id": 8},
+    {"course_id": 2, "student_id": 9},
+    {"course_id": 2, "student_id": 10},
+    {"course_id": 3, "student_id": 11},
+    {"course_id": 3, "student_id": 12},
+    {"course_id": 3, "student_id": 13},
+    {"course_id": 3, "student_id": 14},
+    {"course_id": 3, "student_id": 15},
+    {"course_id": 4, "student_id": 16},
+    {"course_id": 4, "student_id": 17},
+    {"course_id": 4, "student_id": 18},
+    {"course_id": 4, "student_id": 19},
+    {"course_id": 4, "student_id": 20},
+    {"course_id": 5, "student_id": 21},
+    {"course_id": 5, "student_id": 22},
+    {"course_id": 5, "student_id": 23},
+    {"course_id": 5, "student_id": 24},
+    {"course_id": 5, "student_id": 25},
+    {"course_id": 6, "student_id": 26},
+    {"course_id": 6, "student_id": 27},
+    {"course_id": 6, "student_id": 28},
+    {"course_id": 6, "student_id": 29},
+    {"course_id": 6, "student_id": 30},
+    {"course_id": 7, "student_id": 31},
+    {"course_id": 7, "student_id": 32},
+    {"course_id": 7, "student_id": 33},
+    {"course_id": 7, "student_id": 34},
+    {"course_id": 7, "student_id": 35},
+    {"course_id": 8, "student_id": 36},
+    {"course_id": 8, "student_id": 37},
+    {"course_id": 8, "student_id": 38},
+    {"course_id": 8, "student_id": 39},
+    {"course_id": 8, "student_id": 40},
+    {"course_id": 9, "student_id": 41},
+    {"course_id": 9, "student_id": 42},
+    {"course_id": 9, "student_id": 43},
+    {"course_id": 9, "student_id": 44},
+    {"course_id": 9, "student_id": 45},
+    {"course_id": 10, "student_id": 46},
+    {"course_id": 10, "student_id": 47},
+    {"course_id": 10, "student_id": 48},
+    {"course_id": 10, "student_id": 49},
+    {"course_id": 10, "student_id": 50}
   ]
 }

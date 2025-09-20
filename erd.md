@@ -1,11 +1,11 @@
 ```mermaid
 erDiagram
     UNIVERSITY ||--o{ DEPARTMENT : يحتوي
-    DEPARTMENT ||--o{ SUBJECT : يقدم
-    SUBJECT ||--o{ TEACHER : يدرس
-    SUBJECT ||--|| ADMIN : يدير
-    SUBJECT ||--o{ STUDENT : يسجل
-    SUBJECT ||--o{ ASSIGNMENT : يتضمن
+    DEPARTMENT ||--o{ Course : يقدم
+    Course ||--o{ TEACHER : يدرس
+    Course ||--|| ADMIN : يدير
+    Course ||--o{ STUDENT : يسجل
+    Course ||--o{ ASSIGNMENT : يتضمن
 
     UNIVERSITY {
         int id
@@ -17,13 +17,15 @@ erDiagram
         string name
         string head
     }
-    SUBJECT {
+    Course {
         int id
         string name
         string code
         int credits
         string description
         string season
+        array materials
+        string announcements
     }
     TEACHER {
         int id
