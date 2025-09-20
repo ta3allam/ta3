@@ -13,6 +13,7 @@ import {
 
 const items = [
   { title: "الصفحة الرئيسية", url: "/", icon: Home },
+  { title: "الجامعات", url: "/universities", icon: Users },
   { title: "لوحة التحكم - المسؤول", url: "/admin", icon: LayoutDashboard },
   { title: "لوحة التحكم - المعلم", url: "/teacher", icon: BookOpen },
   { title: "لوحة التحكم - الطالب", url: "/student", icon: GraduationCap },

@@ -9,6 +9,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import { HelmetProvider } from "react-helmet-async";
+import UniversitiesPage from "./pages/Universities";
+import DepartmentsPage from "./pages/Departments";
+import CoursesPage from "./pages/Courses";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +26,12 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/teacher" element={<TeacherDashboard />} />
+            <Route path="/universities" element={<UniversitiesPage />} />
+            <Route path="/departments" element={<DepartmentsPage />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/courses/:courseId" element={<CoursesPage />} />
+            <Route path="/universities/:universityId" element={<DepartmentsPage />} />
+            <Route path="/departments/:departmentId" element={<CoursesPage />} />
             <Route path="/student" element={<StudentDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
