@@ -1,23 +1,25 @@
 import db from './DB.json';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import TopBar from '../components/topbar/TopBar';
 import { useNavigate } from 'react-router-dom';
-import { SidebarProvider } from '../components/ui/sidebar';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Input } from "@/components/ui/input";
 // import { useState } from 'react';
+import damascusImg from '../components/assets/damas.jpg';
+import alpImg from '../components/assets/alp.jpg';
+import tishImg from '../components/assets/tish.jpg';
+import homsImg from '../components/assets/homs.jpg';
+import feratImg from '../components/assets/ferat.jpg';
 
+const universityImages: Record<number, string> = {
+  1: damascusImg,
+  2: alpImg,
+  3: tishImg,
+  4: homsImg,
+  5: feratImg,
+};
 // const [query, setQuery] = useState("");
 
-// Use external image URLs for university backgrounds
-const universityImages: Record<number, string> = {
-  1: 'https://images.unsplash.com/photo-1464983953574-0892a716854b',
-  2: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
-  3: 'https://images.unsplash.com/photo-1513258496099-48168024aec0',
-  4: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca',
-  5: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99',
-};
 
 export default function UniversitiesPage() {
   const universities = db.universities;
@@ -34,10 +36,8 @@ export default function UniversitiesPage() {
         //   onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-    <SidebarProvider>
       <div className="min-h-screen bg-background">
         <div className="p-8 max-w-7xl mx-auto">
-        
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {universities.map((uni) => (
               <Card
@@ -59,8 +59,6 @@ export default function UniversitiesPage() {
           </div>
         </div>
       </div>
-    </SidebarProvider>
         </DashboardLayout>
-
   );
 }
