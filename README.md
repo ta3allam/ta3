@@ -3,7 +3,7 @@
 Dashboard with access to three roles: 
 
 * Admin
-*teacher 
+* Teacher
 * Student 
 
 ```bash 
