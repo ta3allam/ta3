@@ -32,7 +32,7 @@ const TopBar = ({ title }: TopBarProps) => {
           <NavLink to="/" className="text-lg font-extrabold">
             {/* <span className="bg-gradient-primary bg-clip-text text-transparent animate-gradient-x">تعلّم</span> */}
             <img
-              src="/ta3/logo.png"
+              src="/logo.png"
               alt="تعلّم"
               className="h-8 w-auto inline-block align-middle"
             />

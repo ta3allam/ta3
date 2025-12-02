@@ -14,7 +14,7 @@ const Index = () => {
       <section className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center container py-16">
           <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-right">
-            <span className="bg-gradient-primary bg-clip-text text-transparent animate-gradient-x">تعلّم</span>
+            <span className="text-primary">تعلّم</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-10 text-right">منصة عربية حديثة لإدارة التعلّم.</p>
 
