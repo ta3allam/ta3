@@ -1,0 +1,121 @@
+{
+    "1": {
+        "name": "مبادئ البرمجة",
+        "code": "CS101",
+        "category": "علوم الحاسب",
+        "rating": 4.5,
+        "difficulty": "مبتدئ",
+        "teacher": "د. أحمد محمد",
+        "language": "العربية",
+        "announcements": [
+            {
+                "id": 1,
+                "title": "واجب الأسبوع الثالث",
+                "content": "تسليم الواجب يوم الخميس القادم قبل الساعة 11:59 مساءً",
+                "authorName": "د. أحمد محمد",
+                "createdAt": "2024-12-20T22:42:00.000Z"
+            },
+            {
+                "id": 2,
+                "title": "محاضرة إضافية",
+                "content": "سيتم عقد محاضرة إضافية يوم الأربعاء في القاعة 201",
+                "authorName": "د. أحمد محمد",
+                "createdAt": "2024-12-18T22:42:00.000Z"
+            }
+        ],
+        "events": [
+            {
+                "id": 1,
+                "title": "واجب الأسبوع 3",
+                "description": "حل تمارين الفصل الثالث",
+                "event_type": "assignment",
+                "due_date": "2024-12-23T22:42:00.000Z"
+            },
+            {
+                "id": 2,
+                "title": "اختبار قصير 1",
+                "event_type": "quiz",
+                "due_date": "2024-12-27T22:42:00.000Z"
+            }
+        ],
+        "assignments": [
+            {
+                "id": 1,
+                "title": "واجب الأسبوع 3",
+                "description": "حل تمارين الفصل الثالث",
+                "hasFile": true,
+                "fileName": "assignments_3.pdf",
+                "dueDate": "2024-12-27T22:42:00.000Z"
+            }
+        ],
+        "lectures": [
+            {
+                "id": 1,
+                "title": "الأسبوع 1: مقدمة في البرمجة",
+                "description": "نظرة عامة على مفاهيم البرمجة الأساسية",
+                "materials": [
+                    {
+                        "id": 1,
+                        "title": "مقدمة.pdf",
+                        "file_url": "#",
+                        "file_type": "pdf",
+                        "file_size": 2400000
+                    },
+                    {
+                        "id": 2,
+                        "title": "أمثلة.pdf",
+                        "file_url": "#",
+                        "file_type": "pdf",
+                        "file_size": 1800000
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "title": "الأسبوع 2: المتغيرات وأنواع البيانات",
+                "description": "التعرف على المتغيرات وأنواع البيانات المختلفة",
+                "materials": [
+                    {
+                        "id": 3,
+                        "title": "المتغيرات.pdf",
+                        "file_url": "#",
+                        "file_type": "pdf",
+                        "file_size": 3200000
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "title": "الأسبوع 3: الجمل الشرطية",
+                "description": "استخدام if, else, switch",
+                "materials": []
+            }
+        ]
+    },
+    "2": {
+        "name": "الرياضيات المتقدمة",
+        "code": "MATH201",
+        "category": "الرياضيات",
+        "rating": 4.2,
+        "difficulty": "متوسط",
+        "teacher": "د. فاطمة السيد",
+        "language": "العربية",
+        "announcements": [],
+        "events": [],
+        "assignments": [],
+        "lectures": []
+    },
+    "3": {
+        "name": "هندسة البرمجيات",
+        "code": "CS301",
+        "category": "علوم الحاسب",
+        "rating": 4.7,
+        "difficulty": "متقدم",
+        "teacher": "د. خالد العمري",
+        "language": "العربية",
+        "announcements": [],
+        "events": [],
+        "assignments": [],
+        "lectures": []
+    }
+}

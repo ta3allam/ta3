@@ -1,47 +1,66 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { Session, User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { createContext, useContext, useState, ReactNode } from 'react';
+
+export type UserRole = 'student' | 'teacher' | 'admin';
+
+export interface User {
+    username: string;
+    role: UserRole;
+    enrolledCourses: number[]; // Array of Course IDs
+    name: string;
+}
 
 interface AuthContextType {
-    session: Session | null;
     user: User | null;
-    loading: boolean;
-    signOut: () => Promise<void>;
+    login: (username: string, password: string) => Promise<boolean>;
+    logout: () => void;
+    isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [session, setSession] = useState<Session | null>(null);
+export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        // Get initial session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setUser(session?.user ?? null);
-            setLoading(false);
-        });
+    const login = async (username: string, password: string): Promise<boolean> => {
+        // Mock authentication delay
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Listen for auth changes
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-            setUser(session?.user ?? null);
-            setLoading(false);
-        });
+        if (password === '123') {
+            if (username === 'student') {
+                setUser({
+                    username: 'student',
+                    role: 'student',
+                    enrolledCourses: [1, 2], // Enrolled in CS101 and MATH201
+                    name: 'أحمد علي'
+                });
+                return true;
+            } else if (username === 'teacher') {
+                setUser({
+                    username: 'teacher',
+                    role: 'teacher',
+                    enrolledCourses: [1, 3], // Teaches CS101 and CS301
+                    name: 'د. خالد'
+                });
+                return true;
+            } else if (username === 'admin') {
+                setUser({
+                    username: 'admin',
+                    role: 'admin',
+                    enrolledCourses: [],
+                    name: 'مدير النظام'
+                });
+                return true;
+            }
+        }
+        return false;
+    };
 
-        return () => subscription.unsubscribe();
-    }, []);
-
-    const signOut = async () => {
-        await supabase.auth.signOut();
+    const logout = () => {
+        setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ session, user, loading, signOut }}>
+        <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
             {children}
         </AuthContext.Provider>
     );

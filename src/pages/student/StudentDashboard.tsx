@@ -1,39 +1,12 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { CourseCard } from "@/components/student/CourseCard";
 import { AnnouncementCard } from "@/components/student/AnnouncementCard";
-import { Progress } from "@/components/ui/progress";
+import { useAuth } from "@/contexts/AuthContext";
+import coursesJson from "../courses/courses.json";
+import { CourseData } from "../courses/types";
+import { useMemo } from "react";
 
-// Mock data - will be replaced with Supabase queries
-const courses = [
-  {
-    id: 1,
-    name: "مبادئ البرمجة",
-    code: "CS101",
-    progress: 65,
-    semester: "Fall",
-    year: 2024,
-    backgroundColor: "bg-pine-blue-600"
-  },
-  {
-    id: 2,
-    name: "الرياضيات المتقدمة",
-    code: "MATH201",
-    progress: 30,
-    semester: "Fall",
-    year: 2024,
-    backgroundColor: "bg-rich-mahogany-500"
-  },
-  {
-    id: 3,
-    name: "هندسة البرمجيات",
-    code: "CS301",
-    progress: 45,
-    semester: "Fall",
-    year: 2024,
-    backgroundColor: "bg-evergreen-700"
-  },
-];
-
+// Mock global announcements
 const globalAnnouncements = [
   {
     id: 1,
@@ -53,15 +26,47 @@ const globalAnnouncements = [
   },
 ];
 
+const courseColors = [
+  "bg-pine-blue-600",
+  "bg-rich-mahogany-500",
+  "bg-evergreen-700",
+  "bg-wine-plum-600",
+  "bg-marine-teal-600"
+];
+
 export default function StudentDashboard() {
-  // Calculate overall progress
-  const overallProgress = Math.round(
-    courses.reduce((sum, course) => sum + course.progress, 0) / courses.length
-  );
+  const { user } = useAuth();
+
+  // Memoize the course data logic
+  const myCourses = useMemo(() => {
+    if (!user || user.role !== 'student' || !user.enrolledCourses) return [];
+
+    const allCourses = coursesJson as unknown as CourseData;
+
+    return user.enrolledCourses.map(courseId => {
+      const course = allCourses[courseId];
+      if (!course) return null;
+
+      return {
+        id: courseId,
+        name: course.name,
+        code: course.code,
+        category: course.category,
+        rating: course.rating,
+        difficulty: course.difficulty,
+        teacher: course.teacher,
+        language: course.language,
+        backgroundColor: courseColors[courseId % courseColors.length]
+      };
+    }).filter(c => c !== null);
+  }, [user]);
 
   return (
     <DashboardLayout title="لوحة التحكم - الطالب">
-      <h1 className="text-3xl font-extrabold mb-6 text-right">لوحة التحكم - الطالب</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-extrabold text-right">لوحة التحكم - الطالب</h1>
+        <span className="text-muted-foreground">مرحباً، {user?.name}</span>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Content - Course Cards */}
@@ -69,27 +74,28 @@ export default function StudentDashboard() {
           {/* Courses Grid */}
           <div>
             <h2 className="text-2xl font-bold mb-4 text-right">المقررات الحالية</h2>
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {courses.map((course) => (
-                <CourseCard
-                  key={course.id}
-                  id={course.id}
-                  name={course.name}
-                  code={course.code}
-                  progress={course.progress}
-                  backgroundColor={course.backgroundColor}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Progress Section */}
-          <div className="bg-card p-6 rounded-lg border">
-            <h3 className="text-xl font-bold mb-4 text-right">التقدم الإجمالي</h3>
-            <Progress value={overallProgress} className="h-3" />
-            <p className="mt-2 text-sm text-muted-foreground text-right">
-              {overallProgress}% مكتمل
-            </p>
+            {myCourses.length > 0 ? (
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {myCourses.map((course) => (
+                  course && <CourseCard
+                    key={course.id}
+                    id={course.id}
+                    name={course.name}
+                    code={course.code}
+                    category={course.category}
+                    rating={course.rating}
+                    difficulty={course.difficulty}
+                    teacher={course.teacher}
+                    language={course.language}
+                    backgroundColor={course.backgroundColor}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 border rounded-lg bg-slate-50">
+                <p className="text-muted-foreground">لست مسجلاً في أي مقررات حالياً</p>
+              </div>
+            )}
           </div>
         </div>
 

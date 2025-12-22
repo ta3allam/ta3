@@ -16,6 +16,7 @@
     "ui": "@/components/ui",
     "lib": "@/lib",
     "hooks": "@/hooks",
-    "assets" : "@/components/assets"
+    "pages": "@/pages",
+    "assets": "@/components/assets"
   }
 }

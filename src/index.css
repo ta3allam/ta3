@@ -112,8 +112,6 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-arabic antialiased;
-    position: relative;
-    z-index: 1;
   }
 
   /* Design utilities bound to tokens */

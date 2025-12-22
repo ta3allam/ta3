@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Video, File, Download, Edit } from "lucide-react";
+import { FileText, Video, File, Download, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LectureMaterial {
@@ -21,6 +21,7 @@ interface LectureDetailProps {
     lecture: Lecture | null;
     isTeacher?: boolean;
     onEdit?: (lecture: Lecture) => void;
+    onDelete?: (lectureId: number) => void;
 }
 
 const fileTypeIcons = {
@@ -30,7 +31,7 @@ const fileTypeIcons = {
     other: File
 };
 
-export function LectureDetail({ lecture, isTeacher = false, onEdit }: LectureDetailProps) {
+export function LectureDetail({ lecture, isTeacher = false, onEdit, onDelete }: LectureDetailProps) {
     if (!lecture) {
         return (
             <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -54,6 +55,12 @@ export function LectureDetail({ lecture, isTeacher = false, onEdit }: LectureDet
                             <Button size="sm" variant="outline" onClick={() => onEdit(lecture)}>
                                 <Edit className="h-4 w-4 ml-1" />
                                 تعديل
+                            </Button>
+                        )}
+                        {isTeacher && onDelete && (
+                            <Button size="sm" variant="destructive" onClick={() => onDelete(lecture.id)}>
+                                <Trash2 className="h-4 w-4 ml-1" />
+                                حذف
                             </Button>
                         )}
                     </div>
