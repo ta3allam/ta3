@@ -41,7 +41,7 @@ export default function Login() {
             <Helmet>
                 <title>تعلّم | منصة إدارة التعلّم </title>
                 <meta name="description" content="منصة عربية حديثة لإدارة التعلّم بثلاث لوحات: المسؤول، المعلم، والطالب." />
-                <link rel="canonical" href="/" />
+                <link rel="canonical" href={import.meta.env.BASE_URL} />
             </Helmet>
             <section className="min-h-screen flex items-center justify-center bg-background">
                 <div className="text-center container py-16">

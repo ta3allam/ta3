@@ -65,7 +65,8 @@ const AppSidebar = () => {
   // Inside a course view for student/teacher
   if (isCoursePath) {
     const dashboardUrl = user?.role === 'teacher' ? "/teacher" : "/student";
-    const courseMatch = pathname.match(/\/courses\/(\d+)/);
+    // Improved regex to handle various path structures
+    const courseMatch = pathname.match(/(?:student|teacher)?\/courses\/(\d+)/);
     const courseId = courseMatch ? courseMatch[1] : "";
     const roleBase = user?.role === 'teacher' ? "/teacher" : "/student";
     const courseBase = `${roleBase}/courses/${courseId}`;

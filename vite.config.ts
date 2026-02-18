@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
   ].filter(Boolean),
-  base: mode === 'development' ? '/' : '/ta3/',
+  base: process.env.NODE_ENV === 'production' ? '/ta3/' : '/',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

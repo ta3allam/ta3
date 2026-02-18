@@ -26,6 +26,7 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
+import { EventType } from "./types";
 
 export default function CourseDetail() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -118,7 +119,7 @@ export default function CourseDetail() {
     addEvent(Number(courseId), {
       title: formData.get('title') as string,
       description: formData.get('description') as string,
-      event_type: formData.get('event_type') as any,
+      event_type: formData.get('event_type') as EventType,
       due_date: new Date(formData.get('due_date') as string).toISOString()
     });
 
@@ -135,7 +136,7 @@ export default function CourseDetail() {
     updateEvent(Number(courseId), editingEvent.id, {
       title: formData.get('title') as string,
       description: formData.get('description') as string,
-      event_type: formData.get('event_type') as any,
+      event_type: formData.get('event_type') as EventType,
       due_date: new Date(formData.get('due_date') as string).toISOString()
     });
 
@@ -553,6 +554,51 @@ export default function CourseDetail() {
       </div>
 
       {/* Edit Dialogs */}
+      {editingEvent && (
+        <Dialog open={!!editingEvent} onOpenChange={() => setEditingEvent(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-right">تعديل الحدث</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleUpdateEvent} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-event-title" className="text-right block">العنوان</Label>
+                <Input id="edit-event-title" name="title" defaultValue={editingEvent.title} required className="text-right" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-event-description" className="text-right block">الوصف</Label>
+                <Textarea id="edit-event-description" name="description" defaultValue={editingEvent.description} className="text-right" rows={3} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-event-type" className="text-right block">النوع</Label>
+                <Select name="event_type" defaultValue={editingEvent.event_type} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="اختر النوع" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="assignment">واجب</SelectItem>
+                    <SelectItem value="quiz">اختبار قصير</SelectItem>
+                    <SelectItem value="exam">امتحان</SelectItem>
+                    <SelectItem value="other">أخرى</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-due-date" className="text-right block">تاريخ الاستحقاق</Label>
+                <Input
+                  id="edit-due-date"
+                  name="due_date"
+                  type="datetime-local"
+                  defaultValue={new Date(editingEvent.due_date).toISOString().slice(0, 16)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full">حفظ التغييرات</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {editingAnnouncement && (
         <Dialog open={!!editingAnnouncement} onOpenChange={() => setEditingAnnouncement(null)}>
           <DialogContent>
