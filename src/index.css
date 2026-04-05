@@ -25,8 +25,8 @@ All colors MUST be HSL.
     /* Forest (Evergreen 800) */
     --primary-foreground: 40 20% 98%;
 
-    --secondary: 172 32% 50%;
-    /* Pine Blue 500 */
+    /* Pine Blue 500 – lowered lightness to 92% so bg-secondary reads as a subtle tint, not a strong colour */
+    --secondary: 172 32% 92%;
     --secondary-foreground: 170 33% 7%;
 
     --muted: 40 20% 95%;
@@ -56,7 +56,7 @@ All colors MUST be HSL.
     --sidebar-ring: 177 100% 20%;
 
     /* Extras */
-    --gradient-primary: none;
+    --gradient-primary: linear-gradient(135deg, hsl(177 100% 20%), hsl(172 80% 32%));
     --shadow-elev: 0 10px 30px -12px hsl(var(--primary) / 0.35);
     --transition-ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -76,9 +76,9 @@ All colors MUST be HSL.
     /* Lighter Forest for dark mode */
     --primary-foreground: 40 20% 98%;
 
-    --secondary: 172 32% 60%;
-    /* Pine Blue 400 */
-    --secondary-foreground: 170 33% 7%;
+    /* Pine Blue – lowered lightness so bg-secondary stays subtle in dark mode */
+    --secondary: 172 32% 18%;
+    --secondary-foreground: 40 20% 98%;
 
     --muted: 170 33% 15%;
     --muted-foreground: 170 20% 60%;
@@ -102,10 +102,10 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 170 33% 7%;
     --sidebar-border: 170 33% 20%;
     --sidebar-ring: 177 80% 30%;
-  }
-}
 
-@layer base {
+    --gradient-primary: linear-gradient(135deg, hsl(177 80% 30%), hsl(172 60% 40%));
+  }
+
   * {
     @apply border-border;
   }
@@ -113,14 +113,83 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground font-arabic antialiased;
   }
+}
+
+@layer utilities {
 
   /* Design utilities bound to tokens */
   .bg-gradient-primary {
-    background-image: none;
-    background-color: hsl(var(--primary));
+    background-image: var(--gradient-primary);
   }
 
   .shadow-elev {
     box-shadow: var(--shadow-elev);
+  }
+}
+
+@layer components {
+
+  /* Layout */
+  .page-center-layout {
+    @apply flex items-center justify-center min-h-screen bg-background;
+  }
+
+  .dashboard-content {
+    @apply flex-1 p-6 container text-right space-y-6;
+  }
+
+  .section-between {
+    @apply flex items-center justify-between;
+  }
+
+  .grid-dashboard {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+  }
+
+  .layout-stack {
+    @apply text-right space-y-4;
+  }
+
+  /* Typography */
+  .hero-header {
+    @apply text-5xl md:text-6xl font-extrabold mb-6 text-right;
+  }
+
+  .hero-text {
+    @apply text-xl text-muted-foreground mb-10 text-right;
+  }
+
+  .page-title {
+    @apply text-3xl font-extrabold text-right;
+  }
+
+  .title-xl {
+    @apply text-4xl font-bold mb-4;
+  }
+
+  .stat-value {
+    @apply text-3xl font-bold;
+  }
+
+  /* Forms & Inputs */
+  .stack-md {
+    @apply space-y-4;
+  }
+
+  .input-group {
+    @apply space-y-2;
+  }
+
+  /* Cards & Containers */
+  .card-content-rtl {
+    @apply p-6 text-right space-y-4;
+  }
+
+  .placeholder-container {
+    @apply h-64 border-2 border-dashed rounded-lg flex items-center justify-center text-muted-foreground;
+  }
+
+  .tabs-wrapper {
+    @apply bg-secondary rounded-lg p-2 mb-6;
   }
 }

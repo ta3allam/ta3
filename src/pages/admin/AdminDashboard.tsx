@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Check, X, Edit, Trash2, Bell } from "lucide-react";
 import { useState } from "react";
@@ -65,19 +64,19 @@ export default function AdminDashboard() {
 
   return (
     <DashboardLayout title="لوحة التحكم - المسؤول">
-      <h1 className="text-3xl font-extrabold mb-4">لوحة التحكم - المسؤول</h1>
-      <div className="grid gap-4 md:grid-cols-3">
+      <h1 className="page-title mb-4">لوحة التحكم - المسؤول</h1>
+      <div className="grid-dashboard">
         <Card className="animate-fade-in">
           <CardHeader className="pb-2"><CardTitle>المستخدمون</CardTitle></CardHeader>
-          <CardContent className="text-3xl font-bold">{analytics.users}</CardContent>
+          <CardContent className="stat-value">{analytics.users}</CardContent>
         </Card>
         <Card className="animate-fade-in">
           <CardHeader className="pb-2"><CardTitle>المقررات</CardTitle></CardHeader>
-          <CardContent className="text-3xl font-bold">{analytics.courses}</CardContent>
+          <CardContent className="stat-value">{analytics.courses}</CardContent>
         </Card>
         <Card className="animate-fade-in">
           <CardHeader className="pb-2"><CardTitle>طلبات معلّقة</CardTitle></CardHeader>
-          <CardContent className="text-3xl font-bold">{analytics.pending}</CardContent>
+          <CardContent className="stat-value">{analytics.pending}</CardContent>
         </Card>
       </div>
 
@@ -131,12 +130,12 @@ export default function AdminDashboard() {
         <TabsContent value="requests">
           <Card>
             <CardHeader><CardTitle>طلبات الالتحاق المعلّقة</CardTitle></CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="input-group">
               {requests.length === 0 ? (
                 <div className="text-muted-foreground">لا توجد طلبات حالياً.</div>
               ) : (
                 requests.map((r) => (
-                  <div key={r.id} className="flex items-center justify-between">
+                  <div key={r.id} className="section-between">
                     <div className="text-right">
                       <div className="font-medium">{r.student}</div>
                       <div className="text-sm text-muted-foreground">{r.course}</div>
@@ -154,7 +153,7 @@ export default function AdminDashboard() {
         <TabsContent value="courses">
           <Card>
             <CardHeader><CardTitle>المقررات</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="stack-md">
               <div className="flex items-center gap-2 flex-row-reverse">
                 <Input placeholder="اسم المقرر" value={newCourse} onChange={(e) => setNewCourse(e.target.value)} className="text-right" />
                 <Button variant="hero" onClick={addCourse}><Plus className="ml-1" />إضافة</Button>

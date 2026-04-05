@@ -258,7 +258,7 @@ export default function CourseDetail() {
 
         {/* Tabs */}
         <Tabs defaultValue="home" className="w-full" dir="rtl">
-          <div className="bg-secondary rounded-lg p-2 mb-6">
+          <div className="tabs-wrapper">
             <TabsList className="w-full justify-start bg-transparent">
               <TabsTrigger value="home" className="flex-1">الرئيسية</TabsTrigger>
               <TabsTrigger value="content" className="flex-1">المحتوى</TabsTrigger>
@@ -269,10 +269,10 @@ export default function CourseDetail() {
 
           {/* Home Tab */}
           <TabsContent value="home">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid-dashboard">
               {/* Announcements */}
               <div className="lg:col-span-2 space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="section-between">
                   {isTeacher && (
                     <Dialog open={announcementDialogOpen} onOpenChange={setAnnouncementDialogOpen}>
                       <DialogTrigger asChild>
@@ -285,12 +285,12 @@ export default function CourseDetail() {
                         <DialogHeader>
                           <DialogTitle className="text-right">إعلان جديد</DialogTitle>
                         </DialogHeader>
-                        <form onSubmit={handleCreateAnnouncement} className="space-y-4">
-                          <div className="space-y-2">
+                        <form onSubmit={handleCreateAnnouncement} className="stack-md">
+                          <div className="input-group">
                             <Label htmlFor="title" className="text-right block">العنوان</Label>
                             <Input id="title" name="title" required className="text-right" />
                           </div>
-                          <div className="space-y-2">
+                          <div className="input-group">
                             <Label htmlFor="content" className="text-right block">المحتوى</Label>
                             <Textarea id="content" name="content" required className="text-right" rows={4} />
                           </div>
@@ -340,7 +340,7 @@ export default function CourseDetail() {
 
               {/* Events Sidebar */}
               <div className="lg:col-span-1 space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="section-between">
                   {isTeacher && (
                     <Dialog open={eventDialogOpen} onOpenChange={setEventDialogOpen}>
                       <DialogTrigger asChild>
@@ -353,16 +353,16 @@ export default function CourseDetail() {
                         <DialogHeader>
                           <DialogTitle className="text-right">حدث جديد</DialogTitle>
                         </DialogHeader>
-                        <form onSubmit={handleCreateEvent} className="space-y-4">
-                          <div className="space-y-2">
+                        <form onSubmit={handleCreateEvent} className="stack-md">
+                          <div className="input-group">
                             <Label htmlFor="event-title" className="text-right block">العنوان</Label>
                             <Input id="event-title" name="title" required className="text-right" />
                           </div>
-                          <div className="space-y-2">
+                          <div className="input-group">
                             <Label htmlFor="event-description" className="text-right block">الوصف</Label>
                             <Textarea id="event-description" name="description" className="text-right" rows={3} />
                           </div>
-                          <div className="space-y-2">
+                          <div className="input-group">
                             <Label htmlFor="event-type" className="text-right block">النوع</Label>
                             <Select name="event_type" required>
                               <SelectTrigger>
@@ -376,7 +376,7 @@ export default function CourseDetail() {
                               </SelectContent>
                             </Select>
                           </div>
-                          <div className="space-y-2">
+                          <div className="input-group">
                             <Label htmlFor="due-date" className="text-right block">تاريخ الاستحقاق</Label>
                             <Input id="due-date" name="due_date" type="datetime-local" required />
                           </div>
@@ -397,7 +397,7 @@ export default function CourseDetail() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Lectures Sidebar */}
               <div className="lg:col-span-1 space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="section-between">
                   {isTeacher && (
                     <Dialog open={lectureDialogOpen} onOpenChange={setLectureDialogOpen}>
                       <DialogTrigger asChild>
@@ -410,12 +410,12 @@ export default function CourseDetail() {
                         <DialogHeader>
                           <DialogTitle className="text-right">محاضرة جديدة</DialogTitle>
                         </DialogHeader>
-                        <form onSubmit={handleCreateLecture} className="space-y-4">
-                          <div className="space-y-2">
+                        <form onSubmit={handleCreateLecture} className="stack-md">
+                          <div className="input-group">
                             <Label htmlFor="lecture-title" className="text-right block">العنوان</Label>
                             <Input id="lecture-title" name="title" required className="text-right" />
                           </div>
-                          <div className="space-y-2">
+                          <div className="input-group">
                             <Label htmlFor="lecture-desc" className="text-right block">الوصف</Label>
                             <Textarea
                               id="lecture-desc"
@@ -454,7 +454,7 @@ export default function CourseDetail() {
           {/* Assignments Tab */}
           <TabsContent value="assignments">
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="section-between">
                 {isTeacher && (
                   <Dialog open={assignmentDialogOpen} onOpenChange={setAssignmentDialogOpen}>
                     <DialogTrigger asChild>
@@ -467,20 +467,20 @@ export default function CourseDetail() {
                       <DialogHeader>
                         <DialogTitle className="text-right">إنشاء واجب جديد</DialogTitle>
                       </DialogHeader>
-                      <form onSubmit={handleCreateAssignment} className="space-y-4">
-                        <div className="space-y-2">
+                      <form onSubmit={handleCreateAssignment} className="stack-md">
+                        <div className="input-group">
                           <Label htmlFor="assignment-title" className="text-right block">عنوان الواجب</Label>
                           <Input id="assignment-title" name="title" required className="text-right" />
                         </div>
-                        <div className="space-y-2">
+                        <div className="input-group">
                           <Label htmlFor="assignment-desc" className="text-right block">وصف الواجب</Label>
                           <Textarea id="assignment-desc" name="description" required className="text-right" rows={4} />
                         </div>
-                        <div className="space-y-2">
+                        <div className="input-group">
                           <Label htmlFor="assignment-due" className="text-right block">تاريخ التسليم</Label>
                           <Input id="assignment-due" name="dueDate" type="datetime-local" required />
                         </div>
-                        <div className="space-y-2">
+                        <div className="input-group">
                           <Label htmlFor="assignment-file" className="text-right block">ملف الواجب (PDF) - اختياري</Label>
                           <Input id="assignment-file" name="file" type="file" accept=".pdf" className="text-right" />
                         </div>
@@ -560,16 +560,16 @@ export default function CourseDetail() {
             <DialogHeader>
               <DialogTitle className="text-right">تعديل الحدث</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleUpdateEvent} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleUpdateEvent} className="stack-md">
+              <div className="input-group">
                 <Label htmlFor="edit-event-title" className="text-right block">العنوان</Label>
                 <Input id="edit-event-title" name="title" defaultValue={editingEvent.title} required className="text-right" />
               </div>
-              <div className="space-y-2">
+              <div className="input-group">
                 <Label htmlFor="edit-event-description" className="text-right block">الوصف</Label>
                 <Textarea id="edit-event-description" name="description" defaultValue={editingEvent.description} className="text-right" rows={3} />
               </div>
-              <div className="space-y-2">
+              <div className="input-group">
                 <Label htmlFor="edit-event-type" className="text-right block">النوع</Label>
                 <Select name="event_type" defaultValue={editingEvent.event_type} required>
                   <SelectTrigger>
@@ -583,7 +583,7 @@ export default function CourseDetail() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
+              <div className="input-group">
                 <Label htmlFor="edit-due-date" className="text-right block">تاريخ الاستحقاق</Label>
                 <Input
                   id="edit-due-date"
@@ -605,12 +605,12 @@ export default function CourseDetail() {
             <DialogHeader>
               <DialogTitle className="text-right">تعديل الإعلان</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleUpdateAnnouncement} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleUpdateAnnouncement} className="stack-md">
+              <div className="input-group">
                 <Label htmlFor="edit-title" className="text-right block">العنوان</Label>
                 <Input id="edit-title" name="title" defaultValue={editingAnnouncement.title} required className="text-right" />
               </div>
-              <div className="space-y-2">
+              <div className="input-group">
                 <Label htmlFor="edit-content" className="text-right block">المحتوى</Label>
                 <Textarea id="edit-content" name="content" defaultValue={editingAnnouncement.content} required className="text-right" rows={4} />
               </div>
@@ -626,8 +626,8 @@ export default function CourseDetail() {
             <DialogHeader>
               <DialogTitle className="text-right">تعديل المحاضرة</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleUpdateLecture} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleUpdateLecture} className="stack-md">
+              <div className="input-group">
                 <Label htmlFor="edit-lecture-title" className="text-right block">العنوان</Label>
                 <Input
                   id="edit-lecture-title"
@@ -637,7 +637,7 @@ export default function CourseDetail() {
                   className="text-right"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="input-group">
                 <Label htmlFor="edit-lecture-desc" className="text-right block">الوصف</Label>
                 <Textarea
                   id="edit-lecture-desc"
@@ -659,16 +659,16 @@ export default function CourseDetail() {
             <DialogHeader>
               <DialogTitle className="text-right">تعديل الواجب</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleUpdateAssignment} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleUpdateAssignment} className="stack-md">
+              <div className="input-group">
                 <Label htmlFor="edit-assignment-title" className="text-right block">عنوان الواجب</Label>
                 <Input id="edit-assignment-title" name="title" defaultValue={editingAssignment.title} required className="text-right" />
               </div>
-              <div className="space-y-2">
+              <div className="input-group">
                 <Label htmlFor="edit-assignment-desc" className="text-right block">وصف الواجب</Label>
                 <Textarea id="edit-assignment-desc" name="description" defaultValue={editingAssignment.description} required className="text-right" rows={4} />
               </div>
-              <div className="space-y-2">
+              <div className="input-group">
                 <Label htmlFor="edit-assignment-due" className="text-right block">تاريخ التسليم</Label>
                 <Input
                   id="edit-assignment-due"
@@ -678,7 +678,7 @@ export default function CourseDetail() {
                   required
                 />
               </div>
-              <div className="space-y-2">
+              <div className="input-group">
                 <Label htmlFor="edit-assignment-file" className="text-right block">ملف جديد (اختياري)</Label>
                 <Input id="edit-assignment-file" name="file" type="file" accept=".pdf" className="text-right" />
                 {editingAssignment.hasFile && (

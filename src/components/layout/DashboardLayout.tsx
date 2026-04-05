@@ -23,7 +23,7 @@ const DashboardLayout = ({ title, children }: DashboardLayoutProps) => {
     return (
       <div className="min-h-screen flex flex-col w-full">
         <TopBar title={title} hideSidebarTrigger />
-        <main className="flex-1 p-6 container text-right space-y-6">
+        <main className="dashboard-content">
           {children}
         </main>
       </div>
@@ -36,7 +36,7 @@ const DashboardLayout = ({ title, children }: DashboardLayoutProps) => {
         <AppSidebar />
         <SidebarInset>
           <TopBar title={title} />
-          <div className="p-6 container text-right space-y-6">
+          <div className="dashboard-content">
             {children}
           </div>
         </SidebarInset>

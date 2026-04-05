@@ -37,30 +37,30 @@ export default function Login() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-background p-4" dir="rtl">
+        <div className="page-center-layout p-4" dir="rtl">
             <Helmet>
                 <title>تعلّم | منصة إدارة التعلّم </title>
                 <meta name="description" content="منصة عربية حديثة لإدارة التعلّم بثلاث لوحات: المسؤول، المعلم، والطالب." />
                 <link rel="canonical" href={import.meta.env.BASE_URL} />
             </Helmet>
-            <section className="min-h-screen flex items-center justify-center bg-background">
+            <section className="page-center-layout">
                 <div className="text-center container py-16">
-                    <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-right">
+                    <h1 className="hero-header">
                         <span className="text-primary">تعلّم</span>
                     </h1>
-                    <p className="text-xl text-muted-foreground mb-10 text-right">منصة عربية حديثة لإدارة التعلّم.</p>
+                    <p className="hero-text">منصة عربية حديثة لإدارة التعلّم.</p>
                 </div>
             </section>
             <Card className="w-full max-w-md">
-                <CardHeader className="space-y-1">
+                <CardHeader className="input-group">
                     <CardTitle className="text-2xl font-bold text-center">تسجيل الدخول</CardTitle>
                     <CardDescription className="text-center">
                         أدخل بيانات الدخول الخاصة بك للمتابعة
                     </CardDescription>
                 </CardHeader>
                 <form onSubmit={handleLogin}>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
+                    <CardContent className="stack-md">
+                        <div className="input-group">
                             <Label htmlFor="username">اسم المستخدم</Label>
                             <Input
                                 id="username"
@@ -71,7 +71,7 @@ export default function Login() {
                                 required
                             />
                         </div>
-                        <div className="space-y-2">
+                        <div className="input-group">
                             <Label htmlFor="password">كلمة المرور</Label>
                             <Input
                                 id="password"

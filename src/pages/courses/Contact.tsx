@@ -9,10 +9,10 @@ export default function CourseContact() {
 
     return (
         <DashboardLayout title={`التواصل مع المعلم - ${course?.name || ""}`}>
-            <div className="text-right space-y-4">
-                <h1 className="text-3xl font-extrabold text-right">التواصل مع المعلم</h1>
+            <div className="layout-stack">
+                <h1 className="page-title">التواصل مع المعلم</h1>
                 <p className="text-muted-foreground">يمكنك هنا إرسال رسائل مباشرة للمعلم المشرف على المقرر.</p>
-                <div className="h-64 border-2 border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+                <div className="placeholder-container">
                     سيتم إضافة نموذج التواصل هنا قريباً
                 </div>
             </div>

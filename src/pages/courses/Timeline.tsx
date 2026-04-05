@@ -9,10 +9,10 @@ export default function CourseTimeline() {
 
     return (
         <DashboardLayout title={`الجدول الزمني - ${course?.name || ""}`}>
-            <div className="text-right space-y-4">
-                <h1 className="text-3xl font-extrabold text-right">الجدول الزمني</h1>
+            <div className="layout-stack">
+                <h1 className="page-title">الجدول الزمني</h1>
                 <p className="text-muted-foreground">هذه الصفحة ستعرض الجدول الزمني للمقرر على مدار الفصل الدراسي.</p>
-                <div className="h-64 border-2 border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+                <div className="placeholder-container">
                     سيتم إضافة الجدول الزمني هنا قريباً
                 </div>
             </div>

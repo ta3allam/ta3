@@ -44,8 +44,8 @@ export default function TeacherDashboard() {
 
   return (
     <DashboardLayout title="لوحة التحكم - المعلم">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-extrabold text-right">لوحة التحكم - المعلم</h1>
+      <div className="section-between mb-6">
+        <h1 className="page-title">لوحة التحكم - المعلم</h1>
         <div className="flex items-center gap-4">
           <span className="text-muted-foreground hidden md:inline">مرحباً، {user?.name}</span>
           <Button>
@@ -55,7 +55,7 @@ export default function TeacherDashboard() {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="stack-md">
         <div>
           <h2 className="text-2xl font-bold mb-4 text-right">المقررات التي تدرسها</h2>
           {myCourses.length > 0 ? (

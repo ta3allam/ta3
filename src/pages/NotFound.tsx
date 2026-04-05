@@ -12,9 +12,9 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="page-center-layout">
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
+        <h1 className="title-xl">404</h1>
         <p className="text-xl text-muted-foreground mb-4">عذراً، الصفحة غير موجودة</p>
         <a href="/" className="text-primary underline">
           العودة للصفحة الرئيسية

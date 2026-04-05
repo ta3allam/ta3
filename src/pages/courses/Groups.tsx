@@ -9,10 +9,10 @@ export default function CourseGroups() {
 
     return (
         <DashboardLayout title={`المجموعات - ${course?.name || ""}`}>
-            <div className="text-right space-y-4">
-                <h1 className="text-3xl font-extrabold text-right">المجموعات</h1>
+            <div className="layout-stack">
+                <h1 className="page-title">المجموعات</h1>
                 <p className="text-muted-foreground">هذه الصفحة ستعرض المجموعات الطلابية والعمل الجماعي.</p>
-                <div className="h-64 border-2 border-dashed rounded-lg flex items-center justify-center text-muted-foreground">
+                <div className="placeholder-container">
                     سيتم إضافة المجموعات هنا قريباً
                 </div>
             </div>

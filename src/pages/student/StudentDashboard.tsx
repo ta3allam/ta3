@@ -63,8 +63,8 @@ export default function StudentDashboard() {
 
   return (
     <DashboardLayout title="لوحة التحكم - الطالب">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-extrabold text-right">لوحة التحكم - الطالب</h1>
+      <div className="section-between mb-6">
+        <h1 className="page-title">لوحة التحكم - الطالب</h1>
         <span className="text-muted-foreground">مرحباً، {user?.name}</span>
       </div>
 
@@ -103,7 +103,7 @@ export default function StudentDashboard() {
         <div className="lg:col-span-1">
           <div className="sticky top-6">
             <h2 className="text-2xl font-bold mb-4 text-right">الإعلانات العامة</h2>
-            <div className="space-y-4">
+            <div className="stack-md">
               {globalAnnouncements.map((announcement) => (
                 <AnnouncementCard
                   key={announcement.id}
