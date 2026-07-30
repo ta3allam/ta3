@@ -7,11 +7,10 @@ import { CourseEvents } from "@/components/student/CourseEvents";
 import { LecturesList } from "@/components/student/LecturesList";
 import { LectureDetail } from "@/components/student/LectureDetail";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import AnnouncementDialog from "@/components/courses/AnnouncementDialog";
+import EventDialog from "@/components/courses/EventDialog";
+import LectureDialog from "@/components/courses/LectureDialog";
+import AssignmentDialog from "@/components/courses/AssignmentDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -80,136 +79,79 @@ export default function CourseDetail() {
 
   const selectedLecture = course.lectures.find(l => l.id === selectedLectureId);
 
-  // Announcement handlers
-  const handleCreateAnnouncement = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    addAnnouncement(Number(courseId), {
-      title: formData.get('title') as string,
-      content: formData.get('content') as string,
-      authorName: user?.name || 'المعلم',
-      createdAt: new Date().toISOString()
-    });
-
-    toast.success("تم إنشاء الإعلان بنجاح");
-    setAnnouncementDialogOpen(false);
-    e.currentTarget.reset();
+  // Announcement handler
+  const handleSaveAnnouncement = (data: { title: string; content: string }) => {
+    if (editingAnnouncement) {
+      updateAnnouncement(Number(courseId), editingAnnouncement.id, data);
+      toast.success("تم تحديث الإعلان بنجاح");
+      setEditingAnnouncement(null);
+    } else {
+      addAnnouncement(Number(courseId), {
+        ...data,
+        authorName: user?.name || 'المعلم',
+        createdAt: new Date().toISOString()
+      });
+      toast.success("تم إنشاء الإعلان بنجاح");
+      setAnnouncementDialogOpen(false);
+    }
   };
 
-  const handleUpdateAnnouncement = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!editingAnnouncement) return;
-
-    const formData = new FormData(e.currentTarget);
-    updateAnnouncement(Number(courseId), editingAnnouncement.id, {
-      title: formData.get('title') as string,
-      content: formData.get('content') as string,
-    });
-
-    toast.success("تم تحديث الإعلان بنجاح");
-    setEditingAnnouncement(null);
+  // Event handler
+  const handleSaveEvent = (data: { title: string; description: string; event_type: EventType; due_date: string }) => {
+    if (editingEvent) {
+      updateEvent(Number(courseId), editingEvent.id, data);
+      toast.success("تم تحديث الحدث بنجاح");
+      setEditingEvent(null);
+    } else {
+      addEvent(Number(courseId), data);
+      toast.success("تم إنشاء الحدث بنجاح");
+      setEventDialogOpen(false);
+    }
   };
 
-  // Event handlers
-  const handleCreateEvent = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    addEvent(Number(courseId), {
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-      event_type: formData.get('event_type') as EventType,
-      due_date: new Date(formData.get('due_date') as string).toISOString()
-    });
-
-    toast.success("تم إنشاء الحدث بنجاح");
-    setEventDialogOpen(false);
-    e.currentTarget.reset();
+  // Lecture handler
+  const handleSaveLecture = (data: { title: string; description: string }) => {
+    if (editingLecture) {
+      updateLecture(Number(courseId), editingLecture.id, data);
+      toast.success("تم تحديث المحاضرة بنجاح");
+      setEditingLecture(null);
+    } else {
+      addLecture(Number(courseId), {
+        ...data,
+        materials: []
+      });
+      toast.success("تم إنشاء المحاضرة بنجاح");
+      setLectureDialogOpen(false);
+    }
   };
 
-  const handleUpdateEvent = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!editingEvent) return;
+  // Assignment handler
+  const handleSaveAssignment = (data: { title: string; description: string; dueDate: string; file: File | null }) => {
+    const fileDetails = data.file ? {
+      hasFile: true,
+      fileName: data.file.name
+    } : {};
 
-    const formData = new FormData(e.currentTarget);
-    updateEvent(Number(courseId), editingEvent.id, {
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-      event_type: formData.get('event_type') as EventType,
-      due_date: new Date(formData.get('due_date') as string).toISOString()
-    });
-
-    toast.success("تم تحديث الحدث بنجاح");
-    setEditingEvent(null);
-  };
-
-  // Lecture handlers
-  const handleCreateLecture = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    addLecture(Number(courseId), {
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-      materials: []
-    });
-
-    toast.success("تم إنشاء المحاضرة بنجاح");
-    setLectureDialogOpen(false);
-    e.currentTarget.reset();
-  };
-
-  const handleUpdateLecture = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!editingLecture) return;
-
-    const formData = new FormData(e.currentTarget);
-    updateLecture(Number(courseId), editingLecture.id, {
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-    });
-
-    toast.success("تم تحديث المحاضرة بنجاح");
-    setEditingLecture(null);
-  };
-
-  // Assignment handlers
-  const handleCreateAssignment = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const file = formData.get('file') as File;
-
-    addAssignment(Number(courseId), {
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-      hasFile: file && file.size > 0,
-      fileName: file?.name,
-      dueDate: new Date(formData.get('dueDate') as string).toISOString()
-    });
-
-    toast.success("تم إنشاء الواجب بنجاح");
-    setAssignmentDialogOpen(false);
-    e.currentTarget.reset();
-  };
-
-  const handleUpdateAssignment = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!editingAssignment) return;
-
-    const formData = new FormData(e.currentTarget);
-    const file = formData.get('file') as File;
-
-    updateAssignment(Number(courseId), editingAssignment.id, {
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-      hasFile: file && file.size > 0 ? true : editingAssignment.hasFile,
-      fileName: file && file.size > 0 ? file.name : editingAssignment.fileName,
-      dueDate: new Date(formData.get('dueDate') as string).toISOString()
-    });
-
-    toast.success("تم تحديث الواجب بنجاح");
-    setEditingAssignment(null);
+    if (editingAssignment) {
+      updateAssignment(Number(courseId), editingAssignment.id, {
+        title: data.title,
+        description: data.description,
+        dueDate: data.dueDate,
+        ...fileDetails
+      });
+      toast.success("تم تحديث الواجب بنجاح");
+      setEditingAssignment(null);
+    } else {
+      addAssignment(Number(courseId), {
+        title: data.title,
+        description: data.description,
+        dueDate: data.dueDate,
+        hasFile: !!data.file,
+        fileName: data.file?.name
+      });
+      toast.success("تم إنشاء الواجب بنجاح");
+      setAssignmentDialogOpen(false);
+    }
   };
 
   // Delete handler
@@ -274,30 +216,10 @@ export default function CourseDetail() {
               <div className="lg:col-span-2 space-y-4">
                 <div className="section-between">
                   {isTeacher && (
-                    <Dialog open={announcementDialogOpen} onOpenChange={setAnnouncementDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button>
-                          <Plus className="h-4 w-4 ml-2" />
-                          إعلان جديد
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle className="text-right">إعلان جديد</DialogTitle>
-                        </DialogHeader>
-                        <form onSubmit={handleCreateAnnouncement} className="stack-md">
-                          <div className="input-group">
-                            <Label htmlFor="title" className="text-right block">العنوان</Label>
-                            <Input id="title" name="title" required className="text-right" />
-                          </div>
-                          <div className="input-group">
-                            <Label htmlFor="content" className="text-right block">المحتوى</Label>
-                            <Textarea id="content" name="content" required className="text-right" rows={4} />
-                          </div>
-                          <Button type="submit" className="w-full">نشر</Button>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
+                    <Button onClick={() => setAnnouncementDialogOpen(true)}>
+                      <Plus className="h-4 w-4 ml-2" />
+                      إعلان جديد
+                    </Button>
                   )}
                   <h2 className="text-2xl font-bold text-right">إعلانات المقرر</h2>
                 </div>
@@ -342,48 +264,10 @@ export default function CourseDetail() {
               <div className="lg:col-span-1 space-y-4">
                 <div className="section-between">
                   {isTeacher && (
-                    <Dialog open={eventDialogOpen} onOpenChange={setEventDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button size="sm">
-                          <Plus className="h-3 w-3 ml-1" />
-                          حدث
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle className="text-right">حدث جديد</DialogTitle>
-                        </DialogHeader>
-                        <form onSubmit={handleCreateEvent} className="stack-md">
-                          <div className="input-group">
-                            <Label htmlFor="event-title" className="text-right block">العنوان</Label>
-                            <Input id="event-title" name="title" required className="text-right" />
-                          </div>
-                          <div className="input-group">
-                            <Label htmlFor="event-description" className="text-right block">الوصف</Label>
-                            <Textarea id="event-description" name="description" className="text-right" rows={3} />
-                          </div>
-                          <div className="input-group">
-                            <Label htmlFor="event-type" className="text-right block">النوع</Label>
-                            <Select name="event_type" required>
-                              <SelectTrigger>
-                                <SelectValue placeholder="اختر النوع" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="assignment">واجب</SelectItem>
-                                <SelectItem value="quiz">اختبار قصير</SelectItem>
-                                <SelectItem value="exam">امتحان</SelectItem>
-                                <SelectItem value="other">أخرى</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="input-group">
-                            <Label htmlFor="due-date" className="text-right block">تاريخ الاستحقاق</Label>
-                            <Input id="due-date" name="due_date" type="datetime-local" required />
-                          </div>
-                          <Button type="submit" className="w-full">إنشاء</Button>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
+                    <Button size="sm" onClick={() => setEventDialogOpen(true)}>
+                      <Plus className="h-3 w-3 ml-1" />
+                      حدث
+                    </Button>
                   )}
                   <h3 className="text-lg font-bold text-right">الأحداث</h3>
                 </div>
@@ -399,36 +283,10 @@ export default function CourseDetail() {
               <div className="lg:col-span-1 space-y-4">
                 <div className="section-between">
                   {isTeacher && (
-                    <Dialog open={lectureDialogOpen} onOpenChange={setLectureDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button size="sm">
-                          <Plus className="h-3 w-3 ml-1" />
-                          محاضرة
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-2xl">
-                        <DialogHeader>
-                          <DialogTitle className="text-right">محاضرة جديدة</DialogTitle>
-                        </DialogHeader>
-                        <form onSubmit={handleCreateLecture} className="stack-md">
-                          <div className="input-group">
-                            <Label htmlFor="lecture-title" className="text-right block">العنوان</Label>
-                            <Input id="lecture-title" name="title" required className="text-right" />
-                          </div>
-                          <div className="input-group">
-                            <Label htmlFor="lecture-desc" className="text-right block">الوصف</Label>
-                            <Textarea
-                              id="lecture-desc"
-                              name="description"
-                              className="text-right"
-                              rows={3}
-                              placeholder="يمكنك إضافة روابط في الوصف"
-                            />
-                          </div>
-                          <Button type="submit" className="w-full">إنشاء المحاضرة</Button>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
+                    <Button size="sm" onClick={() => setLectureDialogOpen(true)}>
+                      <Plus className="h-3 w-3 ml-1" />
+                      محاضرة
+                    </Button>
                   )}
                   <h3 className="text-lg font-bold text-right">المحاضرات</h3>
                 </div>
@@ -456,38 +314,10 @@ export default function CourseDetail() {
             <div className="space-y-6">
               <div className="section-between">
                 {isTeacher && (
-                  <Dialog open={assignmentDialogOpen} onOpenChange={setAssignmentDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Plus className="h-4 w-4 ml-2" />
-                        واجب جديد
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl">
-                      <DialogHeader>
-                        <DialogTitle className="text-right">إنشاء واجب جديد</DialogTitle>
-                      </DialogHeader>
-                      <form onSubmit={handleCreateAssignment} className="stack-md">
-                        <div className="input-group">
-                          <Label htmlFor="assignment-title" className="text-right block">عنوان الواجب</Label>
-                          <Input id="assignment-title" name="title" required className="text-right" />
-                        </div>
-                        <div className="input-group">
-                          <Label htmlFor="assignment-desc" className="text-right block">وصف الواجب</Label>
-                          <Textarea id="assignment-desc" name="description" required className="text-right" rows={4} />
-                        </div>
-                        <div className="input-group">
-                          <Label htmlFor="assignment-due" className="text-right block">تاريخ التسليم</Label>
-                          <Input id="assignment-due" name="dueDate" type="datetime-local" required />
-                        </div>
-                        <div className="input-group">
-                          <Label htmlFor="assignment-file" className="text-right block">ملف الواجب (PDF) - اختياري</Label>
-                          <Input id="assignment-file" name="file" type="file" accept=".pdf" className="text-right" />
-                        </div>
-                        <Button type="submit" className="w-full">إنشاء الواجب</Button>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
+                  <Button onClick={() => setAssignmentDialogOpen(true)}>
+                    <Plus className="h-4 w-4 ml-2" />
+                    واجب جديد
+                  </Button>
                 )}
                 <h2 className="text-2xl font-bold text-right">الواجبات</h2>
               </div>
@@ -553,145 +383,62 @@ export default function CourseDetail() {
         </Tabs>
       </div>
 
-      {/* Edit Dialogs */}
-      {editingEvent && (
-        <Dialog open={!!editingEvent} onOpenChange={() => setEditingEvent(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="text-right">تعديل الحدث</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleUpdateEvent} className="stack-md">
-              <div className="input-group">
-                <Label htmlFor="edit-event-title" className="text-right block">العنوان</Label>
-                <Input id="edit-event-title" name="title" defaultValue={editingEvent.title} required className="text-right" />
-              </div>
-              <div className="input-group">
-                <Label htmlFor="edit-event-description" className="text-right block">الوصف</Label>
-                <Textarea id="edit-event-description" name="description" defaultValue={editingEvent.description} className="text-right" rows={3} />
-              </div>
-              <div className="input-group">
-                <Label htmlFor="edit-event-type" className="text-right block">النوع</Label>
-                <Select name="event_type" defaultValue={editingEvent.event_type} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر النوع" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="assignment">واجب</SelectItem>
-                    <SelectItem value="quiz">اختبار قصير</SelectItem>
-                    <SelectItem value="exam">امتحان</SelectItem>
-                    <SelectItem value="other">أخرى</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="input-group">
-                <Label htmlFor="edit-due-date" className="text-right block">تاريخ الاستحقاق</Label>
-                <Input
-                  id="edit-due-date"
-                  name="due_date"
-                  type="datetime-local"
-                  defaultValue={new Date(editingEvent.due_date).toISOString().slice(0, 16)}
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">حفظ التغييرات</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* Create/Edit Dialogs */}
+      <AnnouncementDialog
+        open={announcementDialogOpen || !!editingAnnouncement}
+        onOpenChange={(open) => {
+          if (!open) {
+            setAnnouncementDialogOpen(false);
+            setEditingAnnouncement(null);
+          } else {
+            setAnnouncementDialogOpen(true);
+          }
+        }}
+        editingAnnouncement={editingAnnouncement}
+        onSave={handleSaveAnnouncement}
+      />
 
-      {editingAnnouncement && (
-        <Dialog open={!!editingAnnouncement} onOpenChange={() => setEditingAnnouncement(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="text-right">تعديل الإعلان</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleUpdateAnnouncement} className="stack-md">
-              <div className="input-group">
-                <Label htmlFor="edit-title" className="text-right block">العنوان</Label>
-                <Input id="edit-title" name="title" defaultValue={editingAnnouncement.title} required className="text-right" />
-              </div>
-              <div className="input-group">
-                <Label htmlFor="edit-content" className="text-right block">المحتوى</Label>
-                <Textarea id="edit-content" name="content" defaultValue={editingAnnouncement.content} required className="text-right" rows={4} />
-              </div>
-              <Button type="submit" className="w-full">حفظ التغييرات</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
+      <EventDialog
+        open={eventDialogOpen || !!editingEvent}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEventDialogOpen(false);
+            setEditingEvent(null);
+          } else {
+            setEventDialogOpen(true);
+          }
+        }}
+        editingEvent={editingEvent}
+        onSave={handleSaveEvent}
+      />
 
-      {editingLecture && (
-        <Dialog open={!!editingLecture} onOpenChange={() => setEditingLecture(null)}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-right">تعديل المحاضرة</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleUpdateLecture} className="stack-md">
-              <div className="input-group">
-                <Label htmlFor="edit-lecture-title" className="text-right block">العنوان</Label>
-                <Input
-                  id="edit-lecture-title"
-                  name="title"
-                  defaultValue={editingLecture.title}
-                  required
-                  className="text-right"
-                />
-              </div>
-              <div className="input-group">
-                <Label htmlFor="edit-lecture-desc" className="text-right block">الوصف</Label>
-                <Textarea
-                  id="edit-lecture-desc"
-                  name="description"
-                  defaultValue={editingLecture.description}
-                  className="text-right"
-                  rows={3}
-                />
-              </div>
-              <Button type="submit" className="w-full">حفظ التغييرات</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
+      <LectureDialog
+        open={lectureDialogOpen || !!editingLecture}
+        onOpenChange={(open) => {
+          if (!open) {
+            setLectureDialogOpen(false);
+            setEditingLecture(null);
+          } else {
+            setLectureDialogOpen(true);
+          }
+        }}
+        editingLecture={editingLecture}
+        onSave={handleSaveLecture}
+      />
 
-      {editingAssignment && (
-        <Dialog open={!!editingAssignment} onOpenChange={() => setEditingAssignment(null)}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-right">تعديل الواجب</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleUpdateAssignment} className="stack-md">
-              <div className="input-group">
-                <Label htmlFor="edit-assignment-title" className="text-right block">عنوان الواجب</Label>
-                <Input id="edit-assignment-title" name="title" defaultValue={editingAssignment.title} required className="text-right" />
-              </div>
-              <div className="input-group">
-                <Label htmlFor="edit-assignment-desc" className="text-right block">وصف الواجب</Label>
-                <Textarea id="edit-assignment-desc" name="description" defaultValue={editingAssignment.description} required className="text-right" rows={4} />
-              </div>
-              <div className="input-group">
-                <Label htmlFor="edit-assignment-due" className="text-right block">تاريخ التسليم</Label>
-                <Input
-                  id="edit-assignment-due"
-                  name="dueDate"
-                  type="datetime-local"
-                  defaultValue={new Date(editingAssignment.dueDate).toISOString().slice(0, 16)}
-                  required
-                />
-              </div>
-              <div className="input-group">
-                <Label htmlFor="edit-assignment-file" className="text-right block">ملف جديد (اختياري)</Label>
-                <Input id="edit-assignment-file" name="file" type="file" accept=".pdf" className="text-right" />
-                {editingAssignment.hasFile && (
-                  <p className="text-sm text-muted-foreground text-right">
-                    الملف الحالي: {editingAssignment.fileName}
-                  </p>
-                )}
-              </div>
-              <Button type="submit" className="w-full">حفظ التغييرات</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
+      <AssignmentDialog
+        open={assignmentDialogOpen || !!editingAssignment}
+        onOpenChange={(open) => {
+          if (!open) {
+            setAssignmentDialogOpen(false);
+            setEditingAssignment(null);
+          } else {
+            setAssignmentDialogOpen(true);
+          }
+        }}
+        editingAssignment={editingAssignment}
+        onSave={handleSaveAssignment}
+      />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
