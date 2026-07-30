@@ -11,6 +11,8 @@ import AnnouncementDialog from "@/components/courses/AnnouncementDialog";
 import EventDialog from "@/components/courses/EventDialog";
 import LectureDialog from "@/components/courses/LectureDialog";
 import AssignmentDialog from "@/components/courses/AssignmentDialog";
+import AssignmentSubmissions from "@/components/courses/AssignmentSubmissions";
+import GradingConsole from "@/components/courses/GradingConsole";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,6 +52,7 @@ export default function CourseDetail() {
 
   const course = courseData[Number(courseId)];
   const [selectedLectureId, setSelectedLectureId] = useState<number | undefined>();
+  const [expandedAssignmentId, setExpandedAssignmentId] = useState<number | null>(null);
 
   // Dialog states
   const [announcementDialogOpen, setAnnouncementDialogOpen] = useState(false);
@@ -360,6 +363,27 @@ export default function CourseDetail() {
                           >
                             <Trash2 className="h-3 w-3" />
                           </Button>
+                        </div>
+                      )}
+
+                      <div className="flex justify-between items-center pt-2 border-t border-border/10">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-primary font-bold hover:underline p-0 h-auto"
+                          onClick={() => setExpandedAssignmentId(expandedAssignmentId === assignment.id ? null : assignment.id)}
+                        >
+                          {expandedAssignmentId === assignment.id ? "إغلاق التفاصيل" : isTeacher ? "عرض تسليمات الطلاب" : "تسليم الواجب وعرض التقييم"}
+                        </Button>
+                      </div>
+
+                      {expandedAssignmentId === assignment.id && (
+                        <div className="mt-4 pt-4 border-t border-border/40">
+                          {isTeacher ? (
+                            <GradingConsole courseId={Number(courseId)} assignmentId={assignment.id} />
+                          ) : (
+                            <AssignmentSubmissions courseId={Number(courseId)} assignment={assignment} />
+                          )}
                         </div>
                       )}
                     </div>

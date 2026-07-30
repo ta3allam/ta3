@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import coursesJson from '@/pages/courses/courses.json';
-import { CourseData, Announcement, Lecture, CourseEvent, Assignment } from '@/pages/courses/types';
+import { CourseData, Announcement, Lecture, CourseEvent, Assignment, Submission } from '@/pages/courses/types';
 
 interface CourseContextType {
     courseData: CourseData;
@@ -17,6 +17,8 @@ interface CourseContextType {
     updateAssignment: (courseId: number, assignmentId: number, assignment: Partial<Assignment>) => void;
     deleteAssignment: (courseId: number, assignmentId: number) => void;
     addCourse: (course: { name: string; code: string; category?: string; teacher?: string }) => void;
+    addSubmission: (courseId: number, submission: Omit<Submission, 'id'>) => void;
+    gradeSubmission: (courseId: number, submissionId: number, grade: number, feedback?: string) => void;
 }
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
@@ -248,7 +250,43 @@ export function CourseProvider({ children }: { children: ReactNode }) {
                     announcements: [],
                     events: [],
                     assignments: [],
-                    lectures: []
+                    lectures: [],
+                    submissions: []
+                }
+            };
+        });
+    };
+
+    const addSubmission = (courseId: number, submission: Omit<Submission, 'id'>) => {
+        setCourseData(prev => {
+            const course = prev[courseId];
+            if (!course) return prev;
+
+            const existingSubmissions = course.submissions || [];
+            const newId = Math.max(0, ...existingSubmissions.map(s => s.id)) + 1;
+            return {
+                ...prev,
+                [courseId]: {
+                    ...course,
+                    submissions: [...existingSubmissions, { ...submission, id: newId }]
+                }
+            };
+        });
+    };
+
+    const gradeSubmission = (courseId: number, submissionId: number, grade: number, feedback?: string) => {
+        setCourseData(prev => {
+            const course = prev[courseId];
+            if (!course) return prev;
+
+            const existingSubmissions = course.submissions || [];
+            return {
+                ...prev,
+                [courseId]: {
+                    ...course,
+                    submissions: existingSubmissions.map(s =>
+                        s.id === submissionId ? { ...s, grade, feedback } : s
+                    )
                 }
             };
         });
@@ -269,7 +307,9 @@ export function CourseProvider({ children }: { children: ReactNode }) {
             addAssignment,
             updateAssignment,
             deleteAssignment,
-            addCourse
+            addCourse,
+            addSubmission,
+            gradeSubmission
         }}>
             {children}
         </CourseContext.Provider>

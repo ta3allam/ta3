@@ -42,6 +42,19 @@ export interface Lecture {
     materials: Material[];
 }
 
+export interface Submission {
+    id: number;
+    assignmentId: number;
+    studentId: string;
+    studentName: string;
+    submittedAt: string;
+    fileUrl?: string;
+    fileName?: string;
+    comment?: string;
+    grade?: number;
+    feedback?: string;
+}
+
 export interface Course {
     name: string;
     code: string;
@@ -54,6 +67,7 @@ export interface Course {
     events: CourseEvent[];
     assignments: Assignment[];
     lectures: Lecture[];
+    submissions?: Submission[];
 }
 
 export interface CourseData {
