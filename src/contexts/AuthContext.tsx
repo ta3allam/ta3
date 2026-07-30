@@ -19,36 +19,48 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(() => {
+        try {
+            const saved = localStorage.getItem('ta3_user');
+            return saved ? JSON.parse(saved) : null;
+        } catch (e) {
+            console.error('Failed to load user session from localStorage', e);
+            return null;
+        }
+    });
 
     const login = async (username: string, password: string): Promise<boolean> => {
         // Mock authentication delay
         await new Promise(resolve => setTimeout(resolve, 500));
 
         if (password === '123') {
+            let loggedInUser: User | null = null;
             if (username === 'student') {
-                setUser({
+                loggedInUser = {
                     username: 'student',
                     role: 'student',
                     enrolledCourses: [1, 2], // Enrolled in CS101 and MATH201
                     name: 'أحمد علي'
-                });
-                return true;
+                };
             } else if (username === 'teacher') {
-                setUser({
+                loggedInUser = {
                     username: 'teacher',
                     role: 'teacher',
                     enrolledCourses: [1, 3], // Teaches CS101 and CS301
                     name: 'د. خالد'
-                });
-                return true;
+                };
             } else if (username === 'admin') {
-                setUser({
+                loggedInUser = {
                     username: 'admin',
                     role: 'admin',
                     enrolledCourses: [],
                     name: 'مدير النظام'
-                });
+                };
+            }
+
+            if (loggedInUser) {
+                setUser(loggedInUser);
+                localStorage.setItem('ta3_user', JSON.stringify(loggedInUser));
                 return true;
             }
         }
@@ -57,6 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const logout = () => {
         setUser(null);
+        localStorage.removeItem('ta3_user');
     };
 
     return (

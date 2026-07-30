@@ -2,8 +2,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { CourseCard } from "@/components/student/CourseCard";
 import { AnnouncementCard } from "@/components/student/AnnouncementCard";
 import { useAuth } from "@/contexts/AuthContext";
-import coursesJson from "../courses/courses.json";
-import { CourseData } from "../courses/types";
+import { useCourseData } from "@/contexts/CourseContext";
 import { useMemo } from "react";
 
 // Mock global announcements
@@ -36,15 +35,14 @@ const courseColors = [
 
 export default function StudentDashboard() {
   const { user } = useAuth();
+  const { courseData } = useCourseData();
 
   // Memoize the course data logic
   const myCourses = useMemo(() => {
     if (!user || user.role !== 'student' || !user.enrolledCourses) return [];
 
-    const allCourses = coursesJson as unknown as CourseData;
-
     return user.enrolledCourses.map(courseId => {
-      const course = allCourses[courseId];
+      const course = courseData[courseId];
       if (!course) return null;
 
       return {
@@ -59,7 +57,7 @@ export default function StudentDashboard() {
         backgroundColor: courseColors[courseId % courseColors.length]
       };
     }).filter(c => c !== null);
-  }, [user]);
+  }, [user, courseData]);
 
   return (
     <DashboardLayout title="لوحة التحكم - الطالب">

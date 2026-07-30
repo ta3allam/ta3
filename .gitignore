@@ -24,3 +24,6 @@ supabase/
 *.sln
 *.sw?
 *.env
+
+# Antigravity Workspace Customizations
+.agents/

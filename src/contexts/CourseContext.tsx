@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import coursesJson from '@/pages/courses/courses.json';
 import { CourseData, Announcement, Lecture, CourseEvent, Assignment } from '@/pages/courses/types';
 
@@ -16,12 +16,29 @@ interface CourseContextType {
     addAssignment: (courseId: number, assignment: Omit<Assignment, 'id'>) => void;
     updateAssignment: (courseId: number, assignmentId: number, assignment: Partial<Assignment>) => void;
     deleteAssignment: (courseId: number, assignmentId: number) => void;
+    addCourse: (course: { name: string; code: string; category?: string; teacher?: string }) => void;
 }
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
 
 export function CourseProvider({ children }: { children: ReactNode }) {
-    const [courseData, setCourseData] = useState<CourseData>(coursesJson as unknown as CourseData);
+    const [courseData, setCourseData] = useState<CourseData>(() => {
+        try {
+            const saved = localStorage.getItem('ta3_courses');
+            return saved ? JSON.parse(saved) : (coursesJson as unknown as CourseData);
+        } catch (e) {
+            console.error('Failed to load courses from localStorage', e);
+            return coursesJson as unknown as CourseData;
+        }
+    });
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('ta3_courses', JSON.stringify(courseData));
+        } catch (e) {
+            console.error('Failed to save courses to localStorage', e);
+        }
+    }, [courseData]);
 
     const addAnnouncement = (courseId: number, announcement: Omit<Announcement, 'id'>) => {
         setCourseData(prev => {
@@ -215,6 +232,28 @@ export function CourseProvider({ children }: { children: ReactNode }) {
         });
     };
 
+    const addCourse = (course: { name: string; code: string; category?: string; teacher?: string }) => {
+        setCourseData(prev => {
+            const nextId = Math.max(0, ...Object.keys(prev).map(Number)) + 1;
+            return {
+                ...prev,
+                [nextId]: {
+                    name: course.name,
+                    code: course.code,
+                    category: course.category || "عام",
+                    rating: 5,
+                    difficulty: "متوسط",
+                    teacher: course.teacher || "المعلم",
+                    language: "العربية",
+                    announcements: [],
+                    events: [],
+                    assignments: [],
+                    lectures: []
+                }
+            };
+        });
+    };
+
     return (
         <CourseContext.Provider value={{
             courseData,
@@ -229,7 +268,8 @@ export function CourseProvider({ children }: { children: ReactNode }) {
             deleteEvent,
             addAssignment,
             updateAssignment,
-            deleteAssignment
+            deleteAssignment,
+            addCourse
         }}>
             {children}
         </CourseContext.Provider>
