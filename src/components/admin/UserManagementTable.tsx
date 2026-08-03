@@ -35,12 +35,12 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="flex-between-rtl">
         <Input
           placeholder="ابحث بالاسم أو اسم المستخدم..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-xs text-right"
+          className="form-input-rtl"
         />
         <Button onClick={() => setIsAddUserOpen(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
@@ -48,7 +48,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
         </Button>
       </div>
 
-      <div className="border border-border rounded-lg overflow-hidden bg-card">
+      <div className="table-container">
         <Table dir="rtl">
           <TableHeader>
             <TableRow>
@@ -82,7 +82,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => onDeleteUser(user.id)}
-                      className="text-destructive hover:bg-destructive/10"
+                      className="btn-action-danger"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

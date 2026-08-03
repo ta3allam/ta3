@@ -116,8 +116,6 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-
-  /* Design utilities bound to tokens */
   .bg-gradient-primary {
     background-image: var(--gradient-primary);
   }
@@ -128,7 +126,6 @@ All colors MUST be HSL.
 }
 
 @layer components {
-
   /* Layout */
   .page-center-layout {
     @apply flex items-center justify-center min-h-screen bg-background;
@@ -148,6 +145,81 @@ All colors MUST be HSL.
 
   .layout-stack {
     @apply text-right space-y-4;
+  }
+
+  /* Dashboard Headers & Metrics */
+  .dashboard-header-title {
+    @apply text-3xl font-extrabold tracking-tight text-foreground;
+  }
+
+  .dashboard-header-sub {
+    @apply text-sm text-muted-foreground mt-1;
+  }
+
+  .metric-card-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6;
+  }
+
+  .metric-card {
+    @apply border border-border/80 shadow-sm bg-card hover:shadow-md transition-shadow rounded-xl;
+  }
+
+  .metric-header {
+    @apply flex flex-row items-center justify-between space-y-0 pb-2 p-6;
+  }
+
+  .metric-title {
+    @apply text-sm font-semibold text-muted-foreground;
+  }
+
+  .metric-value {
+    @apply text-3xl font-extrabold text-foreground;
+  }
+
+  .metric-subtext {
+    @apply text-xs text-muted-foreground mt-1;
+  }
+
+  /* Cards & Sections */
+  .card-container {
+    @apply border border-border/80 shadow-sm bg-card rounded-xl;
+  }
+
+  .card-section-header {
+    @apply border-b border-border pb-4 p-6;
+  }
+
+  .card-section-title {
+    @apply text-xl font-bold;
+  }
+
+  .card-body-padded {
+    @apply p-6 pt-6;
+  }
+
+  /* Tables & Data Lists */
+  .table-container {
+    @apply border border-border rounded-lg overflow-hidden bg-card;
+  }
+
+  .flex-between-rtl {
+    @apply flex flex-col sm:flex-row justify-between items-center gap-4;
+  }
+
+  .form-input-rtl {
+    @apply max-w-xs text-right;
+  }
+
+  .badge-primary-outline {
+    @apply text-primary border-primary/30;
+  }
+
+  .btn-action-primary {
+    @apply text-primary border-primary/30 hover:bg-primary/10;
+  }
+
+  .btn-action-danger {
+    @apply text-destructive hover:bg-destructive/10;
   }
 
   /* Typography */

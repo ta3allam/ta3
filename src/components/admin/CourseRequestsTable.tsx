@@ -21,7 +21,7 @@ export const CourseRequestsTable: React.FC<CourseRequestsTableProps> = ({
   onReject,
 }) => {
   return (
-    <div className="border border-border rounded-lg overflow-hidden bg-card">
+    <div className="table-container">
       <Table dir="rtl">
         <TableHeader>
           <TableRow>
@@ -50,7 +50,7 @@ export const CourseRequestsTable: React.FC<CourseRequestsTableProps> = ({
                       size="sm"
                       variant="outline"
                       onClick={() => onApprove(req.id)}
-                      className="text-primary border-primary/30 hover:bg-primary/10"
+                      className="btn-action-primary"
                     >
                       <Check className="h-4 w-4 ml-1" />
                       قبول
@@ -59,7 +59,7 @@ export const CourseRequestsTable: React.FC<CourseRequestsTableProps> = ({
                       size="sm"
                       variant="ghost"
                       onClick={() => onReject(req.id)}
-                      className="text-destructive hover:bg-destructive/10"
+                      className="btn-action-danger"
                     >
                       <X className="h-4 w-4 ml-1" />
                       رفض

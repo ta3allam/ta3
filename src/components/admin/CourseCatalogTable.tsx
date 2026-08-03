@@ -27,13 +27,13 @@ export const CourseCatalogTable: React.FC<CourseCatalogTableProps> = ({ courses,
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="flex-between-rtl">
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Input
             placeholder="اسم المقرر الجديد..."
             value={newCourseTitle}
             onChange={(e) => setNewCourseTitle(e.target.value)}
-            className="max-w-xs text-right"
+            className="form-input-rtl"
           />
           <Button onClick={handleAdd} className="flex items-center gap-1">
             <Plus className="h-4 w-4" />
@@ -42,7 +42,7 @@ export const CourseCatalogTable: React.FC<CourseCatalogTableProps> = ({ courses,
         </div>
       </div>
 
-      <div className="border border-border rounded-lg overflow-hidden bg-card">
+      <div className="table-container">
         <Table dir="rtl">
           <TableHeader>
             <TableRow>
@@ -59,7 +59,7 @@ export const CourseCatalogTable: React.FC<CourseCatalogTableProps> = ({ courses,
                 <TableCell className="font-medium">{course.title}</TableCell>
                 <TableCell className="text-center font-semibold">{course.students} طالب</TableCell>
                 <TableCell className="text-center">
-                  <Badge variant="outline" className="text-primary border-primary/30">
+                  <Badge variant="outline" className="badge-primary-outline">
                     نشط
                   </Badge>
                 </TableCell>

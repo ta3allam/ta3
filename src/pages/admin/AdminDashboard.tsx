@@ -116,12 +116,12 @@ export default function AdminDashboard() {
 
   return (
     <DashboardLayout role="admin">
-      <div className="space-y-6 text-right" dir="rtl">
+      <div className="layout-stack" dir="rtl">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+          <h1 className="dashboard-header-title">
             لوحة تحكم المسؤول ⚙️
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="dashboard-header-sub">
             إدارة المستخدمين والمقررات والطلبات الأكاديمية بنقرة واحدة.
           </p>
         </div>
@@ -133,11 +133,11 @@ export default function AdminDashboard() {
           pendingRequests={requests.length}
         />
 
-        <Card className="border border-border/80 shadow-sm bg-card">
-          <CardHeader className="border-b border-border pb-4">
-            <CardTitle className="text-xl font-bold">مركز الإدارة والعمليات</CardTitle>
+        <Card className="card-container">
+          <CardHeader className="card-section-header">
+            <CardTitle className="card-section-title">مركز الإدارة والعمليات</CardTitle>
           </CardHeader>
-          <CardContent className="pt-6">
+          <CardContent className="card-body-padded">
             <Tabs defaultValue="users" dir="rtl">
               <TabsList className="grid grid-cols-3 mb-6 max-w-md">
                 <TabsTrigger value="users">المستخدمون ({users.length})</TabsTrigger>
