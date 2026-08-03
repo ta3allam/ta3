@@ -1,14 +1,77 @@
-# Ta3allam Dashboard
+# 🎓 Ta3 (تعلّم) - Modern Arabic-First AI-Boosted LMS
 
-Dashboard with access to three roles: 
+> **Ta3 (تعلّم)** is a high-aesthetic, RTL-native, AI-native Learning Management System (LMS) designed for modern education across the MENA region. Built with React 18, TypeScript, Tailwind CSS, Supabase, and PostgreSQL.
 
-* Admin
-* Teacher
-* Student 
+---
 
-```bash 
-npm i 
+## 📌 Executive Overview
 
-npm run dev 
+Ta3 connects Students, Teachers, and Administrators in a unified, role-based platform that features adaptive AI tutoring, dynamic lesson blocks, and frictionless course management.
+
+```mermaid
+graph TD
+    User([Browser / Mobile Client]) -->|RTL React UI| FE[Frontend App - Vite/Nginx]
+    FE -->|Supabase Auth & REST| BE[PostgreSQL Database & Storage]
+    FE -->|Contextual Prompts & Quizzes| AI[ROAI - AI Engine Service]
+    BE --- RLS[Row-Level Security Policies]
 ```
 
+---
+
+## 👥 Multi-Agent Engineering Team Roster
+
+Ta3 is built and maintained by a team of specialized AI engineering personas orchestrated by **Antigravity 2.0**:
+
+| Official Name | Role | Core Responsibility | Learning Ledger |
+| :--- | :--- | :--- | :--- |
+| 🎯 **POAI** | Product Owner (Lead) | Product roadmap, user stories, DoD verification, Scrum orchestration | [.agents/learning/POAI/](.agents/learning/POAI/memory.md) |
+| 🎨 **Fai** (فيء) | Frontend Engineer | React 18, TypeScript, RTL layout, `shadcn/ui`, component parity | [src/.agents/learning/Fai/](src/.agents/learning/Fai/memory.md) |
+| ⚙️ **BAI** | Backend Engineer | PostgreSQL schema (`erd.md`), Supabase Auth/RLS, migrations, Docker | [backend/.agents/learning/BAI/](backend/.agents/learning/BAI/memory.md) |
+| 🤖 **ROAI** | AI Specialist | LLM client connectors, MDX lesson block parser, auto-quiz generator | [ai-service/.agents/learning/ROAI/](ai-service/.agents/learning/ROAI/memory.md) |
+| 🛡️ **SAI** | Security Engineer | Supabase RLS audits, JWT session validation, OWASP top 10 checks | [backend/.agents/learning/SAI/](backend/.agents/learning/SAI/memory.md) |
+| 🧪 **QAI** | QA Engineer | Playwright E2E automation, Vitest runners, RTL visual regression | [src/.agents/learning/QAI/](src/.agents/learning/QAI/memory.md) |
+
+---
+
+## 🚀 Quick Start (Local Development)
+
+### 1. Prerequisites
+- **Node.js**: v20+
+- **Docker & Docker Compose**: Installed and running
+
+### 2. Environment Setup
+Copy the environment template and configure your keys:
+```bash
+cp .env.example .env.local
+```
+
+### 3. Run Locally with Vite
+```bash
+npm install
+npm run dev
+```
+
+### 4. Run Full Stack with Docker Compose
+```bash
+docker-compose up -d --build
+```
+Access the application at `http://localhost:8080`.
+
+---
+
+## 🏃 3-Week Product Roadmap & Sprints
+
+*   **Sprint 1: Foundation, Auth & Base API Integration**
+    *   Supabase Auth integration, PostgreSQL schema migrations (`erd.md`), RLS policy enforcement, Docker setup.
+*   **Sprint 2: Core LMS Workflows & AI Micro-Features**
+    *   Student assignment upload dropzone, teacher grading interface, AI auto-quiz generator.
+*   **Sprint 3: Dockerization, Hardening & Public Readiness**
+    *   Nginx reverse proxy, container security audit, performance load testing, public cloud deployment manifests.
+
+---
+
+## 📄 Key Architecture Documents
+- 📐 [arch.md](arch.md) - Full Frontend & Component Architecture
+- 🗄️ [erd.md](erd.md) - Database Schema & ERD Diagram
+- 🤖 [ta3.v3.md](ta3.v3.md) - AI Platform & Ecosystem Specification
+- 🗂️ [.github/PROJECTS.md](.github/PROJECTS.md) - Sprint Issues & Kanban Board
