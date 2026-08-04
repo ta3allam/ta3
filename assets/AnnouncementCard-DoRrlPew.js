@@ -1,0 +1,6 @@
+import{c as i,j as e}from"./index-BZXuON0p.js";import{C as l,a as o,b as m,d as x}from"./card-Dfv2TBxZ.js";import{B as j}from"./badge-DhJUU7eb.js";/**
+ * @license lucide-react v0.462.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const y=i("Award",[["path",{d:"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",key:"1yiouv"}],["circle",{cx:"12",cy:"8",r:"6",key:"1vp47v"}]]);function g({title:t,content:s,authorName:a,createdAt:r,isGlobal:n=!1}){const c=d=>new Date(d).toLocaleDateString("ar-EG",{year:"numeric",month:"long",day:"numeric"});return e.jsxs(l,{className:"mb-4",children:[e.jsx(o,{children:e.jsxs("div",{className:"flex items-center justify-between",children:[e.jsx(m,{className:"text-lg text-right",children:t}),n&&e.jsx(j,{variant:"secondary",children:"إعلان عام"})]})}),e.jsxs(x,{className:"space-y-2",children:[e.jsx("p",{className:"text-right text-muted-foreground",children:s}),e.jsxs("div",{className:"flex items-center justify-between text-xs text-muted-foreground",children:[a&&e.jsx("span",{children:a}),e.jsx("span",{children:c(r)})]})]})]})}export{y as A,g as a};
