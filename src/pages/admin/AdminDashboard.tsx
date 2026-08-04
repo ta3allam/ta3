@@ -3,7 +3,7 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Sparkles, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { AdminMetricsOverview } from '@/components/admin/AdminMetricsOverview';
 import { UserManagementTable, UserItem } from '@/components/admin/UserManagementTable';
 import { CourseRequestsTable, RequestItem } from '@/components/admin/CourseRequestsTable';
@@ -118,19 +118,23 @@ export default function AdminDashboard() {
   return (
     <DashboardLayout role="admin">
       <div className="layout-stack" dir="rtl">
-        {/* Welcome Banner using official otherbackground.png */}
+        {/* Profile Card: White background, thin Mountain Teal border (#428177), high-contrast text */}
         <div 
-          className="relative overflow-hidden rounded-2xl bg-cover bg-center text-white p-6 md:p-8 mb-4 shadow-xl border border-stone-700/30"
-          style={{ backgroundImage: `linear-gradient(to left, rgba(38, 15, 20, 0.85), rgba(0, 38, 35, 0.85)), url('/dashboard bg/otherbackground.png')` }}
+          className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 mb-4 shadow-sm"
+          style={{
+            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('/dashboard bg/otherbackground.png')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         >
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B9A779]/20 text-[#EDEBE0] text-xs font-semibold mb-3 border border-[#B9A779]/30">
-                <Settings className="w-3.5 h-3.5 text-[#988561]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#428177]/10 text-[#428177] text-xs font-bold mb-3 border border-[#428177]/30">
+                <Settings className="w-3.5 h-3.5 text-[#428177]" />
                 <span>إدارة النظام والعمليات المركزية</span>
               </div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-[#EDEBE0]">لوحة تحكم المسؤول ⚙️</h1>
-              <p className="text-[#EDEBE0]/80 mt-2 text-sm max-w-xl">
+              <h1 className="text-3xl font-extrabold tracking-tight text-[#002623]">لوحة تحكم المسؤول ⚙️</h1>
+              <p className="text-[#3D3A3B] mt-2 text-sm max-w-xl font-medium">
                 إدارة المستخدمين والمقررات الدراسية وطلبات التسجيل الأكاديمية بنقرة واحدة.
               </p>
             </div>
@@ -144,16 +148,16 @@ export default function AdminDashboard() {
           pendingRequests={requests.length}
         />
 
-        <Card className="card-container border-[#428177]/20">
+        <Card className="card-container border-[#428177]/30 bg-white">
           <CardHeader className="card-section-header">
             <CardTitle className="card-section-title text-[#002623]">مركز الإدارة والعمليات</CardTitle>
           </CardHeader>
           <CardContent className="card-body-padded">
             <Tabs defaultValue="users" dir="rtl">
               <TabsList className="grid grid-cols-3 mb-6 max-w-md bg-[#EDEBE0]">
-                <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white">المستخدمون ({users.length})</TabsTrigger>
-                <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white">الطلبات ({requests.length})</TabsTrigger>
-                <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white">المقررات ({courses.length})</TabsTrigger>
+                <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-semibold">المستخدمون ({users.length})</TabsTrigger>
+                <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-semibold">الطلبات ({requests.length})</TabsTrigger>
+                <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-semibold">المقررات ({courses.length})</TabsTrigger>
               </TabsList>
 
               <TabsContent value="users">

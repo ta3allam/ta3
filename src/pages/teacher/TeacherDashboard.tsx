@@ -74,55 +74,59 @@ export default function TeacherDashboard() {
 
   return (
     <DashboardLayout title="لوحة التحكم - المعلم">
-      {/* Welcome Banner using official otherbackground.png */}
+      {/* Profile Card: White background, thin Mountain Teal border (#428177), high-contrast text */}
       <div 
-        className="relative overflow-hidden rounded-2xl bg-cover bg-center text-white p-6 md:p-8 mb-8 shadow-xl border border-stone-700/30"
-        style={{ backgroundImage: `linear-gradient(to left, rgba(38, 15, 20, 0.85), rgba(0, 38, 35, 0.85)), url('/dashboard bg/otherbackground.png')` }}
+        className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 mb-8 shadow-sm"
+        style={{
+          backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('/dashboard bg/otherbackground.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
         dir="rtl"
       >
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B9A779]/20 text-[#EDEBE0] text-xs font-semibold mb-3 border border-[#B9A779]/30">
-              <Sparkles className="w-3.5 h-3.5 text-[#988561]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#428177]/10 text-[#428177] text-xs font-bold mb-3 border border-[#428177]/30">
+              <Sparkles className="w-3.5 h-3.5 text-[#428177]" />
               <span>لوحة التحكم الخاصة بأعضاء هيئة التدريس</span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[#EDEBE0]">أهلاً بك، {user?.name || "الأستاذ الفاضل"} 👨‍🏫</h1>
-            <p className="text-[#EDEBE0]/80 mt-2 text-sm max-w-xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-[#002623]">أهلاً بك، {user?.name || "الأستاذ الفاضل"} 👨‍🏫</h1>
+            <p className="text-[#3D3A3B] mt-2 text-sm max-w-xl font-medium">
               إدارة المقررات الدراسية، نشر المحاضرات والواجبات، ومتابعة تواصل الطلاب بكل مرونة.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2 bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 text-xs font-medium text-[#EDEBE0]">
-              <Clock className="w-4 h-4 text-[#988561]" />
+            <div className="hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-3 rounded-xl border border-[#428177]/30 text-xs font-bold text-[#002623] shadow-sm">
+              <Clock className="w-4 h-4 text-[#428177]" />
               <span>{new Date().toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long" })}</span>
             </div>
 
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-[#428177] hover:bg-[#054239] text-white border-none shadow-md">
+                <Button className="bg-[#428177] hover:bg-[#054239] text-white border-none shadow-md font-bold">
                   <Plus className="h-4 w-4 ml-2" />
                   مقرر جديد
                 </Button>
               </DialogTrigger>
-              <DialogContent dir="rtl">
+              <DialogContent dir="rtl" className="bg-white border border-[#428177]">
                 <DialogHeader>
                   <DialogTitle className="text-right text-[#002623]">مقرر جديد</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleCreateCourse} className="stack-md text-right space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="block text-right text-[#002623]">اسم المقرر</Label>
-                    <Input id="name" name="name" required className="text-right" placeholder="مثال: مبادئ البرمجة بلغة بايثون" />
+                    <Label htmlFor="name" className="block text-right text-[#002623] font-semibold">اسم المقرر</Label>
+                    <Input id="name" name="name" required className="text-right border-[#428177]/40" placeholder="مثال: مبادئ البرمجة بلغة بايثون" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="code" className="block text-right text-[#002623]">رمز المقرر</Label>
-                    <Input id="code" name="code" required className="text-right" placeholder="مثال: CS202" />
+                    <Label htmlFor="code" className="block text-right text-[#002623] font-semibold">رمز المقرر</Label>
+                    <Input id="code" name="code" required className="text-right border-[#428177]/40" placeholder="مثال: CS202" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="category" className="block text-right text-[#002623]">التصنيف</Label>
-                    <Input id="category" name="category" className="text-right" placeholder="مثال: علوم الحاسوب" />
+                    <Label htmlFor="category" className="block text-right text-[#002623] font-semibold">التصنيف</Label>
+                    <Input id="category" name="category" className="text-right border-[#428177]/40" placeholder="مثال: علوم الحاسوب" />
                   </div>
-                  <Button type="submit" className="w-full mt-4 bg-[#428177] hover:bg-[#054239] text-white">إنشاء المقرر</Button>
+                  <Button type="submit" className="w-full mt-4 bg-[#428177] hover:bg-[#054239] text-white font-bold">إنشاء المقرر</Button>
                 </form>
               </DialogContent>
             </Dialog>
@@ -152,7 +156,7 @@ export default function TeacherDashboard() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 border border-dashed rounded-2xl bg-[#EDEBE0]/40">
+            <div className="text-center py-16 border border-dashed rounded-2xl bg-white border-[#428177]/30">
               <BookOpen className="w-12 h-12 text-[#988561] mx-auto mb-3" />
               <p className="text-[#002623] font-medium">لا تدرس أي مقررات حالياً</p>
             </div>

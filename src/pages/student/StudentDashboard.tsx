@@ -92,26 +92,30 @@ export default function StudentDashboard() {
 
   return (
     <DashboardLayout title="لوحة التحكم - الطالب">
-      {/* Welcome Banner using official student background image */}
+      {/* Profile Card: White background, thin Mountain Teal border (#428177), high-contrast text */}
       <div 
-        className="relative overflow-hidden rounded-2xl bg-cover bg-center text-white p-6 md:p-8 mb-8 shadow-xl border border-stone-700/30"
-        style={{ backgroundImage: `linear-gradient(to left, rgba(38, 15, 20, 0.85), rgba(0, 38, 35, 0.85)), url('/dashboard bg/student background.jpg')` }}
+        className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 mb-8 shadow-sm"
+        style={{
+          backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('/dashboard bg/student background.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
         dir="rtl"
       >
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B9A779]/20 text-[#EDEBE0] text-xs font-semibold mb-3 border border-[#B9A779]/30">
-              <Sparkles className="w-3.5 h-3.5 text-[#988561]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#428177]/10 text-[#428177] text-xs font-bold mb-3 border border-[#428177]/30">
+              <Sparkles className="w-3.5 h-3.5 text-[#428177]" />
               <span>مرحباً بك مجدداً في تعلّم</span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[#EDEBE0]">أهلاً، {user?.name || "طالب العلم"} 👋</h1>
-            <p className="text-[#EDEBE0]/80 mt-2 text-sm max-w-xl">
+            <h1 className="text-3xl font-extrabold tracking-tight text-[#002623]">أهلاً، {user?.name || "طالب العلم"} 👋</h1>
+            <p className="text-[#3D3A3B] mt-2 text-sm max-w-xl font-medium">
               تتبع تقدمك الأكاديمي، واطلع على المحاضرات والواجبات المطلوبة لهذا الأسبوع بكل سهولة.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 bg-black/30 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 text-xs font-medium text-[#EDEBE0]">
-            <Clock className="w-4 h-4 text-[#988561]" />
+          <div className="flex items-center gap-3 bg-white/90 backdrop-blur-md px-4 py-3 rounded-xl border border-[#428177]/30 text-xs font-bold text-[#002623] shadow-sm">
+            <Clock className="w-4 h-4 text-[#428177]" />
             <span>{new Date().toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</span>
           </div>
         </div>
@@ -119,10 +123,10 @@ export default function StudentDashboard() {
 
       {/* KPI Metrics Summary Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" dir="rtl">
-        <Card className="bg-card hover:shadow-md transition-shadow border-[#428177]/20">
+        <Card className="bg-white hover:shadow-md transition-shadow border border-[#428177]/30">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted-foreground font-medium">المقررات المسجلة</p>
+              <p className="text-xs text-[#3D3A3B] font-semibold">المقررات المسجلة</p>
               <h3 className="text-2xl font-bold mt-1 text-[#002623]">{myCourses.length}</h3>
             </div>
             <div className="p-3 bg-[#428177]/10 text-[#428177] rounded-xl">
@@ -131,10 +135,10 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card hover:shadow-md transition-shadow border-[#6B1F2A]/20">
+        <Card className="bg-white hover:shadow-md transition-shadow border border-[#6B1F2A]/30">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted-foreground font-medium">إجمالي الواجبات</p>
+              <p className="text-xs text-[#3D3A3B] font-semibold">إجمالي الواجبات</p>
               <h3 className="text-2xl font-bold mt-1 text-[#6B1F2A]">{totalAssignments}</h3>
             </div>
             <div className="p-3 bg-[#6B1F2A]/10 text-[#6B1F2A] rounded-xl">
@@ -143,10 +147,10 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card hover:shadow-md transition-shadow border-[#054239]/20">
+        <Card className="bg-white hover:shadow-md transition-shadow border border-[#054239]/30">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted-foreground font-medium">المحاضرات المتاحة</p>
+              <p className="text-xs text-[#3D3A3B] font-semibold">المحاضرات المتاحة</p>
               <h3 className="text-2xl font-bold mt-1 text-[#054239]">{totalLectures}</h3>
             </div>
             <div className="p-3 bg-[#054239]/10 text-[#054239] rounded-xl">
@@ -155,10 +159,10 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card hover:shadow-md transition-shadow border-[#988561]/20">
+        <Card className="bg-white hover:shadow-md transition-shadow border border-[#988561]/30">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-muted-foreground font-medium">المعدل العام التقديري</p>
+              <p className="text-xs text-[#3D3A3B] font-semibold">المعدل العام التقديري</p>
               <h3 className="text-2xl font-bold mt-1 text-[#988561]"> ممتاز 🌟</h3>
             </div>
             <div className="p-3 bg-[#988561]/10 text-[#988561] rounded-xl">
@@ -174,7 +178,7 @@ export default function StudentDashboard() {
         <div className="lg:col-span-3 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-[#002623]">المقررات الحالية</h2>
-            <span className="text-xs text-muted-foreground">تصفح موادك الدراسية وسجلات التعلم</span>
+            <span className="text-xs text-[#3D3A3B] font-medium">تصفح موادك الدراسية وسجلات التعلم</span>
           </div>
 
           {myCourses.length > 0 ? (
@@ -195,10 +199,10 @@ export default function StudentDashboard() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 border border-dashed rounded-2xl bg-[#EDEBE0]/40">
+            <div className="text-center py-16 border border-dashed rounded-2xl bg-white border-[#428177]/30">
               <BookOpen className="w-12 h-12 text-[#988561] mx-auto mb-3" />
               <p className="text-[#002623] font-medium">لست مسجلاً في أي مقررات حالياً</p>
-              <p className="text-xs text-slate-500 mt-1">تواصل مع شؤون الطلاب لإضافة مقرراتك</p>
+              <p className="text-xs text-[#3D3A3B] mt-1">تواصل مع شؤون الطلاب لإضافة مقرراتك</p>
             </div>
           )}
         </div>
