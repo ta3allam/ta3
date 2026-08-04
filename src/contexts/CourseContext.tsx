@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
-import coursesJson from '@/pages/courses/courses.json';
 import { CourseData, Announcement, Lecture, CourseEvent, Assignment, Submission } from '@/pages/courses/types';
+import { MockDataEngine } from '@/lib/MockDataEngine';
 
 interface CourseContextType {
   courseData: CourseData;
@@ -25,36 +25,17 @@ const CourseContext = createContext<CourseContextType | undefined>(undefined);
 
 export function CourseProvider({ children }: { children: ReactNode }) {
   const [courseData, setCourseData] = useState<CourseData>(() => {
-    try {
-      const saved = localStorage.getItem('ta3_courses');
-      return saved ? JSON.parse(saved) : (coursesJson as unknown as CourseData);
-    } catch (e) {
-      console.error('Failed to load courses from localStorage', e);
-      return coursesJson as unknown as CourseData;
-    }
+    return MockDataEngine.loadCourses();
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem('ta3_courses', JSON.stringify(courseData));
-    } catch (e) {
-      console.error('Failed to save courses to localStorage', e);
-    }
-  }, [courseData]);
+    return MockDataEngine.subscribe((data) => {
+      setCourseData(data);
+    });
+  }, []);
 
   const addAnnouncement = useCallback((courseId: number, announcement: Omit<Announcement, 'id'>) => {
-    setCourseData((prev) => {
-      const course = prev[courseId];
-      if (!course) return prev;
-      const newId = Math.max(0, ...course.announcements.map((a) => a.id)) + 1;
-      return {
-        ...prev,
-        [courseId]: {
-          ...course,
-          announcements: [...course.announcements, { ...announcement, id: newId }],
-        },
-      };
-    });
+    setCourseData((prev) => MockDataEngine.addAnnouncement(prev, courseId, announcement));
   }, []);
 
   const updateAnnouncement = useCallback((courseId: number, announcementId: number, announcement: Partial<Announcement>) => {

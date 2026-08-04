@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { UserProfile, UserRole } from '../types/user';
+import { MockAuthEngine } from '../lib/MockAuthEngine';
 
 export type { UserRole };
 
@@ -19,13 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
-    try {
-      const saved = localStorage.getItem('ta3_user');
-      return saved ? JSON.parse(saved) : null;
-    } catch (e) {
-      console.error('Failed to load user session from localStorage', e);
-      return null;
-    }
+    return MockAuthEngine.getSavedUser();
   });
 
   useEffect(() => {
@@ -44,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           name: name,
         };
         setUser(sbUser);
-        localStorage.setItem('ta3_user', JSON.stringify(sbUser));
+        MockAuthEngine.saveUser(sbUser);
       }
     });
 
@@ -71,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             name: data.user.user_metadata?.full_name || username,
           };
           setUser(sbUser);
-          localStorage.setItem('ta3_user', JSON.stringify(sbUser));
+          MockAuthEngine.saveUser(sbUser);
           return true;
         }
       } catch (e) {
@@ -81,42 +76,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     await new Promise((resolve) => setTimeout(resolve, 300));
 
-    if (password === '123') {
-      let loggedInUser: User | null = null;
-      if (username === 'student') {
-        loggedInUser = {
-          id: '00000000-0000-0000-0000-000000000003',
-          username: 'student',
-          email: 'student@ta3.edu',
-          role: 'student',
-          enrolledCourses: [1, 2],
-          name: 'سامي الطالب',
-        };
-      } else if (username === 'teacher') {
-        loggedInUser = {
-          id: '00000000-0000-0000-0000-000000000002',
-          username: 'teacher',
-          email: 'teacher@ta3.edu',
-          role: 'teacher',
-          enrolledCourses: [1, 3],
-          name: 'د. داليا سليمان',
-        };
-      } else if (username === 'admin') {
-        loggedInUser = {
-          id: '00000000-0000-0000-0000-000000000001',
-          username: 'admin',
-          email: 'admin@ta3.edu',
-          role: 'admin',
-          enrolledCourses: [],
-          name: 'أحمد مدير النظام',
-        };
-      }
-
-      if (loggedInUser) {
-        setUser(loggedInUser);
-        localStorage.setItem('ta3_user', JSON.stringify(loggedInUser));
-        return true;
-      }
+    const loggedInUser = MockAuthEngine.authenticateMock(username, password);
+    if (loggedInUser) {
+      setUser(loggedInUser);
+      return true;
     }
     return false;
   }, []);
@@ -128,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Supabase signOut error', e);
     }
     setUser(null);
-    localStorage.removeItem('ta3_user');
+    MockAuthEngine.clearSession();
   }, []);
 
   const value = useMemo(
