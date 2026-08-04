@@ -141,7 +141,17 @@ export default {
 					"900": "#211d12",
 					"950": "#17140c"
 				},
-				"ivory-mist": "#F2F2F0"
+				"mountain-teal": "#428177",
+				"ivory-mist": "#EDEBE0",
+				"damask-red": "#6B1F2A",
+				"forest": "#002623",
+				"emerald-shadow": "#054239",
+				"golden-wheat": "#988561",
+				"antique-sand": "#B9A779",
+				"deep-umber": "#260F14",
+				"black-cherry": "#4A151E",
+				"charcoal": "#161616",
+				"stone": "#3D3A3B",
 			},
 			fontFamily: {
 				arabic: ['Cairo', 'system-ui', 'sans-serif']

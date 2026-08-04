@@ -25,7 +25,7 @@ export function CourseCard({
     difficulty,
     teacher,
     language,
-    backgroundColor = "bg-pine-blue-500",
+    backgroundColor = "bg-[#428177]",
     basePath = "/student/courses"
 }: CourseCardProps) {
     const navigate = useNavigate();
