@@ -7,6 +7,7 @@
         "difficulty": "مبتدئ",
         "teacher": "د. أحمد محمد",
         "language": "العربية",
+        "bgImage": "/coursesbg/coding.png",
         "announcements": [
             {
                 "id": 1,
@@ -100,6 +101,7 @@
         "difficulty": "متوسط",
         "teacher": "د. فاطمة السيد",
         "language": "العربية",
+        "bgImage": "/coursesbg/math.png",
         "announcements": [],
         "events": [],
         "assignments": [],
@@ -113,6 +115,7 @@
         "difficulty": "متقدم",
         "teacher": "د. خالد العمري",
         "language": "العربية",
+        "bgImage": "/coursesbg/coding.png",
         "announcements": [],
         "events": [],
         "assignments": [],
