@@ -214,27 +214,26 @@ export default function CourseDetail() {
         <Tabs defaultValue="home" className="w-full" dir="rtl">
           <div className="bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20">
             <TabsList className="w-full justify-start bg-transparent gap-1">
-              <TabsTrigger value="home" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الرئيسية</TabsTrigger>
+              <TabsTrigger value="home" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الرئيسية والمناقشات</TabsTrigger>
               <TabsTrigger value="content" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">المحتوى والمحاضرات</TabsTrigger>
               <TabsTrigger value="assignments" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الواجبات والتكليفات</TabsTrigger>
-              <TabsTrigger value="discussions" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">ساحة المناقشات</TabsTrigger>
               <TabsTrigger value="help" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الدليل والمساعدة</TabsTrigger>
             </TabsList>
           </div>
 
           {/* Home Tab */}
           <TabsContent value="home">
-            <div className="grid-dashboard">
-              {/* Announcements */}
-              <div className="lg:col-span-2 space-y-4">
-                <div className="section-between">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" dir="rtl">
+              {/* Main Column: Announcements & Main Feed */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-[#002623]">إعلانات المقرر</h2>
                   {isTeacher && (
-                    <Button onClick={() => setAnnouncementDialogOpen(true)}>
+                    <Button onClick={() => setAnnouncementDialogOpen(true)} className="bg-[#428177] hover:bg-[#054239] text-white font-bold">
                       <Plus className="h-4 w-4 ml-2" />
                       إعلان جديد
                     </Button>
                   )}
-                  <h2 className="text-2xl font-bold text-right">إعلانات المقرر</h2>
                 </div>
 
                 {course.announcements.length > 0 ? (
@@ -267,22 +266,28 @@ export default function CourseDetail() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-12 text-muted-foreground">
+                  <div className="text-center py-12 text-xs text-[#3D3A3B] bg-white border border-dashed border-[#428177]/30 rounded-2xl">
                     لا توجد إعلانات حالياً
                   </div>
                 )}
+
+                {/* Discussions Section inside Main Feed */}
+                <div className="pt-4 border-t border-[#EDEBE0]">
+                  <h3 className="text-xl font-bold text-[#002623] mb-4">ساحة المناقشات والاستفسارات</h3>
+                  <CourseDiscussions />
+                </div>
               </div>
 
-              {/* Events Sidebar */}
-              <div className="lg:col-span-1 space-y-4">
-                <div className="section-between">
+              {/* Sidebar Column: Events & Quick Discussions Widget */}
+              <div className="lg:col-span-1 space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-[#002623]">الأحداث</h3>
                   {isTeacher && (
-                    <Button size="sm" onClick={() => setEventDialogOpen(true)}>
+                    <Button size="sm" onClick={() => setEventDialogOpen(true)} className="bg-[#428177] text-white font-bold">
                       <Plus className="h-3 w-3 ml-1" />
                       حدث
                     </Button>
                   )}
-                  <h3 className="text-lg font-bold text-right">الأحداث</h3>
                 </div>
                 <CourseEvents events={course.events} />
               </div>
