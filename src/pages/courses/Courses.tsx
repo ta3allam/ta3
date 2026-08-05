@@ -13,6 +13,7 @@ import LectureDialog from "@/components/courses/LectureDialog";
 import AssignmentDialog from "@/components/courses/AssignmentDialog";
 import AssignmentSubmissions from "@/components/courses/AssignmentSubmissions";
 import GradingConsole from "@/components/courses/GradingConsole";
+import CourseDiscussions from "@/components/courses/CourseDiscussions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -404,11 +405,10 @@ export default function CourseDetail() {
             </div>
           </TabsContent>
 
-          {/* Help Tab */}
+          {/* Help & Discussions Tab */}
           <TabsContent value="help">
-            <div className="text-center py-12 text-muted-foreground">
-              <h3 className="text-xl font-semibold mb-2">المساعدة</h3>
-              <p>سيتم إضافة قسم المساعدة قريباً</p>
+            <div className="pt-2">
+              <CourseDiscussions />
             </div>
           </TabsContent>
         </Tabs>
