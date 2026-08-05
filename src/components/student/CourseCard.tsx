@@ -1,14 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { Star, User, Globe } from "lucide-react";
+import { User, Globe, CalendarDays } from "lucide-react";
 
 interface CourseCardProps {
   id: number;
   name: string;
   code: string;
   category?: string;
-  rating?: number;
+  period?: string;
   difficulty?: string;
   teacher?: string;
   language?: string;
@@ -22,7 +22,7 @@ export function CourseCard({
   name,
   code,
   category,
-  rating,
+  period = "صيف 2026",
   difficulty,
   teacher,
   language,
@@ -84,13 +84,11 @@ export function CourseCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2 text-xs">
-        {rating !== undefined && (
-          <div className="flex items-center justify-end gap-1 font-semibold text-[#002623]">
-            {/* Standard digits rating output */}
-            <span>{rating.toFixed(1)}</span>
-            <Star className="h-4 w-4 fill-[#988561] text-[#988561]" />
-          </div>
-        )}
+        {/* Period badge (e.g. صيف 2026) replacing rating */}
+        <div className="flex items-center justify-end gap-1.5 font-bold text-[#428177] bg-[#428177]/10 px-2.5 py-1 rounded-lg border border-[#428177]/20 w-fit mr-auto">
+          <span>{period}</span>
+          <CalendarDays className="h-3.5 w-3.5 text-[#428177]" />
+        </div>
 
         {teacher && (
           <div className="flex items-center justify-end gap-2 text-[#3D3A3B] font-medium">

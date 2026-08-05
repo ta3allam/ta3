@@ -193,6 +193,9 @@ export default function CourseDetail() {
     setDeleteConfirmOpen(true);
   };
 
+  const activeLectureId = selectedLectureId ?? course.lectures[0]?.id;
+  const selectedLecture = course.lectures.find(l => l.id === activeLectureId);
+
   return (
     <DashboardLayout title={course.name}>
       <div className="space-y-6" dir="rtl">
@@ -216,7 +219,8 @@ export default function CourseDetail() {
               <TabsTrigger value="home" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الرئيسية</TabsTrigger>
               <TabsTrigger value="content" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">المحتوى والمحاضرات</TabsTrigger>
               <TabsTrigger value="assignments" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الواجبات والتكليفات</TabsTrigger>
-              <TabsTrigger value="help" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الدعم والمساعدة</TabsTrigger>
+              <TabsTrigger value="discussions" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">ساحة المناقشات</TabsTrigger>
+              <TabsTrigger value="help" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الدليل والمساعدة</TabsTrigger>
             </TabsList>
           </div>
 
@@ -323,70 +327,71 @@ export default function CourseDetail() {
           {/* Assignments Tab */}
           <TabsContent value="assignments">
             <div className="space-y-6">
-              <div className="section-between">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-[#002623]">قائمة الواجبات المعتمدة</h2>
                 {isTeacher && (
-                  <Button onClick={() => setAssignmentDialogOpen(true)}>
+                  <Button onClick={() => setAssignmentDialogOpen(true)} className="bg-[#428177] hover:bg-[#054239] text-white font-bold">
                     <Plus className="h-4 w-4 ml-2" />
                     واجب جديد
                   </Button>
                 )}
-                <h2 className="text-2xl font-bold text-right">الواجبات</h2>
               </div>
 
               <div className="grid gap-4">
                 {course.assignments && course.assignments.length > 0 ? (
                   course.assignments.map((assignment) => (
-                    <div key={assignment.id} className="border rounded-lg p-6 text-right space-y-4 hover:bg-slate-50 transition-colors relative group">
-                      <div className="flex justify-between items-start">
-                        <div className="text-left text-sm text-muted-foreground">
-                          تاريخ الاستحقاق: {new Date(assignment.dueDate).toLocaleDateString('ar-EG')}
+                    <div key={assignment.id} className="border border-[#428177]/30 bg-white rounded-2xl p-6 text-right space-y-4 hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-center pb-3 border-b border-[#EDEBE0]">
+                        <div className="flex items-center gap-3">
+                          {isTeacher && (
+                            <div className="flex items-center gap-1.5 bg-[#EDEBE0] p-1 rounded-xl border border-[#428177]/20">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-7 w-7 p-0 text-[#002623] hover:bg-[#428177]/10"
+                                onClick={() => setEditingAssignment(assignment)}
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="h-7 w-7 p-0 text-[#6B1F2A] hover:bg-[#6B1F2A]/10"
+                                onClick={() => confirmDelete('assignment', assignment.id)}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+                          )}
+                          <span className="text-xs font-bold text-[#3D3A3B] bg-[#EDEBE0]/60 px-3 py-1 rounded-full border border-[#428177]/20">
+                            تاريخ الاستحقاق: {new Date(assignment.dueDate).toISOString().split('T')[0].replace(/-/g, '/')}
+                          </span>
                         </div>
-                        <div>
-                          <h3 className="font-bold text-xl">{assignment.title}</h3>
-                        </div>
+                        <h3 className="font-bold text-xl text-[#002623]">{assignment.title}</h3>
                       </div>
 
-                      <p className="text-muted-foreground">{assignment.description}</p>
+                      <p className="text-xs text-[#3D3A3B] font-medium leading-relaxed">{assignment.description}</p>
 
                       {assignment.hasFile && (
-                        <div className="inline-flex items-center text-blue-600 bg-blue-50 px-3 py-1 rounded-md text-sm">
+                        <div className="inline-flex items-center text-[#428177] bg-[#428177]/10 px-3 py-1 rounded-lg text-xs font-bold border border-[#428177]/20">
                           <span className="mr-2">{assignment.fileName}</span>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text ml-1"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /><path d="M14 2v4h4" /></svg>
                         </div>
                       )}
 
-                      {isTeacher && (
-                        <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setEditingAssignment(assignment)}
-                          >
-                            <Pencil className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => confirmDelete('assignment', assignment.id)}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      )}
-
-                      <div className="flex justify-between items-center pt-2 border-t border-border/10">
+                      <div className="flex justify-between items-center pt-2 border-t border-[#EDEBE0]">
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-xs text-primary font-bold hover:underline p-0 h-auto"
+                          className="text-xs text-[#428177] font-bold hover:underline p-0 h-auto"
                           onClick={() => setExpandedAssignmentId(expandedAssignmentId === assignment.id ? null : assignment.id)}
                         >
-                          {expandedAssignmentId === assignment.id ? "إغلاق التفاصيل" : isTeacher ? "عرض تسليمات الطلاب" : "تسليم الواجب وعرض التقييم"}
+                          {expandedAssignmentId === assignment.id ? "إغلاق التفاصيل" : isTeacher ? "عرض تسليمات الطلاب ورصد الدرجات" : "تسليم الواجب وعرض التقييم"}
                         </Button>
                       </div>
 
                       {expandedAssignmentId === assignment.id && (
-                        <div className="mt-4 pt-4 border-t border-border/40">
+                        <div className="mt-4 pt-4 border-t border-[#EDEBE0]">
                           {isTeacher ? (
                             <GradingConsole courseId={Number(courseId)} assignmentId={assignment.id} />
                           ) : (
@@ -397,7 +402,7 @@ export default function CourseDetail() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-12 text-muted-foreground">
+                  <div className="text-center py-12 text-xs text-[#3D3A3B] bg-white border border-dashed border-[#428177]/30 rounded-2xl">
                     لا توجد واجبات حالياً
                   </div>
                 )}
@@ -405,10 +410,30 @@ export default function CourseDetail() {
             </div>
           </TabsContent>
 
-          {/* Help & Discussions Tab */}
-          <TabsContent value="help">
+          {/* Discussions Tab */}
+          <TabsContent value="discussions">
             <div className="pt-2">
               <CourseDiscussions />
+            </div>
+          </TabsContent>
+
+          {/* Help & Support Tab (Manuals & Q&As) */}
+          <TabsContent value="help">
+            <div className="bg-white border border-[#428177]/30 rounded-2xl p-8 text-right space-y-6">
+              <div className="pb-4 border-b border-[#EDEBE0]">
+                <h3 className="text-xl font-bold text-[#002623]">الدليل الإرشادي والأسئلة الشائعة</h3>
+                <p className="text-xs text-[#3D3A3B] mt-1">تجد هنا أدلة استخدام المنصة والإجابات الشائعة لدعم الطلاب والمعلمين.</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-medium">
+                <div className="p-4 bg-[#EDEBE0]/30 rounded-xl border border-[#428177]/20 space-y-2">
+                  <h4 className="font-bold text-sm text-[#002623]">📖 دليل وتسليم الواجبات</h4>
+                  <p className="text-[#3D3A3B] leading-relaxed">يجب رفع ملف الواجب الرئيسي بصيغة PDF إجبارياً قبل انتهاء موعد الاستحقاق المعتمد. يُمكن إرفاق ملف ZIP اختياري للمشاريع.</p>
+                </div>
+                <div className="p-4 bg-[#EDEBE0]/30 rounded-xl border border-[#428177]/20 space-y-2">
+                  <h4 className="font-bold text-sm text-[#002623]">💬 التواصل والاستفسارات</h4>
+                  <p className="text-[#3D3A3B] leading-relaxed">استخدم تبويب "ساحة المناقشات" لطرح الأسئلة الأكاديمية والاستفسارات ليجيبك عليها أستاذ المادة والزملاء.</p>
+                </div>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
