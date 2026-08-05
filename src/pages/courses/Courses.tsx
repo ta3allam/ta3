@@ -198,8 +198,15 @@ export default function CourseDetail() {
     <DashboardLayout title={course.name}>
       <div className="space-y-6" dir="rtl">
         {/* Course Header Banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div 
+          className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
+          style={course.bgImage ? {
+            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.82)), url('${course.bgImage}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          } : undefined}
+        >
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
             <div>
               <span className="inline-block px-3 py-1 rounded-full bg-[#428177]/10 text-[#428177] text-xs font-bold mb-2 border border-[#428177]/30">
                 مقرر دراسي • {course.code}
