@@ -14,6 +14,16 @@ interface GradingConsoleProps {
   assignmentId: number;
 }
 
+function formatStandardDate(dateString: string): string {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const mins = String(date.getMinutes()).padStart(2, '0');
+  return `${year}/${month}/${day} - ${hours}:${mins}`;
+}
+
 export default function GradingConsole({ courseId, assignmentId }: GradingConsoleProps) {
   const { courseData, gradeSubmission } = useCourseData();
   const [selectedSub, setSelectedSub] = useState<Submission | null>(null);
@@ -47,55 +57,55 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
   return (
     <div className="space-y-4" dir="rtl">
       <div className="flex justify-between items-center">
-        <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+        <span className="text-xs text-[#3D3A3B] bg-[#EDEBE0] font-bold px-3 py-1 rounded-full border border-[#428177]/20">
           إجمالي التسليمات: {submissions.length}
         </span>
-        <h4 className="font-bold text-lg text-foreground">تسليمات الطلاب</h4>
+        <h4 className="font-bold text-lg text-[#002623]">قائمة تسليمات الطلاب</h4>
       </div>
 
       {submissions.length > 0 ? (
-        <div className="border border-border/60 rounded-xl overflow-hidden shadow-sm bg-card">
+        <div className="border border-[#428177]/30 rounded-2xl overflow-hidden shadow-sm bg-white">
           <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse text-sm">
+            <table className="w-full text-right border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 border-b border-border/40 text-muted-foreground font-semibold">
+                <tr className="bg-[#EDEBE0]/60 border-b border-[#428177]/20 text-[#002623] font-bold">
                   <th className="p-3 text-right">اسم الطالب</th>
                   <th className="p-3 text-right">تاريخ التسليم</th>
                   <th className="p-3 text-right">ملف الواجب</th>
                   <th className="p-3 text-right">الحالة</th>
-                  <th className="p-3 text-center">الدرجة</th>
+                  <th className="p-3 text-center">الدرجة (من 100)</th>
                   <th className="p-3 text-center">إجراءات</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/30">
+              <tbody className="divide-y divide-[#EDEBE0]">
                 {submissions.map((sub) => {
                   const isGraded = sub.grade !== undefined;
                   return (
-                    <tr key={sub.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-3 font-semibold text-foreground">{sub.studentName}</td>
-                      <td className="p-3 text-xs text-muted-foreground">
-                        {new Date(sub.submittedAt).toLocaleString("ar-EG")}
+                    <tr key={sub.id} className="hover:bg-[#EDEBE0]/20 transition-colors">
+                      <td className="p-3 font-bold text-[#002623]">{sub.studentName}</td>
+                      <td className="p-3 text-xs text-[#3D3A3B] font-semibold">
+                        {formatStandardDate(sub.submittedAt)}
                       </td>
                       <td className="p-3">
-                        <span className="inline-flex items-center gap-1 text-primary text-xs font-medium">
+                        <span className="inline-flex items-center gap-1 text-[#428177] text-xs font-bold">
                           <FileText className="h-3.5 w-3.5" />
-                          <span className="truncate max-w-[120px]">{sub.fileName}</span>
+                          <span className="truncate max-w-[130px]">{sub.fileName}</span>
                         </span>
                       </td>
                       <td className="p-3">
                         {isGraded ? (
-                          <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded-full font-semibold">
+                          <span className="inline-flex items-center gap-1 bg-[#428177]/10 text-[#428177] text-xs px-2.5 py-0.5 rounded-full font-bold border border-[#428177]/30">
                             <Check className="h-3 w-3" />
                             تم التقييم
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-xs px-2 py-0.5 rounded-full font-semibold">
+                          <span className="inline-flex items-center gap-1 bg-[#988561]/10 text-[#988561] text-xs px-2.5 py-0.5 rounded-full font-bold border border-[#988561]/30">
                             <AlertCircle className="h-3 w-3" />
                             بانتظار التقييم
                           </span>
                         )}
                       </td>
-                      <td className="p-3 text-center font-bold text-foreground">
+                      <td className="p-3 text-center font-bold text-[#002623]">
                         {isGraded ? `${sub.grade} / 100` : "-"}
                       </td>
                       <td className="p-3 text-center">
@@ -103,7 +113,11 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
                           size="sm"
                           variant={isGraded ? "outline" : "default"}
                           onClick={() => handleOpenGrading(sub)}
-                          className="h-8 text-xs font-semibold"
+                          className={
+                            isGraded
+                              ? "border-[#428177]/30 text-[#002623] hover:bg-[#428177]/10 text-xs font-bold"
+                              : "bg-[#428177] hover:bg-[#054239] text-white text-xs font-bold"
+                          }
                         >
                           {isGraded ? "تعديل الدرجة" : "رصد الدرجة"}
                         </Button>
@@ -116,39 +130,41 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
           </div>
         </div>
       ) : (
-        <div className="text-center py-12 border border-dashed rounded-xl bg-slate-50 text-muted-foreground text-sm">
-          لا توجد أي تسليمات لهذا الواجب بعد.
+        <div className="text-center py-12 border border-dashed rounded-2xl bg-white text-[#3D3A3B] text-xs font-medium border-[#428177]/30">
+          لا توجد تسليمات لهذا الواجب حتى الآن.
         </div>
       )}
 
       {/* Grading Dialog */}
       {selectedSub && (
         <Dialog open={!!selectedSub} onOpenChange={() => setSelectedSub(null)}>
-          <DialogContent dir="rtl" className="text-right max-w-md">
-            <DialogHeader>
-              <DialogTitle className="text-right">تقييم واجب الطالب: {selectedSub.studentName}</DialogTitle>
+          <DialogContent dir="rtl" className="text-right max-w-md bg-white border border-[#428177]/40 rounded-2xl">
+            <DialogHeader className="border-b border-[#EDEBE0] pb-3">
+              <DialogTitle className="text-right text-lg font-bold text-[#002623]">
+                رصد تقييم واجب الطالب: {selectedSub.studentName}
+              </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSaveGrade} className="space-y-4 pt-2">
-              <div className="bg-slate-50 p-3 rounded-lg text-xs space-y-1.5 border border-border/30">
+              <div className="bg-[#EDEBE0]/40 p-3 rounded-xl text-xs space-y-1.5 border border-[#428177]/20">
                 <div className="flex justify-between items-center">
-                  <span className="text-primary font-semibold flex items-center gap-1">
+                  <span className="text-[#428177] font-bold flex items-center gap-1">
                     <FileText className="h-3.5 w-3.5" />
                     {selectedSub.fileName}
                   </span>
-                  <span className="text-muted-foreground font-semibold">الملف المرفق</span>
+                  <span className="text-[#3D3A3B] font-bold">الملف المرفق</span>
                 </div>
                 {selectedSub.comment && (
-                  <div className="pt-2 border-t border-border/20">
-                    <span className="text-muted-foreground font-semibold block">ملاحظات الطالب:</span>
-                    <p className="text-foreground leading-relaxed mt-0.5">{selectedSub.comment}</p>
+                  <div className="pt-2 border-t border-[#428177]/20">
+                    <span className="text-[#3D3A3B] font-bold block">ملاحظات الطالب أثناء التسليم:</span>
+                    <p className="text-[#002623] leading-relaxed mt-0.5">{selectedSub.comment}</p>
                   </div>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="grade" className="block text-xs font-semibold text-foreground/80 flex items-center gap-1 justify-end">
-                  <Award className="h-3.5 w-3.5" />
-                  رصد الدرجة (من 100)
+              <div className="space-y-1.5">
+                <Label htmlFor="grade" className="block text-xs font-bold text-[#002623] flex items-center gap-1 justify-end">
+                  <Award className="h-3.5 w-3.5 text-[#988561]" />
+                  رصد الدرجة (أرقام قياسية من 0 إلى 100)
                 </Label>
                 <Input
                   id="grade"
@@ -158,35 +174,35 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
                   required
                   value={grade}
                   onChange={(e) => setGrade(e.target.value)}
-                  className="text-right focus-visible:ring-primary/50"
+                  className="text-right bg-white border-[#428177]/30 text-[#002623] font-bold"
                   placeholder="مثال: 95"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="feedback" className="block text-xs font-semibold text-foreground/80 flex items-center gap-1 justify-end">
-                  <MessageSquare className="h-3.5 w-3.5" />
+              <div className="space-y-1.5">
+                <Label htmlFor="feedback" className="block text-xs font-bold text-[#002623] flex items-center gap-1 justify-end">
+                  <MessageSquare className="h-3.5 w-3.5 text-[#428177]" />
                   ملاحظات وتقييم المعلم
                 </Label>
                 <Textarea
                   id="feedback"
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
-                  className="text-right text-xs focus-visible:ring-primary/50"
-                  placeholder="اكتب ملاحظاتك للطالب هنا..."
+                  className="text-right text-xs bg-white border-[#428177]/30 text-[#002623]"
+                  placeholder="اكتب التوجيهات والملاحظات للطالب..."
                   rows={4}
                 />
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button type="submit" className="flex-1 font-bold">
+                <Button type="submit" className="flex-1 font-bold bg-[#428177] hover:bg-[#054239] text-white">
                   حفظ التقييم
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setSelectedSub(null)}
-                  className="w-24 font-bold"
+                  className="w-24 font-bold border-[#428177]/30 text-[#002623]"
                 >
                   إلغاء
                 </Button>
