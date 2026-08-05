@@ -214,7 +214,7 @@ export default function CourseDetail() {
         <Tabs defaultValue="home" className="w-full" dir="rtl">
           <div className="bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20">
             <TabsList className="w-full justify-start bg-transparent gap-1">
-              <TabsTrigger value="home" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الرئيسية والمناقشات</TabsTrigger>
+              <TabsTrigger value="home" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الرئيسية</TabsTrigger>
               <TabsTrigger value="content" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">المحتوى والمحاضرات</TabsTrigger>
               <TabsTrigger value="assignments" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الواجبات والتكليفات</TabsTrigger>
               <TabsTrigger value="help" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الدليل والمساعدة</TabsTrigger>
@@ -272,7 +272,7 @@ export default function CourseDetail() {
                 )}
               </div>
 
-              {/* Sidebar Column: Events & Discussions Widget */}
+              {/* Sidebar Column: Events */}
               <div className="lg:col-span-1 space-y-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold text-[#002623]">الأحداث القادمة</h3>
@@ -284,12 +284,6 @@ export default function CourseDetail() {
                   )}
                 </div>
                 <CourseEvents events={course.events} />
-
-                {/* Discussions Sidebar Section */}
-                <div className="pt-4 border-t border-[#EDEBE0]">
-                  <h3 className="text-lg font-bold text-[#002623] mb-3">مناقشات المقرر</h3>
-                  <CourseDiscussions />
-                </div>
               </div>
             </div>
           </TabsContent>
