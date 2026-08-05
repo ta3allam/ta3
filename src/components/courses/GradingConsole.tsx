@@ -87,10 +87,20 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
                         {formatStandardDate(sub.submittedAt)}
                       </td>
                       <td className="p-3">
-                        <span className="inline-flex items-center gap-1 text-[#428177] text-xs font-bold">
+                        <a
+                          href={sub.fileUrl || "#"}
+                          download={sub.fileName}
+                          onClick={(e) => {
+                            if (!sub.fileUrl || sub.fileUrl === "#") {
+                              e.preventDefault();
+                              toast.info(`جاري بدء تحميل ملف الطالب: ${sub.fileName}`);
+                            }
+                          }}
+                          className="inline-flex items-center gap-1.5 text-[#428177] hover:underline text-xs font-bold bg-[#428177]/10 px-2.5 py-1 rounded-lg border border-[#428177]/20"
+                        >
                           <FileText className="h-3.5 w-3.5" />
                           <span className="truncate max-w-[130px]">{sub.fileName}</span>
-                        </span>
+                        </a>
                       </td>
                       <td className="p-3">
                         {isGraded ? (
