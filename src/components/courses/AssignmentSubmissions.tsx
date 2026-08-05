@@ -7,16 +7,13 @@ import { Assignment } from "@/pages/courses/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
 import { toast } from "sonner";
-import { UploadCloud, CheckCircle2, FileText, Calendar, Archive, AlertCircle, RefreshCw } from "lucide-react";
+import { UploadCloud, CheckCircle2, FileText, Calendar, Archive, Lock, RefreshCw } from "lucide-react";
 
 interface AssignmentSubmissionsProps {
   courseId: number;
   assignment: Assignment;
 }
 
-/**
- * Format dates with standard Western/Arabic digits (1, 2, 3, 4, 5, 6, 7, 8, 9, 0)
- */
 function formatStandardDate(dateString: string): string {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -31,9 +28,12 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
   const { user } = useAuth();
   const { courseData, addSubmission } = useCourseData();
   const [comment, setComment] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [dragActive, setDragActive] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
+  const pdfInputRef = useRef<HTMLInputElement>(null);
+  const zipInputRef = useRef<HTMLInputElement>(null);
+
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [zipFile, setZipFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -42,33 +42,45 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
     (s) => s.assignmentId === assignment.id && s.studentId === user?.username
   );
 
-  const validateFile = (file: File): boolean => {
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    const isAllowedExt = ext === 'pdf' || ext === 'zip';
-    const isAllowedMime = file.type === 'application/pdf' || file.type === 'application/zip' || file.type === 'application/x-zip-compressed';
+  const isLate = new Date() > new Date(assignment.dueDate);
 
-    if (!isAllowedExt && !isAllowedMime) {
-      toast.error("ممنوع إرفاق هذه الصيغة! يُسمح فقط بملفات PDF أو ZIP");
-      return false;
+  const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      if (ext !== 'pdf' && file.type !== 'application/pdf') {
+        toast.error("الملف الأساسي يجب أن يكون بصيغة PDF إجبارياً");
+        return;
+      }
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error("حجم ملف PDF يتجاوز 25 ميجابايت");
+        return;
+      }
+      setPdfFile(file);
+      simulateUpload();
     }
-
-    const maxSizeMb = 25;
-    if (file.size > maxSizeMb * 1024 * 1024) {
-      toast.error(`حجم الملف يتجاوز الحد الأقصى (${maxSizeMb} MB)`);
-      return false;
-    }
-
-    return true;
   };
 
-  const processFileSelect = (file: File) => {
-    if (!validateFile(file)) return;
+  const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      if (ext !== 'zip' && !file.type.includes('zip')) {
+        toast.error("الملف الإضافي يجب أن يكون بصيغة ZIP مضغوطة");
+        return;
+      }
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error("حجم ملف ZIP يتجاوز 25 ميجابايت");
+        return;
+      }
+      setZipFile(file);
+      simulateUpload();
+    }
+  };
 
-    setSelectedFile(file);
+  const simulateUpload = () => {
     setIsUploading(true);
     setUploadProgress(0);
-
-    // Simulate clean upload progress
     const interval = setInterval(() => {
       setUploadProgress((prev) => {
         if (prev >= 100) {
@@ -78,57 +90,40 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
         }
         return prev + 25;
       });
-    }, 120);
-  };
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      processFileSelect(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      processFileSelect(e.target.files[0]);
-    }
+    }, 100);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedFile) {
-      toast.error("يرجى إرفاق ملف الواجب بصيغة PDF أو ZIP أولاً");
+
+    if (isLate) {
+      toast.error("عذراً، تم إغلاق باب التسليم لأن موعد الاستحقاق قد انتهى.");
       return;
     }
+
+    if (!pdfFile) {
+      toast.error("إرفاق ملف PDF للواجب إجباري للتسليم!");
+      return;
+    }
+
+    const combinedName = zipFile
+      ? `${pdfFile.name} + ${zipFile.name}`
+      : pdfFile.name;
 
     addSubmission(courseId, {
       assignmentId: assignment.id,
       studentId: user?.username || "unknown",
       studentName: user?.name || "طالب مجهول",
       submittedAt: new Date().toISOString(),
-      fileName: selectedFile.name,
+      fileName: combinedName,
       comment: comment.trim() || undefined,
     });
 
     toast.success("تم تسليم الواجب بنجاح");
-    setSelectedFile(null);
+    setPdfFile(null);
+    setZipFile(null);
     setComment("");
   };
-
-  const isLate = new Date() > new Date(assignment.dueDate);
 
   if (mySubmission) {
     return (
@@ -143,17 +138,13 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-medium">
           <div className="space-y-1 bg-[#EDEBE0]/30 p-3 rounded-xl border border-[#428177]/10">
-            <span className="text-[#3D3A3B] block">تاريخ ووقت التسليم (أرقام قياسية)</span>
+            <span className="text-[#3D3A3B] block">تاريخ التسليم</span>
             <span className="font-bold text-[#002623]">{formatStandardDate(mySubmission.submittedAt)}</span>
           </div>
           <div className="space-y-1 bg-[#EDEBE0]/30 p-3 rounded-xl border border-[#428177]/10">
-            <span className="text-[#3D3A3B] block">الملف المرفوع المعتمد</span>
+            <span className="text-[#3D3A3B] block">الملفات التي تم تسليمها</span>
             <span className="font-bold text-[#428177] flex items-center justify-end gap-1.5 truncate">
-              {mySubmission.fileName?.endsWith('.zip') ? (
-                <Archive className="h-4 w-4 text-[#988561]" />
-              ) : (
-                <FileText className="h-4 w-4 text-[#428177]" />
-              )}
+              <FileText className="h-4 w-4 text-[#428177]" />
               <span className="truncate">{mySubmission.fileName}</span>
             </span>
           </div>
@@ -166,27 +157,24 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
           </div>
         )}
 
-        {/* Grading Section */}
         <div className="pt-3 border-t border-[#EDEBE0]">
-          <h5 className="font-bold text-sm text-[#002623] mb-2">النتيجة وتقييم أستاذ المادة</h5>
+          <h5 className="font-bold text-sm text-[#002623] mb-2">درجة وتقييم أستاذ المادة</h5>
           {mySubmission.grade !== undefined ? (
             <div className="space-y-3">
               <div className="flex items-center justify-between bg-[#428177]/10 border border-[#428177]/30 rounded-xl p-4">
-                <span className="text-[#002623] font-black text-xl">
-                  {mySubmission.grade} / 100
-                </span>
-                <span className="text-xs text-[#3D3A3B] font-bold">الدرجة المستحقة</span>
+                <span className="text-[#002623] font-black text-xl">{mySubmission.grade} / 100</span>
+                <span className="text-xs text-[#3D3A3B] font-bold">الدرجة النهائية</span>
               </div>
               {mySubmission.feedback && (
                 <div className="bg-[#988561]/10 border border-[#988561]/30 rounded-xl p-4 text-xs space-y-1">
-                  <span className="text-[#260F14] font-bold block">توصيات وملاحظات المعلم:</span>
+                  <span className="text-[#260F14] font-bold block">ملاحظات المعلم:</span>
                   <p className="text-[#002623] leading-relaxed font-medium">{mySubmission.feedback}</p>
                 </div>
               )}
             </div>
           ) : (
             <p className="text-xs text-[#3D3A3B] italic bg-[#EDEBE0]/40 p-3 rounded-xl text-center font-medium border border-[#428177]/20">
-              الملف قيد المراجعة والتقييم حالياً من قبل أستاذ المادة
+              الملف قيد المراجعة والتقييم من المعلم
             </p>
           )}
         </div>
@@ -204,115 +192,132 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
         <h4 className="font-bold text-lg text-[#002623]">تسليم الواجب الدراسي</h4>
       </div>
 
-      {isLate && (
-        <div className="bg-[#6B1F2A]/10 border border-[#6B1F2A]/30 text-[#6B1F2A] text-xs rounded-xl p-3 text-center font-bold flex items-center justify-center gap-2">
-          <AlertCircle className="w-4 h-4" />
-          <span>تنبيه: تم تجاوز موعد الاستحقاق المعتمد (قد تنطبق خصومات التأخير)</span>
+      {isLate ? (
+        <div className="bg-[#6B1F2A]/10 border border-[#6B1F2A]/30 text-[#6B1F2A] text-xs rounded-xl p-4 text-center font-bold flex items-center justify-center gap-2">
+          <Lock className="w-4 h-4 text-[#6B1F2A]" />
+          <span>تم إغلاق التسليم! انتهى موعد الاستحقاق ولا يُسمح بالتسليم المتأخر.</span>
         </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Dropzone */}
-        <div className="space-y-1.5">
-          <Label className="text-xs font-bold text-[#002623] block">
-            رفع ملف الواجب (يُسمح فقط بملفات PDF أو ZIP - حتى 25 MB)
-          </Label>
-          <div
-            onDragEnter={handleDrag}
-            onDragOver={handleDrag}
-            onDragLeave={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-2 select-none ${
-              dragActive
-                ? "border-[#428177] bg-[#428177]/10"
-                : selectedFile
-                ? "border-[#054239] bg-[#054239]/5"
-                : "border-[#428177]/30 hover:border-[#428177] hover:bg-[#EDEBE0]/40"
-            }`}
-          >
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept=".pdf,.zip,application/pdf,application/zip"
-              className="hidden"
-            />
-            {selectedFile ? (
-              <div className="w-full space-y-3">
-                <div className="flex items-center justify-center gap-2">
-                  {selectedFile.name.endsWith('.zip') ? (
-                    <Archive className="h-10 w-10 text-[#988561]" />
-                  ) : (
-                    <FileText className="h-10 w-10 text-[#428177]" />
-                  )}
-                  <div className="text-right">
-                    <span className="text-sm font-bold text-[#002623] block truncate max-w-[280px]">
-                      {selectedFile.name}
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Dual File Dropzone: PDF (Required) + ZIP (Optional) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Required PDF Picker */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-[#002623] flex items-center justify-between">
+                <span>ملف الواجب الرئيسي (PDF)</span>
+                <span className="text-[#6B1F2A] text-[10px] font-bold">* إجباري</span>
+              </Label>
+              <div
+                onClick={() => pdfInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-2 select-none ${
+                  pdfFile
+                    ? "border-[#428177] bg-[#428177]/10"
+                    : "border-[#428177]/30 hover:border-[#428177] hover:bg-[#EDEBE0]/40"
+                }`}
+              >
+                <input
+                  type="file"
+                  ref={pdfInputRef}
+                  onChange={handlePdfChange}
+                  accept=".pdf,application/pdf"
+                  className="hidden"
+                />
+                {pdfFile ? (
+                  <div className="space-y-1 text-center">
+                    <FileText className="h-8 w-8 text-[#428177] mx-auto" />
+                    <span className="text-xs font-bold text-[#002623] block truncate max-w-[180px]">
+                      {pdfFile.name}
                     </span>
-                    <span className="text-xs text-[#3D3A3B] font-semibold">
-                      ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
+                    <span className="text-[10px] text-[#3D3A3B]">
+                      ({(pdfFile.size / (1024 * 1024)).toFixed(2)} MB)
                     </span>
                   </div>
-                </div>
-
-                {/* Upload Progress Bar */}
-                <div className="space-y-1">
-                  <Progress value={uploadProgress} className="h-2 bg-[#EDEBE0]" />
-                  <span className="text-[10px] text-[#428177] font-bold">
-                    {isUploading ? `جاري معالجة الملف... ${uploadProgress}%` : "الملف جاهز للتسليم 100%"}
-                  </span>
-                </div>
-
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs text-[#6B1F2A] hover:bg-[#6B1F2A]/10 mt-1"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedFile(null);
-                  }}
-                >
-                  <RefreshCw className="w-3.5 h-3.5 ml-1" />
-                  تغيير الملف
-                </Button>
+                ) : (
+                  <>
+                    <UploadCloud className="h-8 w-8 text-[#428177]" />
+                    <span className="text-xs font-bold text-[#002623]">اختر ملف PDF الأساسي</span>
+                    <span className="text-[10px] text-[#3D3A3B]">(حتى 25 MB)</span>
+                  </>
+                )}
               </div>
-            ) : (
-              <>
-                <UploadCloud className="h-10 w-10 text-[#428177]" />
-                <span className="text-sm font-bold text-[#002623]">
-                  اسحب ملف الواجب هنا أو اضغط لتحديد الملف
-                </span>
-                <span className="text-xs text-[#3D3A3B]">صيغ مقبولة: PDF أو ZIP (الحد الأقصى 25 MB)</span>
-              </>
-            )}
+            </div>
+
+            {/* Optional ZIP Picker */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-[#002623] flex items-center justify-between">
+                <span>ملف المشروع / الأكواد (ZIP)</span>
+                <span className="text-[#988561] text-[10px] font-bold">اختياري</span>
+              </Label>
+              <div
+                onClick={() => zipInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-2xl p-5 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-2 select-none ${
+                  zipFile
+                    ? "border-[#988561] bg-[#988561]/10"
+                    : "border-[#428177]/30 hover:border-[#428177] hover:bg-[#EDEBE0]/40"
+                }`}
+              >
+                <input
+                  type="file"
+                  ref={zipInputRef}
+                  onChange={handleZipChange}
+                  accept=".zip,application/zip,application/x-zip-compressed"
+                  className="hidden"
+                />
+                {zipFile ? (
+                  <div className="space-y-1 text-center">
+                    <Archive className="h-8 w-8 text-[#988561] mx-auto" />
+                    <span className="text-xs font-bold text-[#002623] block truncate max-w-[180px]">
+                      {zipFile.name}
+                    </span>
+                    <span className="text-[10px] text-[#3D3A3B]">
+                      ({(zipFile.size / (1024 * 1024)).toFixed(2)} MB)
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <Archive className="h-8 w-8 text-[#988561]" />
+                    <span className="text-xs font-bold text-[#002623]">اختر ملف ZIP الإضافي</span>
+                    <span className="text-[10px] text-[#3D3A3B]">(اختياري للمشاريع)</span>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Comment Field */}
-        <div className="space-y-1.5">
-          <Label htmlFor="comment" className="text-xs font-bold text-[#002623] block">
-            ملاحظات إضافية للمعلم (اختياري)
-          </Label>
-          <Textarea
-            id="comment"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className="text-right text-xs bg-white border-[#428177]/30 text-[#002623] focus:border-[#428177]"
-            placeholder="اكتب أي توضيحات تود إرفاقها مع الحل..."
-            rows={3}
-          />
-        </div>
+          {/* Upload Progress Bar */}
+          {isUploading && (
+            <div className="space-y-1 pt-1">
+              <Progress value={uploadProgress} className="h-2 bg-[#EDEBE0]" />
+              <span className="text-[10px] text-[#428177] font-bold block text-center">
+                جاري معالجة الملفات... {uploadProgress}%
+              </span>
+            </div>
+          )}
 
-        <Button
-          type="submit"
-          className="w-full font-bold bg-[#428177] hover:bg-[#054239] text-white py-2.5 rounded-xl shadow-sm"
-          disabled={!selectedFile || isUploading}
-        >
-          تأكيد تسليم الواجب
-        </Button>
-      </form>
+          {/* Comment Field */}
+          <div className="space-y-1.5">
+            <Label htmlFor="comment" className="text-xs font-bold text-[#002623] block">
+              ملاحظات إضافية للمعلم (اختياري)
+            </Label>
+            <Textarea
+              id="comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="text-right text-xs bg-white border-[#428177]/30 text-[#002623]"
+              placeholder="اكتب أي ملاحظات تود إرفاقها مع الحل..."
+              rows={3}
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full font-bold bg-[#428177] hover:bg-[#054239] text-white py-2.5 rounded-xl shadow-sm"
+            disabled={!pdfFile || isUploading || isLate}
+          >
+            تأكيد تسليم الواجب
+          </Button>
+        </form>
+      )}
     </div>
   );
 }
