@@ -192,6 +192,7 @@ export default function CourseDetail() {
   };
 
   const activeLectureId = selectedLectureId ?? course.lectures[0]?.id;
+  const selectedLecture = course.lectures.find(l => l.id === activeLectureId);
   const bannerBg = course.bgImage || (course.category?.includes("رياضيات") ? '/coursesbg/math.png' : '/coursesbg/coding.png');
 
   return (
