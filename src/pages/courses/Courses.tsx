@@ -224,7 +224,7 @@ export default function CourseDetail() {
           {/* Home Tab */}
           <TabsContent value="home">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" dir="rtl">
-              {/* Main Column: Announcements & Main Feed */}
+              {/* Main Column: Announcements */}
               <div className="lg:col-span-2 space-y-6">
                 <div className="flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-[#002623]">إعلانات المقرر</h2>
@@ -270,18 +270,12 @@ export default function CourseDetail() {
                     لا توجد إعلانات حالياً
                   </div>
                 )}
-
-                {/* Discussions Section inside Main Feed */}
-                <div className="pt-4 border-t border-[#EDEBE0]">
-                  <h3 className="text-xl font-bold text-[#002623] mb-4">ساحة المناقشات والاستفسارات</h3>
-                  <CourseDiscussions />
-                </div>
               </div>
 
-              {/* Sidebar Column: Events & Quick Discussions Widget */}
+              {/* Sidebar Column: Events & Discussions Widget */}
               <div className="lg:col-span-1 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-[#002623]">الأحداث</h3>
+                  <h3 className="text-lg font-bold text-[#002623]">الأحداث القادمة</h3>
                   {isTeacher && (
                     <Button size="sm" onClick={() => setEventDialogOpen(true)} className="bg-[#428177] text-white font-bold">
                       <Plus className="h-3 w-3 ml-1" />
@@ -290,6 +284,12 @@ export default function CourseDetail() {
                   )}
                 </div>
                 <CourseEvents events={course.events} />
+
+                {/* Discussions Sidebar Section */}
+                <div className="pt-4 border-t border-[#EDEBE0]">
+                  <h3 className="text-lg font-bold text-[#002623] mb-3">مناقشات المقرر</h3>
+                  <CourseDiscussions />
+                </div>
               </div>
             </div>
           </TabsContent>
