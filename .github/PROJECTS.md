@@ -33,6 +33,11 @@
 | **#33** | Fix Assignment UI Overlap & Late Submission Block | 🎨 `Fai` | 2026-08-05 | 2026-08-05 | ✅ Closed |
 | **#34** | Enforce PDF Required + ZIP Optional Uploads | 🎨 `Fai` | 2026-08-05 | 2026-08-05 | ✅ Closed |
 | **#35** | Route Discussions via Sidebar & Admin Course Creation | 🎨 `Fai` | 2026-08-05 | 2026-08-05 | ✅ Closed |
+| **#36** | Student Timeline Page (`Timeline.tsx`) Improvements | 🎨 `Fai` | 2026-08-06 | 2026-08-06 | 📋 Scheduled |
+| **#37** | Student Study Groups (`Groups.tsx`) Enhancements | 🎨 `Fai` | 2026-08-06 | 2026-08-06 | 📋 Scheduled |
+| **#38** | Contact Teacher (`Contact.tsx`) Direct Messaging | 🎨 `Fai` | 2026-08-06 | 2026-08-06 | 📋 Scheduled |
+| **#39** | Teacher Gradebook & Exclusive Admin Course Builder | 🎨 `Fai` | 2026-08-06 | 2026-08-06 | 📋 Scheduled |
+| **#40** | User Account Provisioning & Role Assignment Table | ⚙️ `BAI` | 2026-08-06 | 2026-08-06 | 📋 Scheduled |
 | **#6** | Playwright E2E Runner & Auth Smoke Tests | 🧪 `QAI` | 2026-08-03 | 2026-08-06 | 🚧 In Progress |
 
 ---

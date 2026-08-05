@@ -64,14 +64,15 @@ Each working day consists of structured contributions from the agent team:
 - 🛡️ `SAI`: Verify discussion input sanitization. (Activity 11–12)
 - 🔀 `GAI`: Merge PR `feature/fai-submissions` to `main` and sync branch. (Activity 13–14)
 
-### Day 5: Teacher Dashboard, Course Builder & Grading Hub
-- 🎯 `POAI`: Create Issues #32–#36 for Teacher & Admin Hub. (Activity 1–2)
-- 🎨 `Fai`: Redesign `TeacherDashboard.tsx` with course quick stats and active student counters. (Activity 3–4)
-- 🎨 `Fai`: Enhance `NewCourseModal` and `AddLectureModal` with rich multi-field form validation. (Activity 5–6)
-- 🎨 `Fai`: Build `TeacherGradingModal.tsx` allowing teachers to review student submissions, enter grades, and provide feedback. (Activity 7–8)
-- 🧪 `QAI`: Run full E2E test suite across Student and Teacher flows. (Activity 9–10)
-- 🎯 `POAI`: Sign off on Sprint 1 DoD (100% Mockup MVP Complete). (Activity 11–12)
-- 🔀 `GAI`: Cut Sprint 1 Release tag `v0.2.0-mvp`, log ledger entries for all agents. (Activity 13–15)
+### Day 5: Teacher/Admin Hub & Student Navigation Customizations
+- 🎯 `POAI`: Create & label Issues #36–#40 for Day 5 scope. (Activity 1–2)
+- 🎨 `Fai`: Finish student Timeline page (`Timeline.tsx`) with milestone progress, category badges, and standard digits dates. (Activity 3–4)
+- 🎨 `Fai`: Enhance student Study Groups page (`Groups.tsx`) with group creation, team member roster, and project submission link. (Activity 5–6)
+- 🎨 `Fai`: Upgrade Contact Teacher page (`Contact.tsx`) with interactive direct chat UI, subject selection, and office hours. (Activity 7–8)
+- 🎨 `Fai`: Redesign `TeacherDashboard.tsx` with gradebook matrix and pending submissions alert. (Activity 9–10)
+- 🎨 `Fai`: Overhaul `AdminDashboard.tsx` with exclusive administrative course builder, user account provisioning, and role assignment. (Activity 11–12)
+- 🧪 `QAI`: Run full E2E test suite across Student, Teacher, and Admin flows. (Activity 13–14)
+- 🎯 `POAI`: Sign off on Sprint 1 DoD (100% Operational Local MVP Complete). (Activity 15)
 
 ---
 
