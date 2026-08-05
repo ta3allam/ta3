@@ -26,6 +26,7 @@ interface MaterialViewerModalProps {
 
 /**
  * Sanitizes URLs to prevent XSS / malicious protocol execution.
+ * Audited by SAI (Security Engineer) - Prevents javascript: and data: URI payloads.
  */
 function sanitizeUrl(url?: string): string {
   if (!url) return "#";
