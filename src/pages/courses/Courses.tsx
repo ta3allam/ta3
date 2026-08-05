@@ -81,8 +81,6 @@ export default function CourseDetail() {
     );
   }
 
-  const selectedLecture = course.lectures.find(l => l.id === selectedLectureId);
-
   // Announcement handler
   const handleSaveAnnouncement = (data: { title: string; content: string }) => {
     if (editingAnnouncement) {
