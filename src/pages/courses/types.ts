@@ -63,6 +63,7 @@ export interface Course {
     difficulty: string;
     teacher: string;
     language: string;
+    bgImage?: string;
     announcements: Announcement[];
     events: CourseEvent[];
     assignments: Assignment[];
