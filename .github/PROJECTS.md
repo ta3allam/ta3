@@ -15,18 +15,22 @@ For the detailed day-by-day 3-week plan targeting **12–15 agent GitHub activit
 
 ## 🏃 Sprint 1 Active Master Board (Mockup MVP)
 
-| Issue # | Title | Assigned Agent | Status | Daily Target | Labels |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **#12** | Implement `MockAuthEngine.ts` with `localStorage` Session Persistence | 🎨 `Fai` | 📋 Backlog | Day 1 | `frontend`, `auth` |
-| **#13** | Implement `MockDataEngine.ts` Local Storage Store & Reactive Emitter | 🎨 `Fai` | 📋 Backlog | Day 1 | `frontend`, `state` |
-| **#14** | Add Vitest Unit Tests for `MockDataEngine` Persistence | 🧪 `QAI` | 📋 Backlog | Day 1 | `qa`, `testing` |
-| **#15** | Audit Mock Auth Local Storage Sanitization & XSS | 🛡️ `SAI` | 📋 Backlog | Day 1 | `security`, `audit` |
-| **#16** | Merge PR `feature/fai-mock-engines` to `main` & Tag Release | 🔀 `GAI` | 📋 Backlog | Day 1 | `release`, `git` |
-| **#17** | Redesign `StudentDashboard.tsx` (Progress Rings & Metrics Feed) | 🎨 `Fai` | 📋 Backlog | Day 2 | `frontend`, `student` |
-| **#18** | Refactor `CourseCard.tsx` (Dynamic Badges & Micro-Animations) | 🎨 `Fai` | 📋 Backlog | Day 2 | `frontend`, `ui` |
-| **#19** | Build Global Announcement Ticker Sidebar with Read/Unread state | 🎨 `Fai` | 📋 Backlog | Day 2 | `frontend`, `announcements` |
-| **#20** | Add Playwright E2E Test `student-dashboard.spec.ts` | 🧪 `QAI` | 📋 Backlog | Day 2 | `qa`, `e2e` |
-| **#21** | Verify Student Route Protection in `RequireAuth.tsx` | 🛡️ `SAI` | 📋 Backlog | Day 2 | `security`, `routes` |
+| Issue # | Title | Assigned Agent | Status | Daily Target |
+| :--- | :--- | :--- | :--- | :--- |
+| **#12** | Implement `MockAuthEngine.ts` with `localStorage` Session Persistence | 🎨 `Fai` | ✅ Done | Day 1 |
+| **#13** | Implement `MockDataEngine.ts` Local Storage Store | 🎨 `Fai` | ✅ Done | Day 1 |
+| **#14** | Add Vitest Unit Tests for `MockDataEngine` Persistence | 🧪 `QAI` | ✅ Done | Day 1 |
+| **#15** | Audit Mock Auth Local Storage Sanitization & XSS | 🛡️ `SAI` | ✅ Done | Day 1 |
+| **#16** | Merge PR `feature/fai-mock-engines` to `main` | 🔀 `GAI` | ✅ Done | Day 1 |
+| **#17** | Redesign `StudentDashboard.tsx` (Progress Rings & Metrics Feed) | 🎨 `Fai` | ✅ Done | Day 2 |
+| **#18** | Add Playwright E2E Test `student-dashboard.spec.ts` | 🧪 `QAI` | ✅ Done | Day 2 |
+| **#19** | Merge PR `feature/fai-student-ui` to `main` | 🔀 `GAI` | ✅ Done | Day 2 |
+| **#20** | Overhaul `Courses.tsx` Unified Course Center Tabbed Layout | 🎨 `Fai` | ✅ Done | Day 3 |
+| **#21** | Build Interactive `MaterialViewerModal.tsx` (PDF/Video/Doc Previews) | 🎨 `Fai` | ✅ Done | Day 3 |
+| **#22** | Add Search & Category Filter Bar to `LecturesList.tsx` | 🎨 `Fai` | ✅ Done | Day 3 |
+| **#23** | Execute Playwright Visual & E2E Test `course-center.spec.ts` | 🧪 `QAI` | ✅ Done | Day 3 |
+| **#24** | Audit Material Link XSS & URL Security Sanitization | 🛡️ `SAI` | ✅ Done | Day 3 |
+| **#25** | Merge PR `feature/fai-course-center` to `main` | 🔀 `GAI` | ✅ Done | Day 3 |
 
 ---
 
