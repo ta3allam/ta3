@@ -195,6 +195,7 @@ export default function StudentDashboard() {
                   teacher={course.teacher}
                   language={course.language}
                   backgroundColor={course.backgroundColor}
+                  bgImage={course.bgImage}
                 />
               ))}
             </div>
