@@ -194,21 +194,28 @@ export default function CourseDetail() {
 
   return (
     <DashboardLayout title={course.name}>
-      <div className="space-y-6">
-        {/* Course Header */}
-        <div className="text-right">
-          <h1 className="text-3xl font-extrabold">{course.name}</h1>
-          <p className="text-muted-foreground">{course.code}</p>
+      <div className="space-y-6" dir="rtl">
+        {/* Course Header Banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <span className="inline-block px-3 py-1 rounded-full bg-[#428177]/10 text-[#428177] text-xs font-bold mb-2 border border-[#428177]/30">
+                مقرر دراسي • {course.code}
+              </span>
+              <h1 className="text-3xl font-extrabold text-[#002623]">{course.name}</h1>
+              <p className="text-xs text-[#3D3A3B] mt-1 font-medium">المعلم المسؤول: {course.teacher || "أستاذ المادة"}</p>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
         <Tabs defaultValue="home" className="w-full" dir="rtl">
-          <div className="tabs-wrapper">
-            <TabsList className="w-full justify-start bg-transparent">
-              <TabsTrigger value="home" className="flex-1">الرئيسية</TabsTrigger>
-              <TabsTrigger value="content" className="flex-1">المحتوى</TabsTrigger>
-              <TabsTrigger value="assignments" className="flex-1">الواجبات</TabsTrigger>
-              <TabsTrigger value="help" className="flex-1">المساعدة</TabsTrigger>
+          <div className="bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20">
+            <TabsList className="w-full justify-start bg-transparent gap-1">
+              <TabsTrigger value="home" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الرئيسية</TabsTrigger>
+              <TabsTrigger value="content" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">المحتوى والمحاضرات</TabsTrigger>
+              <TabsTrigger value="assignments" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الواجبات والتكليفات</TabsTrigger>
+              <TabsTrigger value="help" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الدعم والمساعدة</TabsTrigger>
             </TabsList>
           </div>
 
