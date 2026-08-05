@@ -16,7 +16,14 @@ export class MockDataEngine {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved) as CourseData;
+        const parsed = JSON.parse(saved) as CourseData;
+        // Ensure bgImage is merged for existing courses in cache
+        Object.keys(parsed).forEach((id) => {
+          if (!parsed[id].bgImage && coursesJson[id as keyof typeof coursesJson]) {
+            parsed[id].bgImage = (coursesJson[id as keyof typeof coursesJson] as unknown as Course).bgImage;
+          }
+        });
+        return parsed;
       }
     } catch (e) {
       console.error('MockDataEngine: Failed to parse courses from localStorage', e);

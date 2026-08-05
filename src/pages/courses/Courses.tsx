@@ -192,7 +192,7 @@ export default function CourseDetail() {
   };
 
   const activeLectureId = selectedLectureId ?? course.lectures[0]?.id;
-  const selectedLecture = course.lectures.find(l => l.id === activeLectureId);
+  const bannerBg = course.bgImage || (course.category?.includes("رياضيات") ? '/coursesbg/math.png' : '/coursesbg/coding.png');
 
   return (
     <DashboardLayout title={course.name}>
@@ -200,11 +200,11 @@ export default function CourseDetail() {
         {/* Course Header Banner */}
         <div 
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
-          style={course.bgImage ? {
-            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.82)), url('${course.bgImage}')`,
+          style={{
+            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78)), url('${bannerBg}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-          } : undefined}
+          }}
         >
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
             <div>
