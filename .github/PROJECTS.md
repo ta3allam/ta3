@@ -31,6 +31,12 @@ For the detailed day-by-day 3-week plan targeting **12–15 agent GitHub activit
 | **#23** | Execute Playwright Visual & E2E Test `course-center.spec.ts` | 🧪 `QAI` | ✅ Done | Day 3 |
 | **#24** | Audit Material Link XSS & URL Security Sanitization | 🛡️ `SAI` | ✅ Done | Day 3 |
 | **#25** | Merge PR `feature/fai-course-center` to `main` | 🔀 `GAI` | ✅ Done | Day 3 |
+| **#27** | Add Dynamic Course Background Image Schema & `CourseCard` Support | 🎨 `Fai` | ✅ Done | Day 4 |
+| **#28** | Restrict Dropzone Uploads Strictly to PDF & ZIP with Standard Digits | 🎨 `Fai` | ✅ Done | Day 4 |
+| **#29** | Overhaul Teacher `GradingConsole` with Grade Inputs & Feedback | 🎨 `Fai` | ✅ Done | Day 4 |
+| **#30** | Build Interactive `CourseDiscussions` Thread Component | 🎨 `Fai` | ✅ Done | Day 4 |
+| **#31** | Add Vitest & Playwright Test Suites for PDF/ZIP Uploads & Grading | 🧪 `QAI` | ✅ Done | Day 4 |
+| **#32** | Merge PR `feature/fai-assignments-submissions` to `main` | 🔀 `GAI` | ✅ Done | Day 4 |
 
 ---
 
