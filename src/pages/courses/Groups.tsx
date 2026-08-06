@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Users, Plus, UserCheck, ArrowRight, ShieldCheck, List, LayoutGrid, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Users, Plus, UserCheck, ArrowRight, ShieldCheck, List, LayoutGrid, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export interface GroupMember {
@@ -57,7 +57,17 @@ export default function CourseGroups() {
     const key = `ta3_groups_${courseId}`;
     const saved = localStorage.getItem(key);
     if (saved) {
-      setGroups(JSON.parse(saved));
+      try {
+        const parsed = JSON.parse(saved) as StudyGroup[];
+        const sanitized = parsed.map((g) => ({
+          ...g,
+          members: g.members || [],
+          applications: g.applications || []
+        }));
+        setGroups(sanitized);
+      } catch (e) {
+        console.error("Failed to parse groups from cache", e);
+      }
     } else {
       const defaultGroups: StudyGroup[] = [
         {
@@ -123,21 +133,25 @@ export default function CourseGroups() {
     if (!user) return;
     const updated = groups.map(g => {
       if (g.id === groupId) {
-        if (g.members.some(m => m.name === user.name)) {
+        const members = g.members || [];
+        const applications = g.applications || [];
+
+        if (members.some(m => m.name === user.name)) {
           toast.info("أنت عضو بالفعل في هذه المجموعة");
           return g;
         }
 
         // Auto-accept if group is empty (0 members)
-        if (g.members.length === 0) {
+        if (members.length === 0) {
           toast.success("تم انضمامك للمجموعة تلقائياً (مجموعة جديدة)");
           return {
             ...g,
-            members: [{ name: user.name, role: 'leader' as const }]
+            members: [{ name: user.name, role: 'leader' as const }],
+            applications
           };
         }
 
-        if (g.applications.some(a => a.studentName === user.name && a.status === 'pending')) {
+        if (applications.some(a => a.studentName === user.name && a.status === 'pending')) {
           toast.info("طلب انضمامك قيد المراجعة لدى الأعضاء والمعلم");
           return g;
         }
@@ -145,8 +159,9 @@ export default function CourseGroups() {
         toast.success("تم تقديم طلب الانضمام للمجموعة وفي انتظار موافقة أعضاء الفريق أو المعلم");
         return {
           ...g,
+          members,
           applications: [
-            ...g.applications,
+            ...applications,
             {
               id: Date.now(),
               studentName: user.name,
@@ -165,12 +180,15 @@ export default function CourseGroups() {
   const handleProcessApplication = (groupId: number, appId: number, action: 'accept' | 'reject') => {
     const updated = groups.map(g => {
       if (g.id === groupId) {
-        const app = g.applications.find(a => a.id === appId);
+        const members = g.members || [];
+        const applications = g.applications || [];
+
+        const app = applications.find(a => a.id === appId);
         if (!app) return g;
 
-        let updatedMembers = g.members;
+        let updatedMembers = members;
         if (action === 'accept') {
-          updatedMembers = [...g.members, { name: app.studentName, role: 'member' as const }];
+          updatedMembers = [...members, { name: app.studentName, role: 'member' as const }];
           toast.success(`تمت الموافقة على انضمام ${app.studentName}`);
         } else {
           toast.error(`تم رفض طلب انضمام ${app.studentName}`);
@@ -179,7 +197,7 @@ export default function CourseGroups() {
         return {
           ...g,
           members: updatedMembers,
-          applications: g.applications.filter(a => a.id !== appId)
+          applications: applications.filter(a => a.id !== appId)
         };
       }
       return g;
@@ -301,9 +319,10 @@ export default function CourseGroups() {
               </TableHeader>
               <TableBody>
                 {groups.map((group) => {
-                  const isMember = user && group.members.some(m => m.name === user.name);
-                  const isLeaderOrTeacher = isTeacher || (user && group.members.some(m => m.name === user.name && m.role === 'leader'));
-                  const pendingApps = group.applications.filter(a => a.status === 'pending');
+                  const members = group.members || [];
+                  const applications = group.applications || [];
+                  const isMember = user && members.some(m => m.name === user.name);
+                  const pendingApps = applications.filter(a => a.status === 'pending');
 
                   return (
                     <TableRow key={group.id} className="hover:bg-[#EDEBE0]/20 transition-colors">
@@ -311,7 +330,7 @@ export default function CourseGroups() {
                       <TableCell className="text-xs text-[#3D3A3B] max-w-xs truncate font-medium">{group.description}</TableCell>
                       <TableCell className="text-center">
                         <Badge className="bg-[#428177]/15 text-[#054239] border border-[#428177]/30 font-bold">
-                          {group.members.length} / {group.maxMembers} أعضاء
+                          {members.length} / {group.maxMembers || 5} أعضاء
                         </Badge>
                       </TableCell>
                       <TableCell className="text-center font-semibold text-xs">
@@ -332,7 +351,7 @@ export default function CourseGroups() {
                             onClick={() => handleApplyToGroup(group.id)}
                             className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
                           >
-                            {group.members.length === 0 ? "انضمام تلقائي" : "تقديم طلب انضمام"}
+                            {members.length === 0 ? "انضمام تلقائي" : "تقديم طلب انضمام"}
                           </Button>
                         )}
                       </TableCell>
@@ -348,15 +367,15 @@ export default function CourseGroups() {
         {viewLayout === 'grid' && (
           <div className="grid gap-6 md:grid-cols-2">
             {groups.map((group) => {
-              const isMember = user && group.members.some(m => m.name === user.name);
-              const pendingApps = group.applications.filter(a => a.status === 'pending');
+              const members = group.members || [];
+              const isMember = user && members.some(m => m.name === user.name);
 
               return (
                 <Card key={group.id} className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden text-right">
                   <CardHeader className="pb-3 bg-[#EDEBE0]/30 border-b border-[#428177]/10">
                     <div className="flex justify-between items-start">
                       <Badge className="bg-[#428177]/15 text-[#054239] border-[#428177]/30 font-bold">
-                        {group.members.length} / {group.maxMembers} أعضاء
+                        {members.length} / {group.maxMembers || 5} أعضاء
                       </Badge>
                       <CardTitle className="text-lg font-bold text-[#002623]">{group.name}</CardTitle>
                     </div>
@@ -366,11 +385,11 @@ export default function CourseGroups() {
                     <div>
                       <h4 className="text-xs font-bold text-[#002623] mb-2 flex items-center gap-1">
                         <Users className="w-3.5 h-3.5 text-[#428177]" />
-                        الأعضاء الحاليون ({group.members.length}):
+                        الأعضاء الحاليون ({members.length}):
                       </h4>
-                      {group.members.length > 0 ? (
+                      {members.length > 0 ? (
                         <div className="flex flex-wrap gap-1.5">
-                          {group.members.map((m, idx) => (
+                          {members.map((m, idx) => (
                             <Badge key={idx} variant="outline" className="border-[#428177]/30 text-[#002623] text-[11px] font-semibold">
                               {m.name} {m.role === 'leader' && "(قائد)"}
                             </Badge>
@@ -392,7 +411,7 @@ export default function CourseGroups() {
                           onClick={() => handleApplyToGroup(group.id)}
                           className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
                         >
-                          {group.members.length === 0 ? "انضمام تلقائي" : "تقديم طلب انضمام"}
+                          {members.length === 0 ? "انضمام تلقائي" : "تقديم طلب انضمام"}
                         </Button>
                       )}
                     </div>
@@ -404,13 +423,13 @@ export default function CourseGroups() {
         )}
 
         {/* Pending Group Applications Approval Section (Visible to Group Members & Teacher) */}
-        {groups.some(g => (isTeacher || g.members.some(m => user && m.name === user.name)) && g.applications.some(a => a.status === 'pending')) && (
+        {groups.some(g => (isTeacher || (g.members || []).some(m => user && m.name === user.name)) && (g.applications || []).some(a => a.status === 'pending')) && (
           <Card className="border border-[#988561]/40 bg-white shadow-sm rounded-2xl text-right">
             <CardHeader className="pb-2 bg-[#EDEBE0]/40 border-b border-[#428177]/10">
               <CardTitle className="text-base font-bold text-[#002623]">طلبات الانضمام المعلقة التي يمكنك اتخاذ قرار بشأنها</CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-3">
-              {groups.flatMap(g => g.applications.filter(a => a.status === 'pending').map(a => ({ group: g, app: a }))).map(({ group, app }) => (
+              {groups.flatMap(g => (g.applications || []).filter(a => a.status === 'pending').map(a => ({ group: g, app: a }))).map(({ group, app }) => (
                 <div key={app.id} className="flex items-center justify-between bg-[#EDEBE0]/20 p-3 rounded-xl border border-[#428177]/20">
                   <div className="space-y-0.5 text-xs">
                     <span className="font-bold text-[#002623]">{app.studentName}</span>
