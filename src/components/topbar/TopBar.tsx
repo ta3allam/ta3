@@ -1,4 +1,5 @@
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { getAssetUrl } from "@/lib/assetUtils";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/contexts/AuthContext";
@@ -87,7 +88,7 @@ const TopBar = ({ title, hideSidebarTrigger }: TopBarProps) => {
           {!hideSidebarTrigger && <SidebarTrigger className="order-2" />}
           <NavLink to={user?.role === 'admin' ? '/admin' : user?.role === 'teacher' ? '/teacher' : '/student'} className="text-lg font-extrabold flex items-center gap-2">
             <img
-              src="/logo.png"
+              src={getAssetUrl('/logo.png')}
               alt="تعلّم"
               className="h-8 w-auto inline-block align-middle"
             />

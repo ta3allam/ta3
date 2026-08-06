@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { User, Globe, CalendarDays } from "lucide-react";
+import { getAssetUrl } from "@/lib/assetUtils";
 
 interface CourseCardProps {
   id: number;
@@ -57,7 +58,7 @@ export function CourseCard({
         style={
           bgImage
             ? {
-                backgroundImage: `linear-gradient(to bottom, rgba(0, 38, 35, 0.45), rgba(0, 38, 35, 0.85)), url(${bgImage})`,
+                backgroundImage: `linear-gradient(to bottom, rgba(0, 38, 35, 0.45), rgba(0, 38, 35, 0.85)), url(${getAssetUrl(bgImage)})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }

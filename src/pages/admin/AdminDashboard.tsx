@@ -9,6 +9,7 @@ import { UserManagementTable, UserItem } from '@/components/admin/UserManagement
 import { CourseRequestsTable, RequestItem } from '@/components/admin/CourseRequestsTable';
 import { CourseCatalogTable, CourseCatalogItem } from '@/components/admin/CourseCatalogTable';
 import { useCourseData } from '@/contexts/CourseContext';
+import { getAssetUrl } from '@/lib/assetUtils';
 
 export default function AdminDashboard() {
   const { courseData, addCourse } = useCourseData();
@@ -108,7 +109,7 @@ export default function AdminDashboard() {
         <div 
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 mb-4 shadow-sm"
           style={{
-            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('/dashboard bg/otherbackground.png')`,
+            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('${getAssetUrl("/dashboard bg/otherbackground.png")}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}

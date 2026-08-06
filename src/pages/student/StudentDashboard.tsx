@@ -5,6 +5,7 @@ import { AnnouncementCard } from "@/components/student/AnnouncementCard";
 import { GlobalCalendarDialog } from "@/components/student/GlobalCalendarDialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
+import { getAssetUrl } from "@/lib/assetUtils";
 import { BookOpen, FileCheck, Calendar as CalendarIcon, Clock, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -120,7 +121,7 @@ export default function StudentDashboard() {
       <div 
         className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 mb-8 shadow-sm"
         style={{
-          backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('/dashboard bg/student background.jpg')`,
+          backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('${getAssetUrl("/dashboard bg/student background.jpg")}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

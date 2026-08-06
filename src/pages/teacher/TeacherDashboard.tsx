@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Clock, BookOpen, FileCheck, Users, AlertCircle, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
+import { getAssetUrl } from "@/lib/assetUtils";
 import { Link } from "react-router-dom";
 
 const officialCourseColors = [
@@ -83,7 +84,7 @@ export default function TeacherDashboard() {
       <div 
         className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 mb-8 shadow-sm"
         style={{
-          backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('/dashboard bg/otherbackground.png')`,
+          backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)), url('${getAssetUrl("/dashboard bg/otherbackground.png")}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

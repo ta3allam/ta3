@@ -12,24 +12,9 @@ Ta3 connects Students, Teachers, and Administrators in a unified, role-based pla
 graph TD
     User([Browser / Mobile Client]) -->|RTL React UI| FE[Frontend App - Vite/Nginx]
     FE -->|Supabase Auth & REST| BE[PostgreSQL Database & Storage]
-    FE -->|Contextual Prompts & Quizzes| AI[ROAI - AI Engine Service]
+    FE -->|Contextual Prompts & Quizzes| AI[AI Engine Service]
     BE --- RLS[Row-Level Security Policies]
 ```
-
----
-
-## 👥 Multi-Agent Engineering Team Roster
-
-Ta3 is built and maintained by a team of specialized AI engineering personas orchestrated by **Antigravity 2.0**:
-
-| Official Name | Role | Core Responsibility | Learning Ledger |
-| :--- | :--- | :--- | :--- |
-| 🎯 **POAI** | Product Owner (Lead) | Product roadmap, user stories, DoD verification, Scrum orchestration | [.agents/learning/POAI/](.agents/learning/POAI/memory.md) |
-| 🎨 **Fai** (فيء) | Frontend Engineer | React 18, TypeScript, RTL layout, `shadcn/ui`, component parity | [src/.agents/learning/Fai/](src/.agents/learning/Fai/memory.md) |
-| ⚙️ **BAI** | Backend Engineer | PostgreSQL schema (`erd.md`), Supabase Auth/RLS, migrations, Docker | [backend/.agents/learning/BAI/](backend/.agents/learning/BAI/memory.md) |
-| 🤖 **ROAI** | AI Specialist | LLM client connectors, MDX lesson block parser, auto-quiz generator | [ai-service/.agents/learning/ROAI/](ai-service/.agents/learning/ROAI/memory.md) |
-| 🛡️ **SAI** | Security Engineer | Supabase RLS audits, JWT session validation, OWASP top 10 checks | [backend/.agents/learning/SAI/](backend/.agents/learning/SAI/memory.md) |
-| 🧪 **QAI** | QA Engineer | Playwright E2E automation, Vitest runners, RTL visual regression | [src/.agents/learning/QAI/](src/.agents/learning/QAI/memory.md) |
 
 ---
 
@@ -59,7 +44,7 @@ Access the application at `http://localhost:8080`.
 
 ---
 
-## 🏃 3-Week Product Roadmap & Sprints
+## 🏃 Product Roadmap & Sprints
 
 *   **Sprint 1: Foundation, Auth & Base API Integration**
     *   Supabase Auth integration, PostgreSQL schema migrations (`erd.md`), RLS policy enforcement, Docker setup.
@@ -74,4 +59,4 @@ Access the application at `http://localhost:8080`.
 - 📐 [arch.md](arch.md) - Full Frontend & Component Architecture
 - 🗄️ [erd.md](erd.md) - Database Schema & ERD Diagram
 - 🤖 [ta3.v3.md](ta3.v3.md) - AI Platform & Ecosystem Specification
-- 🗂️ [.github/PROJECTS.md](.github/PROJECTS.md) - Sprint Issues & Kanban Board
+- 🗂️ [.github/PROJECTS.md](.github/PROJECTS.md) - Master Issues & Kanban Board

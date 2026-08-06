@@ -202,7 +202,7 @@ export default function CourseDetail() {
         <div 
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
           style={{
-            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78)), url('${bannerBg}')`,
+            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78)), url('${getAssetUrl(bannerBg)}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
