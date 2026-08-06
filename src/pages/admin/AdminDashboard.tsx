@@ -8,10 +8,11 @@ import { AdminMetricsOverview } from '@/components/admin/AdminMetricsOverview';
 import { UserManagementTable, UserItem } from '@/components/admin/UserManagementTable';
 import { CourseRequestsTable, RequestItem } from '@/components/admin/CourseRequestsTable';
 import { CourseCatalogTable, CourseCatalogItem } from '@/components/admin/CourseCatalogTable';
+import { useCourseData } from '@/contexts/CourseContext';
 
 export default function AdminDashboard() {
+  const { courseData, addCourse } = useCourseData();
   const [users, setUsers] = useState<UserItem[]>([]);
-  const [courses, setCourses] = useState<CourseCatalogItem[]>([]);
   const [requests, setRequests] = useState<RequestItem[]>([]);
 
   useEffect(() => {
@@ -28,19 +29,6 @@ export default function AdminDashboard() {
       localStorage.setItem('ta3_admin_users', JSON.stringify(defaultUsers));
     }
 
-    const savedCourses = localStorage.getItem('ta3_admin_courses');
-    if (savedCourses) {
-      setCourses(JSON.parse(savedCourses));
-    } else {
-      const defaultCourses: CourseCatalogItem[] = [
-        { id: 'c1', title: 'مبادئ البرمجة', students: 24 },
-        { id: 'c2', title: 'الرياضيات المتقدمة', students: 18 },
-        { id: 'c3', title: 'اللغة العربية لغير الناطقين بها', students: 12 },
-      ];
-      setCourses(defaultCourses);
-      localStorage.setItem('ta3_admin_courses', JSON.stringify(defaultCourses));
-    }
-
     const savedRequests = localStorage.getItem('ta3_admin_requests');
     if (savedRequests) {
       setRequests(JSON.parse(savedRequests));
@@ -54,14 +42,18 @@ export default function AdminDashboard() {
     }
   }, []);
 
+  const courseCatalogItems: CourseCatalogItem[] = Object.entries(courseData).map(([idStr, c]) => ({
+    id: idStr,
+    code: c.code,
+    title: c.name,
+    teacher: c.teacher,
+    category: c.category,
+    students: c.id === 1 ? 24 : c.id === 2 ? 18 : 12
+  }));
+
   const saveUsers = (updated: UserItem[]) => {
     setUsers(updated);
     localStorage.setItem('ta3_admin_users', JSON.stringify(updated));
-  };
-
-  const saveCourses = (updated: CourseCatalogItem[]) => {
-    setCourses(updated);
-    localStorage.setItem('ta3_admin_courses', JSON.stringify(updated));
   };
 
   const saveRequests = (updated: RequestItem[]) => {
@@ -86,13 +78,6 @@ export default function AdminDashboard() {
   };
 
   const handleApproveRequest = (id: number) => {
-    const target = requests.find((x) => x.id === id);
-    if (target) {
-      const updatedCourses = courses.map((c) =>
-        c.title === target.course ? { ...c, students: c.students + 1 } : c
-      );
-      saveCourses(updatedCourses);
-    }
     saveRequests(requests.filter((x) => x.id !== id));
     toast.success('تمت الموافقة على طلب الالتحاق بنجاح');
   };
@@ -102,14 +87,15 @@ export default function AdminDashboard() {
     toast.error('تم رفض طلب الالتحاق');
   };
 
-  const handleAddCourse = (title: string) => {
-    const newCourse: CourseCatalogItem = {
-      id: `c-${Date.now()}`,
-      title,
-      students: 0,
-    };
-    saveCourses([...courses, newCourse]);
-    toast.success('تمت إضافة المقرر الجديد بنجاح');
+  const handleAddCourse = (courseDataInput: { name: string; code: string; category: string; teacher: string }) => {
+    addCourse({
+      name: courseDataInput.name,
+      code: courseDataInput.code,
+      category: courseDataInput.category,
+      teacher: courseDataInput.teacher,
+      bgImage: courseDataInput.category.includes('رياضيات') ? '/coursesbg/math.png' : '/coursesbg/coding.png'
+    });
+    toast.success('تم إنشاء واعتماد المقرر الأكاديمي بنجاح (متاح الآن للمعلمين والطلاب)');
   };
 
   const totalStudents = users.filter((u) => u.role === 'طالب').length;
@@ -117,8 +103,8 @@ export default function AdminDashboard() {
 
   return (
     <DashboardLayout role="admin">
-      <div className="layout-stack" dir="rtl">
-        {/* Profile Card: White background, thin Mountain Teal border (#428177), high-contrast text */}
+      <div className="space-y-6" dir="rtl">
+        {/* Admin Header Banner */}
         <div 
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 mb-4 shadow-sm"
           style={{
@@ -135,7 +121,7 @@ export default function AdminDashboard() {
               </div>
               <h1 className="text-3xl font-extrabold tracking-tight text-[#002623]">لوحة تحكم المسؤول ⚙️</h1>
               <p className="text-[#3D3A3B] mt-2 text-sm max-w-xl font-medium">
-                إدارة المستخدمين والمقررات الدراسية وطلبات التسجيل الأكاديمية بنقرة واحدة.
+                إدارة الحسابات، إضافة واعتماد المقررات الأكاديمية حصرياً، ومعالجة طلبات التسجيل الفردية.
               </p>
             </div>
           </div>
@@ -144,20 +130,20 @@ export default function AdminDashboard() {
         <AdminMetricsOverview
           totalStudents={totalStudents}
           totalTeachers={totalTeachers}
-          totalCourses={courses.length}
+          totalCourses={courseCatalogItems.length}
           pendingRequests={requests.length}
         />
 
-        <Card className="card-container border-[#428177]/30 bg-white">
-          <CardHeader className="card-section-header">
-            <CardTitle className="card-section-title text-[#002623]">مركز الإدارة والعمليات</CardTitle>
+        <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden">
+          <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10">
+            <CardTitle className="text-lg font-bold text-[#002623]">مركز الإدارة والعمليات المركزية</CardTitle>
           </CardHeader>
-          <CardContent className="card-body-padded">
+          <CardContent className="p-6">
             <Tabs defaultValue="users" dir="rtl">
-              <TabsList className="grid grid-cols-3 mb-6 max-w-md bg-[#EDEBE0]">
-                <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-semibold">المستخدمون ({users.length})</TabsTrigger>
-                <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-semibold">الطلبات ({requests.length})</TabsTrigger>
-                <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-semibold">المقررات ({courses.length})</TabsTrigger>
+              <TabsList className="grid grid-cols-3 mb-6 max-w-md bg-[#EDEBE0] p-1 rounded-xl">
+                <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المستخدمون ({users.length})</TabsTrigger>
+                <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">الطلبات ({requests.length})</TabsTrigger>
+                <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المقررات ({courseCatalogItems.length})</TabsTrigger>
               </TabsList>
 
               <TabsContent value="users">
@@ -177,7 +163,7 @@ export default function AdminDashboard() {
               </TabsContent>
 
               <TabsContent value="courses">
-                <CourseCatalogTable courses={courses} onAddCourse={handleAddCourse} />
+                <CourseCatalogTable courses={courseCatalogItems} onAddCourse={handleAddCourse} />
               </TabsContent>
             </Tabs>
           </CardContent>
