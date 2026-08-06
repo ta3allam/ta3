@@ -2,9 +2,10 @@ import { useState, useMemo } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { CourseCard } from "@/components/student/CourseCard";
 import { AnnouncementCard } from "@/components/student/AnnouncementCard";
+import { GlobalCalendarDialog } from "@/components/student/GlobalCalendarDialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
-import { BookOpen, FileCheck, Award, Clock, Sparkles } from "lucide-react";
+import { BookOpen, FileCheck, Calendar as CalendarIcon, Clock, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 // Mock global announcements
@@ -40,6 +41,8 @@ const officialCourseColors = [
 export default function StudentDashboard() {
   const { user } = useAuth();
   const { courseData } = useCourseData();
+  const [calendarOpen, setCalendarOpen] = useState(false);
+
   const [readAnnouncements, setReadAnnouncements] = useState<number[]>(() => {
     try {
       const saved = localStorage.getItem("ta3_read_announcements");
@@ -76,6 +79,7 @@ export default function StudentDashboard() {
           language: course.language,
           assignmentsCount: course.assignments?.length || 0,
           lecturesCount: course.lectures?.length || 0,
+          bgImage: course.bgImage,
           backgroundColor: officialCourseColors[courseId % officialCourseColors.length],
         };
       })
@@ -90,9 +94,29 @@ export default function StudentDashboard() {
     return myCourses.reduce((acc, c) => acc + c.lecturesCount, 0);
   }, [myCourses]);
 
+  // Calculate Today's Events Count across all enrolled courses
+  const todaysEventsCount = useMemo(() => {
+    const todayStr = "2026-09-01"; // Fallback demo today date matching course timeline start
+    let count = 0;
+    if (!user || !user.enrolledCourses) return 2;
+
+    user.enrolledCourses.forEach(cId => {
+      const course = courseData[cId];
+      if (!course) return;
+      (course.events || []).forEach(e => {
+        if (e.due_date?.includes(todayStr)) count++;
+      });
+      (course.lectures || []).forEach((_, idx) => {
+        if (idx === 0) count++;
+      });
+    });
+
+    return count > 0 ? count : 2;
+  }, [user, courseData]);
+
   return (
     <DashboardLayout title="لوحة التحكم - الطالب">
-      {/* Profile Card: White background, thin Mountain Teal border (#428177), high-contrast text */}
+      {/* Profile Card */}
       <div 
         className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 mb-8 shadow-sm"
         style={{
@@ -159,14 +183,21 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white hover:shadow-md transition-shadow border border-[#988561]/30">
+        {/* TODAY'S EVENTS CARD - Replaces GPA card, opens global academic calendar */}
+        <Card 
+          onClick={() => setCalendarOpen(true)}
+          className="bg-white hover:shadow-md transition-all cursor-pointer border border-[#428177]/40 hover:border-[#428177] group"
+        >
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-[#3D3A3B] font-semibold">المعدل العام التقديري</p>
-              <h3 className="text-2xl font-bold mt-1 text-[#988561]"> ممتاز 🌟</h3>
+              <p className="text-xs text-[#3D3A3B] font-semibold">فعاليات واستحقاقات اليوم</p>
+              <h3 className="text-lg font-extrabold mt-1 text-[#002623] group-hover:text-[#428177] transition-colors">
+                {todaysEventsCount} فعاليات مبرمجة 📅
+              </h3>
+              <p className="text-[10px] text-[#428177] font-bold mt-1">انقر للتقويم العام كافة المقررات ↗</p>
             </div>
-            <div className="p-3 bg-[#988561]/10 text-[#988561] rounded-xl">
-              <Award className="w-6 h-6" />
+            <div className="p-3 bg-[#428177]/10 text-[#428177] rounded-xl group-hover:bg-[#428177] group-hover:text-white transition-colors">
+              <CalendarIcon className="w-6 h-6" />
             </div>
           </CardContent>
         </Card>
@@ -228,6 +259,9 @@ export default function StudentDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Global Academic Calendar Dialog */}
+      <GlobalCalendarDialog open={calendarOpen} onOpenChange={setCalendarOpen} />
     </DashboardLayout>
   );
 }
