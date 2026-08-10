@@ -1,92 +1,113 @@
+# 🗄️ PostgreSQL Database ERD Schema: Ta3 (تعلّم) LMS
+
 ```mermaid
 erDiagram
-    UNIVERSITY ||--o{ DEPARTMENT : "contains"
-    DEPARTMENT ||--o{ COURSE : "offers"
-    COURSE ||--o{ ENROLLMENT : "has"
-    STUDENT ||--o{ ENROLLMENT : "enrolls in"
-    
-    COURSE ||--o{ ASSIGNMENT : "includes"
-    ASSIGNMENT ||--o{ SUBMISSION : "receives"
-    STUDENT ||--o{ SUBMISSION : "submits"
-    
-    COURSE ||--o{ ANNOUNCEMENT : "has"
-    COURSE ||--o{ LECTURE : "contains"
-    LECTURE ||--o{ MATERIAL : "includes"
+    PROFILES ||--o{ COURSES : "teaches"
+    PROFILES ||--o{ ENROLLMENTS : "enrolled in"
+    COURSES ||--o{ ENROLLMENTS : "has"
+    COURSES ||--o{ LECTURES : "contains"
+    LECTURES ||--o{ MATERIALS : "includes"
+    COURSES ||--o{ ASSIGNMENTS : "assigns"
+    ASSIGNMENTS ||--o{ SUBMISSIONS : "receives"
+    PROFILES ||--o{ SUBMISSIONS : "submits"
+    COURSES ||--o{ DISCUSSIONS : "has"
+    PROFILES ||--o{ DISCUSSIONS : "authors"
+    COURSES ||--o{ STUDY_GROUPS : "hosts"
+    STUDY_GROUPS ||--o{ GROUP_MEMBERS : "contains"
+    PROFILES ||--o{ GROUP_MEMBERS : "joins"
 
-    UNIVERSITY {
-        int id PK
+    PROFILES {
+        uuid id PK
         string name
-        string location
+        string username UK
+        string role
+        string avatar_url
+        timestamp created_at
     }
-    DEPARTMENT {
-        int id PK
+
+    COURSES {
+        bigserial id PK
+        string code UK
         string name
-        int university_id FK
+        string category
+        string difficulty
+        uuid teacher_id FK
+        string bg_image
+        string period
+        timestamp created_at
     }
-    COURSE {
-        int id PK
-        string name
-        string code
-        int credits
-        string description
-        string semester
-        int department_id FK
-        int teacher_id FK
+
+    ENROLLMENTS {
+        bigserial id PK
+        uuid student_id FK
+        bigint course_id FK
+        timestamp enrolled_at
     }
-    ENROLLMENT {
-        int id PK
-        int course_id FK
-        int student_id FK
-        date enrolled_at
-    }
-    ASSIGNMENT {
-        int id PK
+
+    LECTURES {
+        bigserial id PK
+        bigint course_id FK
         string title
         string description
-        string attachment_url
-        datetime deadline
-        int course_id FK
+        string duration
+        int order_num
+        timestamp created_at
     }
-    SUBMISSION {
-        int id PK
+
+    MATERIALS {
+        bigserial id PK
+        bigint lecture_id FK
+        bigint course_id FK
+        string title
+        string type
+        string url
+        timestamp created_at
+    }
+
+    ASSIGNMENTS {
+        bigserial id PK
+        bigint course_id FK
+        string title
+        string description
+        timestamp due_date
+        timestamp created_at
+    }
+
+    SUBMISSIONS {
+        bigserial id PK
+        bigint assignment_id FK
+        uuid student_id FK
         string file_url
-        datetime submitted_at
-        int grade
-        int assignment_id FK
-        int student_id FK
+        string notes
+        numeric grade
+        string feedback
+        timestamp submitted_at
     }
-    ANNOUNCEMENT {
-        int id PK
+
+    DISCUSSIONS {
+        bigserial id PK
+        bigint course_id FK
+        uuid author_id FK
         string title
         string content
-        datetime created_at
-        int course_id FK
+        timestamp created_at
     }
-    LECTURE {
-        int id PK
-        string title
+
+    STUDY_GROUPS {
+        bigserial id PK
+        bigint course_id FK
+        string name
         string description
-        int course_id FK
+        uuid leader_id FK
+        int max_members
+        timestamp created_at
     }
-    MATERIAL {
-        int id PK
-        string title
-        string file_url
-        string file_type
-        int lecture_id FK
+
+    GROUP_MEMBERS {
+        bigserial id PK
+        bigint group_id FK
+        uuid student_id FK
+        string role
+        timestamp joined_at
     }
-    TEACHER {
-        int id PK
-        string name
-        string email
-    }
-    ADMIN {
-        int id PK
-        string name
-        string email
-    }
-    STUDENT {
-        int id PK
-        string name
-        string email
-    }
+```
