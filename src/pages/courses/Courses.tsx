@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
 import { EventType } from "./types";
+import { getAssetUrl } from "@/lib/assetUtils";
 
 export default function CourseDetail() {
   const { courseId } = useParams<{ courseId: string }>();
