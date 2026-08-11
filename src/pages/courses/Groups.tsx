@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Users, Plus, UserCheck, ArrowRight, ShieldCheck, List, LayoutGrid, CheckCircle2, XCircle } from "lucide-react";
+import { Users, Plus, UserCheck, ArrowRight, ShieldCheck, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 
 export interface GroupMember {
@@ -128,6 +128,14 @@ export default function CourseGroups() {
     setDialogOpen(false);
   };
 
+  // Teacher Delete Study Group
+  const handleDeleteGroup = (groupId: number) => {
+    if (!isTeacher) return;
+    const updated = groups.filter(g => g.id !== groupId);
+    saveGroups(updated);
+    toast.success("تم حذف المجموعة الدراسية بنجاح");
+  };
+
   // Student Group Application Workflow
   const handleApplyToGroup = (groupId: number) => {
     if (!user) return;
@@ -169,6 +177,23 @@ export default function CourseGroups() {
               status: 'pending' as const
             }
           ]
+        };
+      }
+      return g;
+    });
+    saveGroups(updated);
+  };
+
+  // Student Withdraw/Cancel Group Application
+  const handleCancelApplication = (groupId: number) => {
+    if (!user) return;
+    const updated = groups.map(g => {
+      if (g.id === groupId) {
+        const applications = (g.applications || []).filter(a => a.studentName !== user.name);
+        toast.info("تم سحب وإلغاء طلب الانضمام بنجاح");
+        return {
+          ...g,
+          applications
         };
       }
       return g;
@@ -314,7 +339,7 @@ export default function CourseGroups() {
                   <TableHead className="text-right font-bold text-[#002623]">الوصف</TableHead>
                   <TableHead className="text-center font-bold text-[#002623]">الأعضاء الحاليون</TableHead>
                   <TableHead className="text-center font-bold text-[#002623]">طلبات المعلقة</TableHead>
-                  <TableHead className="text-center font-bold text-[#002623]">الإجراء</TableHead>
+                  <TableHead className="text-center font-bold text-[#002623]">الإجراءات والعمليات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -322,6 +347,7 @@ export default function CourseGroups() {
                   const members = group.members || [];
                   const applications = group.applications || [];
                   const isMember = user && members.some(m => m.name === user.name);
+                  const hasPendingApp = user && applications.some(a => a.studentName === user.name && a.status === 'pending');
                   const pendingApps = applications.filter(a => a.status === 'pending');
 
                   return (
@@ -341,19 +367,43 @@ export default function CourseGroups() {
                         )}
                       </TableCell>
                       <TableCell className="text-center">
-                        {isMember ? (
-                          <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-3">
-                            عضو بالفريق ✅
-                          </Badge>
-                        ) : (
-                          <Button
-                            size="sm"
-                            onClick={() => handleApplyToGroup(group.id)}
-                            className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
-                          >
-                            {members.length === 0 ? "انضمام تلقائي" : "تقديم طلب انضمام"}
-                          </Button>
-                        )}
+                        <div className="flex items-center justify-center gap-2">
+                          {isMember ? (
+                            <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-3">
+                              عضو بالفريق ✅
+                            </Badge>
+                          ) : hasPendingApp ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleCancelApplication(group.id)}
+                              className="border-[#6B1F2A]/40 text-[#6B1F2A] hover:bg-[#6B1F2A]/10 font-bold text-xs flex items-center gap-1"
+                            >
+                              <Undo2 className="w-3.5 h-3.5" />
+                              إلغاء طلب الانضمام
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              onClick={() => handleApplyToGroup(group.id)}
+                              className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
+                            >
+                              {members.length === 0 ? "انضمام تلقائي" : "تقديم طلب انضمام"}
+                            </Button>
+                          )}
+
+                          {isTeacher && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleDeleteGroup(group.id)}
+                              className="text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-8 w-8 p-0"
+                              title="حذف المجموعة (خاص بالمعلم)"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
@@ -368,15 +418,30 @@ export default function CourseGroups() {
           <div className="grid gap-6 md:grid-cols-2">
             {groups.map((group) => {
               const members = group.members || [];
+              const applications = group.applications || [];
               const isMember = user && members.some(m => m.name === user.name);
+              const hasPendingApp = user && applications.some(a => a.studentName === user.name && a.status === 'pending');
 
               return (
                 <Card key={group.id} className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden text-right">
                   <CardHeader className="pb-3 bg-[#EDEBE0]/30 border-b border-[#428177]/10">
                     <div className="flex justify-between items-start">
-                      <Badge className="bg-[#428177]/15 text-[#054239] border-[#428177]/30 font-bold">
-                        {members.length} / {group.maxMembers || 5} أعضاء
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-[#428177]/15 text-[#054239] border-[#428177]/30 font-bold">
+                          {members.length} / {group.maxMembers || 5} أعضاء
+                        </Badge>
+                        {isTeacher && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDeleteGroup(group.id)}
+                            className="text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-7 w-7 p-0"
+                            title="حذف المجموعة"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        )}
+                      </div>
                       <CardTitle className="text-lg font-bold text-[#002623]">{group.name}</CardTitle>
                     </div>
                     <p className="text-xs text-[#3D3A3B] font-medium mt-1">{group.description}</p>
@@ -405,6 +470,16 @@ export default function CourseGroups() {
                         <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-3">
                           أنت عضو بالفريق ✅
                         </Badge>
+                      ) : hasPendingApp ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleCancelApplication(group.id)}
+                          className="border-[#6B1F2A]/40 text-[#6B1F2A] hover:bg-[#6B1F2A]/10 font-bold text-xs flex items-center gap-1"
+                        >
+                          <Undo2 className="w-3.5 h-3.5" />
+                          إلغاء طلب الانضمام
+                        </Button>
                       ) : (
                         <Button
                           size="sm"
