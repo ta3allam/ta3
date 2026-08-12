@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Assignment } from "@/pages/courses/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
+import { uploadAssignmentSubmission } from "@/lib/storage";
 import { toast } from "sonner";
 import { UploadCloud, CheckCircle2, FileText, Calendar, Archive, Lock, RefreshCw } from "lucide-react";
 
@@ -93,7 +94,7 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
     }, 100);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isLate) {
@@ -106,23 +107,38 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
       return;
     }
 
-    const combinedName = zipFile
-      ? `${pdfFile.name} + ${zipFile.name}`
-      : pdfFile.name;
+    setIsUploading(true);
 
-    addSubmission(courseId, {
-      assignmentId: assignment.id,
-      studentId: user?.username || "unknown",
-      studentName: user?.name || "طالب مجهول",
-      submittedAt: new Date().toISOString(),
-      fileName: combinedName,
-      comment: comment.trim() || undefined,
-    });
+    try {
+      const uploadRes = await uploadAssignmentSubmission(
+        user?.id || user?.username || 'student',
+        assignment.id,
+        pdfFile
+      );
 
-    toast.success("تم تسليم الواجب بنجاح");
-    setPdfFile(null);
-    setZipFile(null);
-    setComment("");
+      const combinedName = zipFile
+        ? `${pdfFile.name} + ${zipFile.name}`
+        : pdfFile.name;
+
+      addSubmission(courseId, {
+        assignmentId: assignment.id,
+        studentId: user?.username || "unknown",
+        studentName: user?.name || "طالب مجهول",
+        submittedAt: new Date().toISOString(),
+        fileName: combinedName,
+        fileUrl: uploadRes.publicUrl,
+        comment: comment.trim() || undefined,
+      });
+
+      toast.success("تم تسليم الواجب بنجاح ورفع الملف إلى السحابة");
+      setPdfFile(null);
+      setZipFile(null);
+      setComment("");
+    } catch (e) {
+      toast.error("حدث خطأ أثناء رفع ملف التسليم");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   if (mySubmission) {
