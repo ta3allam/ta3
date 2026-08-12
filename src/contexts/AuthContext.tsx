@@ -12,6 +12,7 @@ export interface User extends UserProfile {
 interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => Promise<boolean>;
+  register: (email: string, password: string, name: string, role: UserRole) => Promise<{ success: boolean; message?: string }>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
@@ -28,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         const email = session.user.email || '';
         const role: UserRole = (session.user.user_metadata?.role as UserRole) || 'student';
-        const name = session.user.user_metadata?.full_name || email.split('@')[0];
+        const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || email.split('@')[0];
 
         const sbUser: User = {
           id: session.user.id,
@@ -57,13 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
         if (!error && data.user) {
           const role: UserRole = (data.user.user_metadata?.role as UserRole) || 'student';
+          const name = data.user.user_metadata?.full_name || data.user.user_metadata?.name || username;
           const sbUser: User = {
             id: data.user.id,
             username: data.user.email || username,
             email: data.user.email || username,
             role: role,
             enrolledCourses: [1, 2],
-            name: data.user.user_metadata?.full_name || username,
+            name: name,
           };
           setUser(sbUser);
           MockAuthEngine.saveUser(sbUser);
@@ -84,6 +86,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return false;
   }, []);
 
+  const register = useCallback(async (email: string, password: string, name: string, role: UserRole) => {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+            name: name,
+            role: role,
+          }
+        }
+      });
+
+      if (error) {
+        return { success: false, message: error.message };
+      }
+
+      if (data.user) {
+        const newUser: User = {
+          id: data.user.id,
+          username: email,
+          email: email,
+          role: role,
+          name: name,
+          enrolledCourses: [1, 2],
+        };
+        setUser(newUser);
+        MockAuthEngine.saveUser(newUser);
+        return { success: true };
+      }
+    } catch (e) {
+      console.warn('Supabase signup fallback to mock registration', e);
+    }
+
+    // Local fallback mock registration
+    const newUser: User = {
+      id: `user-${Date.now()}`,
+      username: email,
+      email: email,
+      name: name,
+      role: role,
+      enrolledCourses: [1, 2]
+    };
+    setUser(newUser);
+    MockAuthEngine.saveUser(newUser);
+    return { success: true };
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await supabase.auth.signOut();
@@ -98,10 +149,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user,
       login,
+      register,
       logout,
       isAuthenticated: !!user,
     }),
-    [user, login, logout]
+    [user, login, register, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
