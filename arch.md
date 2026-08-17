@@ -7,30 +7,40 @@ The platform provides isolated role-based experiences for **Students**, **Teache
 
 ---
 
-## 🏛️ C4 Model Architecture Diagrams
+## 🏛️ System Architecture Diagrams (Mermaid)
 
 ### Level 1: System Context Diagram
 The System Context diagram displays how different academic roles interact with **Ta3 LMS** and external cloud providers.
 
 ```mermaid
-C4Context
-    title C4 Level 1: System Context Diagram for Ta3 LMS
+graph TD
+    subgraph Users [" Academic Users "]
+        Student["🎓 Student (طالب)<br/>Accesses courses, submits assignments, views calendar"]
+        Teacher["👨‍🏫 Teacher (معلم)<br/>Publishes lectures, grades homework, answers Q&A"]
+        Admin["🛡️ Admin (مدير)<br/>Monitors health, manages users, catalog management"]
+    end
 
-    Person(student, "Student (طالب)", "Enrolled user accessing courses, submitting assignments, and participating in Q&A.")
-    Person(teacher, "Teacher (معلم)", "Course instructor creating lectures, grading submissions, and managing content.")
-    Person(admin, "Admin (مدير)", "System administrator managing catalog, platform metrics, and system security.")
+    subgraph Platform [" Core Ta3 Platform "]
+        Ta3App["💻 Ta3 LMS Web Application<br/>(React 18, TypeScript, Tailwind CSS, shadcn/ui)"]
+    end
 
-    System(ta3_lms, "Ta3 LMS (تعلّم)", "Arabic-first Web Learning Management Platform.")
+    subgraph Cloud [" External Cloud Infrastructure "]
+        SupabaseDB[("🗄️ Supabase PostgreSQL DB<br/>Relational data & RLS policies")]
+        SupabaseAuth["🔑 Supabase Auth<br/>JWT Auth & Role Claims"]
+        SupabaseStorage["☁️ Supabase Storage<br/>course-materials & assignment-submissions"]
+        SupabaseRealtime["⚡ Supabase Realtime<br/>WebSockets Q&A Engine"]
+        GHPages["🌐 GitHub Pages CDN<br/>Production SPA Hosting (/ta3/)"]
+    end
 
-    System_Ext(supabase_cloud, "Supabase Cloud Platform", "PostgreSQL Database, Supabase Auth (JWT), Storage Buckets, & Realtime WebSockets.")
-    System_Ext(gh_pages, "GitHub Pages CDN", "Production static Web SPA Hosting Environment.")
+    Student -->|HTTPS / Web| Ta3App
+    Teacher -->|HTTPS / Web| Ta3App
+    Admin -->|HTTPS / Web| Ta3App
 
-    Rel(student, ta3_lms, "Accesses courses, submits assignments, views calendar", "HTTPS / Web")
-    Rel(teacher, ta3_lms, "Publishes lectures, grades homework, answers Q&A", "HTTPS / Web")
-    Rel(admin, ta3_lms, "Monitors system health, manages users", "HTTPS / Web")
-
-    Rel(ta3_lms, supabase_cloud, "Authenticates users, queries DB, streams WebSockets", "WSS / HTTPS")
-    Rel(ta3_lms, gh_pages, "Loaded from static bundle", "HTTPS")
+    Ta3App -->|PostgREST API| SupabaseDB
+    Ta3App -->|Auth SDK| SupabaseAuth
+    Ta3App -->|S3 Upload/Download| SupabaseStorage
+    Ta3App -->|WebSocket Channels| SupabaseRealtime
+    Ta3App <-->|Static Asset Delivery| GHPages
 ```
 
 ---
@@ -39,34 +49,33 @@ C4Context
 The Container diagram details the high-level technical building blocks of **Ta3 LMS**.
 
 ```mermaid
-C4Container
-    title C4 Level 2: Container Diagram for Ta3 LMS
+graph TD
+    subgraph Browser [" Client Web Browser "]
+        subgraph FrontendSPA [" Ta3 React 18 Single Page Application "]
+            UI["📱 React UI Components & Layouts"]
+            AuthCtx["🔑 Auth Provider (AuthContext.tsx)<br/>Session & Role Router Guard"]
+            CourseCtx["📚 Course State Manager (CourseContext.tsx)<br/>Course CRUD & Submissions State"]
+            StorageUtil["☁️ Storage Helper (storage.ts)<br/>S3 Upload & Blob Fallback"]
+            RealtimeClient["⚡ Realtime Client (discussions.ts)<br/>WebSocket Channel Listener"]
+        end
+    end
 
-    Person(user, "User (Student / Teacher / Admin)", "Authenticated user on Web Browser.")
+    subgraph Backend [" Supabase Cloud Backend "]
+        AuthSvc["🔐 Auth Service (GoTrue)<br/>JWT Session Issuer"]
+        PostgresDB[("DATABASE: PostgreSQL 15<br/>12 Relational Tables + RLS Policies")]
+        StorageBuckets["🗂️ Storage Buckets<br/>course-materials & assignment-submissions"]
+        RealtimeEngine["📡 Phoenix Realtime Engine<br/>WebSocket Broadcasts"]
+    end
 
-    Container_Boundary(frontend_app, "Ta3 Web Application (Browser)") {
-        Container(react_spa, "React 18 SPA", "TypeScript, Vite, Tailwind CSS, shadcn/ui", "Renders responsive, RTL-first user interfaces.")
-        Container(auth_context, "Auth State Provider", "AuthContext.tsx, Supabase Auth SDK", "Manages JWT sessions, login/signup, and role routes.")
-        Container(course_context, "Course Data Manager", "CourseContext.tsx, Mock Engine", "Manages state for courses, assignments, and submissions.")
-        Container(storage_helper, "Storage Client Utility", "src/lib/storage.ts", "Handles file upload to Supabase Storage with local Blob fallback.")
-        Container(realtime_client, "Realtime Subscriptions", "src/lib/discussions.ts", "Manages WebSocket channels for live Q&A updates.")
-    }
+    UI --> AuthCtx
+    UI --> CourseCtx
+    UI --> StorageUtil
+    UI --> RealtimeClient
 
-    Container_Boundary(backend_supabase, "Supabase Infrastructure") {
-        ContainerDb(postgres_db, "PostgreSQL Database", "PostgreSQL 15, RLS Policies", "Stores profiles, courses, assignments, submissions, and discussions.")
-        Container(supabase_auth, "Supabase Auth Service", "GoTrue / JWT", "Handles user authentication and issues role claims.")
-        Container(supabase_storage, "Supabase Storage Buckets", "Object Storage S3 API", "Stores public course-materials and private assignment-submissions.")
-        Container(supabase_realtime, "Realtime WebSocket Engine", "Phoenix Sockets", "Streams database mutations to active clients.")
-    }
-
-    Rel(user, react_spa, "Interacts with UI", "HTTPS / DOM")
-    Rel(react_spa, auth_context, "Reads user session & role")
-    Rel(react_spa, course_context, "Dispatches CRUD actions")
-    
-    Rel(auth_context, supabase_auth, "Authenticates credentials & signs up", "HTTPS / REST")
-    Rel(course_context, postgres_db, "Executes SQL queries with RLS", "HTTPS / PostgREST")
-    Rel(storage_helper, supabase_storage, "Uploads PDF & ZIP files", "HTTPS / S3 API")
-    Rel(realtime_client, supabase_realtime, "Listens to live discussion events", "WSS / WebSockets")
+    AuthCtx -->|SignIn / SignUp / Session| AuthSvc
+    CourseCtx -->|REST Queries & RLS| PostgresDB
+    StorageUtil -->|File Uploads| StorageBuckets
+    RealtimeClient -->|Subscribe to Channel| RealtimeEngine
 ```
 
 ---
@@ -75,33 +84,41 @@ C4Container
 The Component diagram breaks down the internal modules inside the React SPA.
 
 ```mermaid
-C4Component
-    title C4 Level 3: Component Diagram for Ta3 Frontend
+graph TD
+    subgraph AppCore [" App Core & Routing Layer "]
+        Router["🛣️ App Router (App.tsx)<br/>Public & Protected Routes"]
+        RequireAuth["🔒 RequireAuth Guard<br/>Role Validation (Student / Teacher / Admin)"]
+        TopBarComp["🔝 TopBar Header<br/>Brand Logo & getAssetUrl() Helper"]
+        SidebarComp["📐 AppSidebar<br/>Context-Aware Navigation Menu"]
+    end
 
-    Container_Boundary(spa_components, "React 18 Frontend Component Architecture") {
-        Component(router, "App Router", "React Router v6", "Defines public / login routes and protected dashboard routes.")
-        Component(require_auth, "RequireAuth Guard", "RequireAuth.tsx", "Guards routes based on authenticated role claims (student, teacher, admin).")
+    subgraph Pages [" SPA Pages & Dashboards "]
+        LoginPage["🔐 Login & Register Page (Login.tsx)<br/>Sign-In & Sign-Up Tabs"]
+        StudentDash["🎓 Student Dashboard<br/>Today's Events Card & Enrolled Courses"]
+        TeacherDash["👨‍🏫 Teacher Dashboard<br/>Teaching Catalog & Creation Triggers"]
+        AdminDash["🛡️ Admin Dashboard<br/>Platform Metrics & System Admin"]
+        UnifiedCourse["📚 Unified Course Detail (Courses.tsx)<br/>Announcements, Lectures, Assignments, Discussions"]
+        GroupsPage["👥 Study Groups Catalog (Groups.tsx)<br/>List/Grid Toggle, Delete, & Withdraw Application"]
+    end
 
-        Component(topbar, "TopBar Header", "TopBar.tsx", "Displays brand logo, asset paths via getAssetUrl(), and user profile menu.")
-        Component(sidebar, "AppSidebar", "AppSidebar.tsx", "Renders context-aware navigation links depending on active page.")
+    subgraph Features [" Feature Components "]
+        GlobalCal["📅 Global Calendar Modal<br/>Unified Course Deadlines"]
+        QAFeed["💬 Real-time Q&A Feed<br/>Solution Marking & Verified Badges"]
+        GradingConsole["📝 Grading Console<br/>Teacher Homework Evaluation"]
+        StorageHelper["☁️ Storage Helper<br/>S3 Uploads & Blob Fallback"]
+    end
 
-        Component(login_page, "Login & Register Modal", "Login.tsx", "Features dual tabs for Login and Sign-Up with role selection.")
-        Component(student_dash, "Student Dashboard", "StudentDashboard.tsx", "Renders enrolled courses, Today's Events card, and Global Calendar.")
-        Component(teacher_dash, "Teacher Dashboard", "TeacherDashboard.tsx", "Renders teaching course catalog and quick creation triggers.")
-        Component(unified_course, "Unified Course Detail", "Courses.tsx", "Single container managing Announcements, Lectures, Assignments, and Discussions.")
+    Router --> RequireAuth
+    RequireAuth --> StudentDash
+    RequireAuth --> TeacherDash
+    RequireAuth --> AdminDash
+    RequireAuth --> UnifiedCourse
+    RequireAuth --> GroupsPage
 
-        Component(group_catalog, "Study Groups Engine", "Groups.tsx", "List/Grid view catalog with teacher group deletion & student application withdrawal.")
-        Component(discussions_comp, "Real-time Q&A Feed", "CourseDiscussions.tsx", "Live Q&A feed with solution marking, search, and filter tabs.")
-        Component(grading_console, "Grading Console", "GradingConsole.tsx", "Teacher console for evaluating student assignment submissions.")
-        Component(global_cal, "Global Calendar Dialog", "GlobalCalendarDialog.tsx", "Unified academic calendar modal for all course deadlines.")
-    }
-
-    Rel(router, require_auth, "Enforces protection")
-    Rel(require_auth, student_dash, "Renders for student role")
-    Rel(require_auth, teacher_dash, "Renders for teacher role")
-    Rel(unified_course, discussions_comp, "Embeds Q&A feed")
-    Rel(unified_course, grading_console, "Embeds teacher grading")
-    Rel(student_dash, global_cal, "Opens calendar modal")
+    StudentDash --> GlobalCal
+    UnifiedCourse --> QAFeed
+    UnifiedCourse --> GradingConsole
+    UnifiedCourse --> StorageHelper
 ```
 
 ---
@@ -307,7 +324,7 @@ ta3/
 │   └── types/
 │       ├── supabase.ts               # Database TypeScript Interface Definitions
 │       └── user.ts                   # User Roles & Profiles
-├── arch.md                            # Comprehensive C4 Architecture Spec
+├── arch.md                            # Comprehensive Architecture Spec (Standard Mermaid)
 ├── erd.md                             # Entity Relationship Diagram & Schema Docs
 └── README.md                          # Master Project README
 ```
