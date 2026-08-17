@@ -1,19 +1,19 @@
-# 🎓 Ta3 (تعلّم) - Modern Arabic-First AI-Boosted LMS
+# 🎓 Ta3 (تعلّم) - Modern Arabic-First Enterprise LMS
 
-> **Ta3 (تعلّم)** is a high-aesthetic, RTL-native, AI-native Learning Management System (LMS) designed for modern education across the MENA region. Built with React 18, TypeScript, Tailwind CSS, Supabase, and PostgreSQL.
+> **Ta3 (تعلّم)** is a high-aesthetic, RTL-native, enterprise-grade Learning Management System (LMS) designed for modern education across the MENA region. Built with React 18, TypeScript, Tailwind CSS, Supabase, and PostgreSQL.
 
 ---
 
 ## 📌 Executive Overview
 
-Ta3 connects Students, Teachers, and Administrators in a unified, role-based platform that features adaptive AI tutoring, dynamic lesson blocks, and frictionless course management.
+Ta3 connects Students, Teachers, and Administrators in a unified, role-based platform that features real-time Q&A discussions, cloud file storage, database-enforced Row-Level Security (RLS), and adaptive academic dashboards.
 
 ```mermaid
 graph TD
-    User([Browser / Mobile Client]) -->|RTL React UI| FE[Frontend App - Vite/Nginx]
-    FE -->|Supabase Auth & REST| BE[PostgreSQL Database & Storage]
-    FE -->|Contextual Prompts & Quizzes| AI[AI Engine Service]
-    BE --- RLS[Row-Level Security Policies]
+    User([Browser / Mobile Client]) -->|RTL React UI| FE[Frontend App - React 18 / Vite / Nginx]
+    FE -->|Supabase Auth & REST| BE[PostgreSQL Database & RLS Policies]
+    FE -->|S3 Upload & Download| ST[Supabase Storage Buckets]
+    FE -->|WebSocket Q&A Channel| RT[Supabase Realtime Engine]
 ```
 
 ---
@@ -22,7 +22,7 @@ graph TD
 
 ### 1. Prerequisites
 - **Node.js**: v20+
-- **Docker & Docker Compose**: Installed and running
+- **npm** or **pnpm**
 
 ### 2. Environment Setup
 Copy the environment template and configure your keys:
@@ -36,27 +36,32 @@ npm install
 npm run dev
 ```
 
-### 4. Run Full Stack with Docker Compose
+### 4. Run Tests
 ```bash
-docker-compose up -d --build
+npx vitest run src/
 ```
-Access the application at `http://localhost:8080`.
+
+### 5. Deploy to GitHub Pages
+```bash
+npm run git
+```
 
 ---
 
-## 🏃 Product Roadmap & Sprints
+## 🏃 Product Master Roadmap
 
-*   **Sprint 1: Foundation, Auth & Base API Integration**
-    *   Supabase Auth integration, PostgreSQL schema migrations (`erd.md`), RLS policy enforcement, Docker setup.
-*   **Sprint 2: Core LMS Workflows & AI Micro-Features**
-    *   Student assignment upload dropzone, teacher grading interface, AI auto-quiz generator.
-*   **Sprint 3: Dockerization, Hardening & Public Readiness**
-    *   Nginx reverse proxy, container security audit, performance load testing, public cloud deployment manifests.
+- ✅ **Sprint 1 (Days 1–5): Foundation & Role-Based UI Architecture**
+  - Isolated student, teacher, and admin dashboards; unified course detail view (`Courses.tsx`); study groups catalog (`Groups.tsx`); academic calendar (`GlobalCalendarDialog.tsx`); asset path resolution (`getAssetUrl`).
+- ✅ **Sprint 2 (Days 6–9): PostgreSQL, Supabase Auth, Cloud Storage & Real-time Q&A**
+  - PostgreSQL relational schema (`001_initial_schema.sql`), seed data (`002_seed_data.sql`), Supabase Auth SDK & RLS policies (`003_rls_policies.sql`), Supabase Storage file uploads (`005_storage_buckets.sql`, `storage.ts`), real-time WebSocket discussions & solution marking (`discussions.ts`).
+- 📋 **Sprint 2 Resiliency & Production Release (Days 10–13)**
+  - Docker multi-stage build & Nginx staging, CQRS read/write separation, Idempotency key manager, Optimistic Concurrency Control (OCC locking), high-concurrency performance tuning, and Playwright release verification (`v2.0-beta`).
 
 ---
 
-## 📄 Key Architecture Documents
-- 📐 [arch.md](arch.md) - Full Frontend & Component Architecture
-- 🗄️ [erd.md](erd.md) - Database Schema & ERD Diagram
-- 🤖 [ta3.v3.md](ta3.v3.md) - AI Platform & Ecosystem Specification
-- 🗂️ [.github/PROJECTS.md](.github/PROJECTS.md) - Master Issues & Kanban Board
+## 📄 Core Documentation
+- 📐 [arch.md](arch.md) - Comprehensive Frontend & Backend C4 / Standard Mermaid Architecture Spec
+- 🗄️ [erd.md](erd.md) - PostgreSQL Relational Database Schema & ERD Specification
+- 🏆 [.agents/REWARDS_PUNISHMENTS.md](.agents/REWARDS_PUNISHMENTS.md) - Agent Team Leaderboard & XP Progression
+- 📜 [.agents/AGENTS.md](.agents/AGENTS.md) - Agent Operating System & Mandatory Git Rules
+- 🗂️ [.github/PROJECTS.md](.github/PROJECTS.md) - Master Milestone Schedule & Task Status
