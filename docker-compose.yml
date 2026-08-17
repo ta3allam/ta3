@@ -1,30 +1,38 @@
 version: '3.8'
 
 services:
-  frontend:
+  # 1. Frontend Web App (Nginx SPA)
+  ta3-frontend:
     build:
       context: .
       dockerfile: docker/Dockerfile.frontend
+    container_name: ta3_frontend_app
     ports:
       - "8080:80"
     environment:
-      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
-      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - NODE_ENV=production
     restart: always
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  db:
+  # 2. Local PostgreSQL Database Engine (Development & Offline Testing)
+  ta3-postgres:
     image: postgres:15-alpine
-    container_name: ta3_postgres
+    container_name: ta3_postgres_db
     environment:
-      POSTGRES_DB: ta3_db
-      POSTGRES_USER: ta3_user
-      POSTGRES_PASSWORD: ta3_password
+      POSTGRES_DB: ta3_lms
+      POSTGRES_USER: ta3_admin
+      POSTGRES_PASSWORD: ta3_secure_password_2026
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./supabase/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
-      - ./supabase/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
+      - pgdata:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d
+    restart: always
 
 volumes:
-  postgres_data:
+  pgdata:
+    driver: local
