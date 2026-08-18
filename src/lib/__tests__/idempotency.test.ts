@@ -3,7 +3,9 @@ import { idempotencyManager } from '../idempotency';
 
 describe('IdempotencyManager Engine', () => {
   beforeEach(() => {
-    localStorage.clear();
+    if (typeof localStorage !== 'undefined') {
+      localStorage.clear();
+    }
   });
 
   it('should generate deterministic hashes for identical payloads', () => {

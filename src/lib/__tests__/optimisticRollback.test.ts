@@ -11,6 +11,7 @@ describe('OptimisticRollbackEngine', () => {
     const result = await OptimisticRollbackEngine.executeOptimistic<number[], number>(
       {
         currentState,
+        payload: 4,
         optimisticMutator: (state, payload) => [...state, payload],
         action: async (payload) => {
           return { success: true, data: payload };
@@ -34,6 +35,7 @@ describe('OptimisticRollbackEngine', () => {
     const result = await OptimisticRollbackEngine.executeOptimistic<string[], string>(
       {
         currentState,
+        payload: 'post3',
         optimisticMutator: (state, payload) => [payload, ...state],
         action: async () => {
           return { success: false, error: 'Network Connection Interrupted' };

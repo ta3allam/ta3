@@ -5,6 +5,7 @@
 
 export interface OptimisticActionOptions<TState, TPayload> {
   currentState: TState;
+  payload: TPayload;
   optimisticMutator: (state: TState, payload: TPayload) => TState;
   action: (payload: TPayload) => Promise<{ success: boolean; data?: any; error?: string }>;
   onSuccess?: (data?: any) => void;
@@ -23,6 +24,7 @@ export class OptimisticRollbackEngine {
   ): Promise<{ success: boolean; data?: any; error?: string }> {
     const {
       currentState,
+      payload,
       optimisticMutator,
       action,
       onSuccess,
@@ -34,7 +36,7 @@ export class OptimisticRollbackEngine {
 
     // 2. Apply optimistic UI mutation instantly
     try {
-      const optimisticState = optimisticMutator(currentState, options as any);
+      const optimisticState = optimisticMutator(currentState, payload);
       setState(optimisticState);
     } catch (e: any) {
       // Mutation failed locally before network dispatch
@@ -44,7 +46,7 @@ export class OptimisticRollbackEngine {
 
     // 3. Dispatch async network/backend action
     try {
-      const result = await action(options as any);
+      const result = await action(payload);
 
       if (!result.success) {
         // Rollback on non-success result

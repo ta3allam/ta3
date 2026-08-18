@@ -8,7 +8,7 @@ export interface UseOptimisticActionReturn<TState, TPayload> {
   error: string | null;
   executeOptimistic: (
     payload: TPayload,
-    options: Omit<OptimisticActionOptions<TState, TPayload>, 'currentState'>
+    options: Omit<OptimisticActionOptions<TState, TPayload>, 'currentState' | 'payload'>
   ) => Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
@@ -22,7 +22,7 @@ export function useOptimisticAction<TState, TPayload = any>(
   const executeOptimistic = useCallback(
     async (
       payload: TPayload,
-      options: Omit<OptimisticActionOptions<TState, TPayload>, 'currentState'>
+      options: Omit<OptimisticActionOptions<TState, TPayload>, 'currentState' | 'payload'>
     ) => {
       setIsPending(true);
       setError(null);
@@ -31,6 +31,7 @@ export function useOptimisticAction<TState, TPayload = any>(
         {
           ...options,
           currentState: state,
+          payload,
           onError: (err, rolledBackState) => {
             setError(err);
             if (options.onError) {

@@ -60,15 +60,17 @@ class IdempotencyManager {
 
     // 2. Check LocalStorage fallback
     try {
-      const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${key}`);
-      if (raw) {
-        const record: IdempotencyRecord<T> = JSON.parse(raw);
-        if (Date.now() - record.timestamp > DEFAULT_TTL_MS) {
-          this.clearRecord(key);
-          return null;
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${key}`);
+        if (raw) {
+          const record: IdempotencyRecord<T> = JSON.parse(raw);
+          if (Date.now() - record.timestamp > DEFAULT_TTL_MS) {
+            this.clearRecord(key);
+            return null;
+          }
+          this.memoryCache.set(key, record);
+          return record;
         }
-        this.memoryCache.set(key, record);
-        return record;
       }
     } catch {
       // Ignore LocalStorage errors in non-browser environments
@@ -83,7 +85,9 @@ class IdempotencyManager {
   public setRecord<T>(key: string, record: IdempotencyRecord<T>): void {
     this.memoryCache.set(key, record as IdempotencyRecord);
     try {
-      localStorage.setItem(`${STORAGE_KEY_PREFIX}${key}`, JSON.stringify(record));
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        localStorage.setItem(`${STORAGE_KEY_PREFIX}${key}`, JSON.stringify(record));
+      }
     } catch {
       // LocalStorage error fallback
     }
@@ -95,7 +99,9 @@ class IdempotencyManager {
   public clearRecord(key: string): void {
     this.memoryCache.delete(key);
     try {
-      localStorage.removeItem(`${STORAGE_KEY_PREFIX}${key}`);
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        localStorage.removeItem(`${STORAGE_KEY_PREFIX}${key}`);
+      }
     } catch {
       // Ignore
     }
