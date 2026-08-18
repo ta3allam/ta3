@@ -3,11 +3,14 @@
  * Separates atomic mutation Commands from fast, read-optimized Query view models.
  */
 
+import { idempotencyManager } from '../idempotency';
+
 export interface CommandResult<T = any> {
   success: boolean;
   data?: T;
   error?: string;
   commandId: string;
+  idempotencyKey?: string;
   timestamp: string;
 }
 
@@ -21,6 +24,7 @@ export interface ICommand<TPayload = any> {
   type: string;
   payload: TPayload;
   commandId: string;
+  idempotencyKey?: string;
   executedBy: string;
 }
 
@@ -41,7 +45,12 @@ class CQRSBus {
     this.queryHandlers.set(type, handler);
   }
 
-  async dispatchCommand<T = any>(type: string, payload: any, executedBy: string): Promise<CommandResult<T>> {
+  async dispatchCommand<T = any>(
+    type: string,
+    payload: any,
+    executedBy: string,
+    idempotencyKey?: string
+  ): Promise<CommandResult<T>> {
     const handler = this.commandHandlers.get(type);
     const commandId = `cmd_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
@@ -54,13 +63,22 @@ class CQRSBus {
       };
     }
 
+    const key = idempotencyKey || idempotencyManager.generateKey(type, payload);
+
     try {
-      return await handler({ type, payload, commandId, executedBy });
+      return await idempotencyManager.execute(key, async () => {
+        const result = await handler({ type, payload, commandId, idempotencyKey: key, executedBy });
+        return {
+          ...result,
+          idempotencyKey: key,
+        };
+      });
     } catch (e: any) {
       return {
         success: false,
         error: e.message || 'Command execution failed',
         commandId,
+        idempotencyKey: key,
         timestamp: new Date().toISOString()
       };
     }
