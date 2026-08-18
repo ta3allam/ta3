@@ -12,6 +12,8 @@ import { Plus, MessageSquare, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
+import { useOptimisticAction } from "@/lib/useOptimisticAction";
+
 export default function CourseDiscussion() {
     const { courseId } = useParams<{ courseId: string }>();
     const { user } = useAuth();
@@ -22,6 +24,8 @@ export default function CourseDiscussion() {
     const [showNewPost, setShowNewPost] = useState(false);
     const [newTitle, setNewTitle] = useState("");
     const [newContent, setNewContent] = useState("");
+
+    const { executeOptimistic } = useOptimisticAction<DiscussionPost[]>(posts);
 
     // Load posts from LocalStorage, or use initial mock data
     useEffect(() => {
@@ -70,7 +74,7 @@ export default function CourseDiscussion() {
         localStorage.setItem(`ta3_discussions_${courseId}`, JSON.stringify(updatedPosts));
     };
 
-    const handleCreatePost = (e: React.FormEvent) => {
+    const handleCreatePost = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newTitle.trim() || !newContent.trim() || !user) return;
 
@@ -84,35 +88,74 @@ export default function CourseDiscussion() {
             comments: []
         };
 
-        const updated = [newPost, ...posts];
-        savePostsToLocalStorage(updated);
-        toast.success("تم نشر الموضوع الجديد بنجاح");
-        setNewTitle("");
-        setNewContent("");
-        setShowNewPost(false);
+        await executeOptimistic(newPost, {
+            optimisticMutator: (current, payload) => [payload, ...current],
+            action: async (payload) => {
+                const updated = [payload, ...posts];
+                savePostsToLocalStorage(updated);
+                return { success: true, data: updated };
+            },
+            onSuccess: () => {
+                toast.success("تم نشر الموضوع الجديد بنجاح");
+                setNewTitle("");
+                setNewContent("");
+                setShowNewPost(false);
+            },
+            onError: (err) => {
+                toast.error(`فشل في النشر: ${err}`);
+            }
+        });
     };
 
-    const handleAddComment = (postId: number, commentText: string) => {
+    const handleAddComment = async (postId: number, commentText: string) => {
         if (!user) return;
-        const updated = posts.map((post) => {
-            if (post.id === postId) {
-                const newComment = {
-                    id: Math.max(0, ...post.comments.map((c) => c.id)) + 1,
-                    content: commentText,
-                    authorName: user.name,
-                    authorRole: user.role,
-                    createdAt: new Date().toISOString()
-                };
-                return {
-                    ...post,
-                    comments: [...post.comments, newComment]
-                };
-            }
-            return post;
-        });
 
-        savePostsToLocalStorage(updated);
-        toast.success("تمت إضافة التعليق");
+        await executeOptimistic({ postId, commentText }, {
+            optimisticMutator: (current, payload) => {
+                return current.map((post) => {
+                    if (post.id === payload.postId) {
+                        const newComment = {
+                            id: Math.max(0, ...post.comments.map((c) => c.id)) + 1,
+                            content: payload.commentText,
+                            authorName: user.name,
+                            authorRole: user.role,
+                            createdAt: new Date().toISOString()
+                        };
+                        return {
+                            ...post,
+                            comments: [...post.comments, newComment]
+                        };
+                    }
+                    return post;
+                });
+            },
+            action: async (payload) => {
+                const updated = posts.map((post) => {
+                    if (post.id === payload.postId) {
+                        const newComment = {
+                            id: Math.max(0, ...post.comments.map((c) => c.id)) + 1,
+                            content: payload.commentText,
+                            authorName: user.name,
+                            authorRole: user.role,
+                            createdAt: new Date().toISOString()
+                        };
+                        return {
+                            ...post,
+                            comments: [...post.comments, newComment]
+                        };
+                    }
+                    return post;
+                });
+                savePostsToLocalStorage(updated);
+                return { success: true, data: updated };
+            },
+            onSuccess: () => {
+                toast.success("تمت إضافة التعليق");
+            },
+            onError: (err) => {
+                toast.error(`فشل في إضافة التعليق: ${err}`);
+            }
+        });
     };
 
     if (!course) {
