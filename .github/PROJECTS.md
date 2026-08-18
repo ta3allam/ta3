@@ -56,10 +56,10 @@
 | :--- | :--- | :--- | :---: |
 | **#7** | Docker Multi-Stage Build & Production Nginx Setup | ⚙️ `BAI` | ✅ Closed (Day 10) |
 | **#69** | CQRS Read/Write Separation Engine (`src/lib/cqrs/`) | ⚙️ `BAI` | ✅ Closed (Day 10) |
-| **#70** | Idempotency Key Manager (`src/lib/idempotency.ts`) | 🛡️ `SAI` / ⚙️ `BAI` | 🔄 In Progress (Day 11) |
-| **#71** | Optimistic UI Updates & Rollback Error Handler | 🎨 `Fai` / 👁️ `UXAI` | 🔄 In Progress (Day 11) |
-| **#74** | CQRS Command Bus Idempotency Integration | 📐 `AAI` / ⚙️ `BAI` | 🔄 In Progress (Day 11) |
-| **#75** | Vitest & React Interaction Test Suite for Resiliency | 🧪 `QAI` | 🔄 In Progress (Day 11) |
+| **#70** | Idempotency Key Manager (`src/lib/idempotency.ts`) | 🛡️ `SAI` / ⚙️ `BAI` | ✅ Closed (Day 11) |
+| **#71** | Optimistic UI Updates & Rollback Error Handler | 🎨 `Fai` / 👁️ `UXAI` | ✅ Closed (Day 11) |
+| **#74** | CQRS Command Bus Idempotency Integration | 📐 `AAI` / ⚙️ `BAI` | ✅ Closed (Day 11) |
+| **#75** | Vitest & React Interaction Test Suite for Resiliency | 🧪 `QAI` | ✅ Closed (Day 11) |
 | **#72** | Optimistic Concurrency Control (OCC Locking) | ⚙️ `BAI` | 📋 Scheduled (Day 12) |
 | **#73** | High-Concurrency Virtualization & Performance Tuning | 🎨 `Fai` | 📋 Scheduled (Day 12) |
 | **#6** | Playwright Concurrency Stress Testing & Tag v2.0-beta | 🧪 `QAI` | 📋 Scheduled (Day 13) |

@@ -34,6 +34,6 @@
 
 ### 🚀 **Sprint 2 Resiliency & Production Architecture (Days 10–13)**
 - **Day 10 (Completed ✅)**: Multi-Stage `Dockerfile.frontend`, Nginx SPA server (`nginx.conf`), `docker-compose.yml`, and CQRS bus architecture (`src/lib/cqrs/`).
-- **Day 11 (Next 📋)**: Idempotency Key Manager (`src/lib/idempotency.ts`), anti-race condition guards, and Optimistic UI updates with atomic rollbacks.
+- **Day 11 (Completed ✅)**: Idempotency Key Manager (`src/lib/idempotency.ts`), CQRS idempotency injection, and Optimistic UI updates with atomic rollbacks (`useOptimisticAction.ts`).
 - **Day 12 (Scheduled 📋)**: Optimistic Concurrency Control (OCC locking `version_id`) and high-concurrency UI virtualization.
 - **Day 13 (Scheduled 📋)**: E2E Concurrency Stress Testing, zero-regression audit, and GitHub Release Tag `v2.0-beta`.
