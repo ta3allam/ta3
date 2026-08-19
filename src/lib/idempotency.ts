@@ -6,7 +6,8 @@
 
 export interface IdempotencyRecord<T = any> {
   key: string;
-  response: T;
+  response?: T;
+  error?: string;
   timestamp: number;
   status: 'PENDING' | 'COMPLETED' | 'FAILED';
 }
@@ -33,9 +34,13 @@ class IdempotencyManager {
     return record.status === 'COMPLETED';
   }
 
+  getRecord(key: string): IdempotencyRecord | undefined {
+    return this.cache.get(key);
+  }
+
   get<T = any>(key: string): T | null {
     if (!this.has(key)) return null;
-    return (this.cache.get(key) as IdempotencyRecord<T>).response;
+    return (this.cache.get(key) as IdempotencyRecord<T>).response || null;
   }
 
   set<T = any>(key: string, response: T): void {
@@ -57,7 +62,7 @@ class IdempotencyManager {
     action: () => Promise<T>
   ): Promise<T> {
     if (this.pendingKeys.has(key)) {
-      throw new Error(`Concurrent operation already in progress for key: ${key}`);
+      throw new Error(`Operation for key ${key} is currently pending`);
     }
 
     if (this.has(key)) {
@@ -70,14 +75,15 @@ class IdempotencyManager {
       const result = await action();
       this.set(key, result);
       return result;
-    } catch (error) {
+    } catch (error: any) {
+      const errorMsg = typeof error === 'string' ? error : (error.message || 'Operation failed');
       this.cache.set(key, {
         key,
-        response: null,
+        error: errorMsg,
         timestamp: Date.now(),
         status: 'FAILED'
       });
-      throw error;
+      throw errorMsg;
     } finally {
       this.pendingKeys.delete(key);
     }
