@@ -2,6 +2,7 @@
 
 > **Management Protocol**: Aligned with [.github/3_WEEK_ROADMAP.md](file:///c:/Users/hadev/OneDrive%20-%20Aarhus%20universitet/Dokumenter/GitHub/ta3/.github/3_WEEK_ROADMAP.md).
 > All tasks have explicit status and agent assignments.
+> **Documentation Lead**: 🎯 **POAI**
 
 ---
 
@@ -50,16 +51,12 @@
 
 ---
 
-## 🚀 Next Milestone: Resilient CQRS, Concurrency & Dockerization (Days 10–13)
+## 🚀 Sprint 2 Resiliency & CQRS Engine Architecture (Days 10–13)
 
 | Issue # | Title | Assigned Agent | Status |
 | :--- | :--- | :--- | :---: |
-| **#7** | Docker Multi-Stage Build & Production Nginx Setup | ⚙️ `BAI` | ✅ Closed (Day 10) |
-| **#69** | CQRS Read/Write Separation Engine (`src/lib/cqrs/`) | ⚙️ `BAI` | ✅ Closed (Day 10) |
-| **#70** | Idempotency Key Manager (`src/lib/idempotency.ts`) | 🛡️ `SAI` / ⚙️ `BAI` | ✅ Closed (Day 11) |
-| **#71** | Optimistic UI Updates & Rollback Error Handler | 🎨 `Fai` / 👁️ `UXAI` | ✅ Closed (Day 11) |
-| **#74** | CQRS Command Bus Idempotency Integration | 📐 `AAI` / ⚙️ `BAI` | ✅ Closed (Day 11) |
-| **#75** | Vitest & React Interaction Test Suite for Resiliency | 🧪 `QAI` | ✅ Closed (Day 11) |
-| **#72** | Optimistic Concurrency Control (OCC Locking) | ⚙️ `BAI` | 📋 Scheduled (Day 12) |
-| **#73** | High-Concurrency Virtualization & Performance Tuning | 🎨 `Fai` | 📋 Scheduled (Day 12) |
-| **#6** | Playwright Concurrency Stress Testing & Tag v2.0-beta | 🧪 `QAI` | 📋 Scheduled (Day 13) |
+| **#7 & #69–#73** | Multi-Stage Dockerfile, Nginx SPA Server, docker-compose & CQRS Bus | ⚙️ `BAI` | ✅ Closed (Day 10) |
+| **#79–#83** | Idempotency Key Manager, Optimistic UI Rollbacks & Interaction Test Suite | ⚙️ `BAI` / 👁️ `UXAI` | ✅ Closed (Day 11) |
+| **#72** | Optimistic Concurrency Control (OCC Locking) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 12) |
+| **#73** | High-Concurrency Virtualization & Performance Tuning | 🎨 `Fai` / 👁️ `UXAI` | 📋 Scheduled (Day 12) |
+| **#6** | Playwright Concurrency Stress Testing & Tag v2.0-beta | 🧪 `QAI` / 🔀 `GAI` | 📋 Scheduled (Day 13) |
