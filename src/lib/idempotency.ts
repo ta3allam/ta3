@@ -1,162 +1,101 @@
 /**
- * Idempotency Key Manager for Ta3 (تعلّم) LMS
- * Prevents duplicate mutations, race conditions, double-submissions, and network replay attacks.
+ * Ta3 (تعلّم) - Idempotency Key Manager Engine
+ * Protects state-changing operations from duplicate form submissions,
+ * rapid double-clicking, and network retry loops.
  */
 
-export interface IdempotencyRecord<T = unknown> {
+export interface IdempotencyRecord<T = any> {
   key: string;
-  status: 'PENDING' | 'COMPLETED' | 'FAILED';
-  result?: T;
+  response?: T;
   error?: string;
   timestamp: number;
+  status: 'PENDING' | 'COMPLETED' | 'FAILED';
 }
 
-const STORAGE_KEY_PREFIX = 'ta3_idempotency_';
-const DEFAULT_TTL_MS = 1000 * 60 * 15; // 15 minutes TTL
-
 class IdempotencyManager {
-  private memoryCache: Map<string, IdempotencyRecord> = new Map();
+  private cache: Map<string, IdempotencyRecord> = new Map();
+  private pendingKeys: Set<string> = new Set();
+  private defaultTTLMs: number = 300000; // 5 minutes TTL
 
-  /**
-   * Generates a deterministic or random UUID-based idempotency key.
-   */
-  public generateKey(scope: string, payload?: unknown): string {
-    const randomSeed = Math.random().toString(36).substring(2, 10);
-    const payloadHash = payload ? this.hashPayload(payload) : '';
-    return `${scope}_${Date.now()}_${payloadHash}_${randomSeed}`;
+  generateKey(actionType: string, entityId: string | number): string {
+    const randomSuffix = Math.random().toString(36).substring(2, 9);
+    return `idempotent_${actionType}_${entityId}_${Date.now()}_${randomSuffix}`;
   }
 
-  /**
-   * Simple hash utility for payload matching.
-   */
-  private hashPayload(payload: unknown): string {
-    try {
-      const str = JSON.stringify(payload);
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = (hash << 5) - hash + char;
-        hash |= 0; // Convert to 32bit integer
-      }
-      return Math.abs(hash).toString(36);
-    } catch {
-      return 'unhashable';
+  has(key: string): boolean {
+    const record = this.cache.get(key);
+    if (!record) return false;
+
+    if (Date.now() - record.timestamp > this.defaultTTLMs) {
+      this.cache.delete(key);
+      return false;
     }
+
+    return record.status === 'COMPLETED';
   }
 
-  /**
-   * Retrieves recorded idempotency status from Memory or LocalStorage.
-   */
-  public getRecord<T>(key: string): IdempotencyRecord<T> | null {
-    // 1. Check memory cache
-    if (this.memoryCache.has(key)) {
-      const record = this.memoryCache.get(key) as IdempotencyRecord<T>;
-      if (Date.now() - record.timestamp > DEFAULT_TTL_MS) {
-        this.clearRecord(key);
-        return null;
-      }
-      return record;
-    }
-
-    // 2. Check LocalStorage fallback
-    try {
-      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-        const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${key}`);
-        if (raw) {
-          const record: IdempotencyRecord<T> = JSON.parse(raw);
-          if (Date.now() - record.timestamp > DEFAULT_TTL_MS) {
-            this.clearRecord(key);
-            return null;
-          }
-          this.memoryCache.set(key, record);
-          return record;
-        }
-      }
-    } catch {
-      // Ignore LocalStorage errors in non-browser environments
-    }
-
-    return null;
+  getRecord(key: string): IdempotencyRecord | undefined {
+    return this.cache.get(key);
   }
 
-  /**
-   * Saves record status.
-   */
-  public setRecord<T>(key: string, record: IdempotencyRecord<T>): void {
-    this.memoryCache.set(key, record as IdempotencyRecord);
-    try {
-      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-        localStorage.setItem(`${STORAGE_KEY_PREFIX}${key}`, JSON.stringify(record));
-      }
-    } catch {
-      // LocalStorage error fallback
-    }
+  get<T = any>(key: string): T | null {
+    if (!this.has(key)) return null;
+    return (this.cache.get(key) as IdempotencyRecord<T>).response || null;
   }
 
-  /**
-   * Removes record.
-   */
-  public clearRecord(key: string): void {
-    this.memoryCache.delete(key);
-    try {
-      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-        localStorage.removeItem(`${STORAGE_KEY_PREFIX}${key}`);
-      }
-    } catch {
-      // Ignore
-    }
-  }
-
-  /**
-   * Executes an async operation safely wrapped with Idempotency locks.
-   */
-  public async execute<T>(
-    key: string,
-    action: () => Promise<T>,
-    ttlMs: number = DEFAULT_TTL_MS
-  ): Promise<T> {
-    const existing = this.getRecord<T>(key);
-
-    if (existing) {
-      if (existing.status === 'COMPLETED') {
-        return existing.result as T;
-      }
-      if (existing.status === 'PENDING') {
-        throw new Error(`Idempotent action '${key}' is currently pending in another transaction.`);
-      }
-      if (existing.status === 'FAILED') {
-        // Option: Re-throw previous error or allow retry
-      }
-    }
-
-    // Mark as PENDING
-    const pendingRecord: IdempotencyRecord<T> = {
+  set<T = any>(key: string, response: T): void {
+    this.cache.set(key, {
       key,
-      status: 'PENDING',
+      response,
       timestamp: Date.now(),
-    };
-    this.setRecord(key, pendingRecord);
+      status: 'COMPLETED'
+    });
+  }
+
+  clear(key: string): void {
+    this.cache.delete(key);
+    this.pendingKeys.delete(key);
+  }
+
+  async execute<T = any>(
+    key: string,
+    action: () => Promise<T>
+  ): Promise<T> {
+    if (this.pendingKeys.has(key)) {
+      throw new Error(`Operation for key ${key} is currently pending`);
+    }
+
+    if (this.has(key)) {
+      return this.get<T>(key)!;
+    }
+
+    this.pendingKeys.add(key);
 
     try {
       const result = await action();
-      const completedRecord: IdempotencyRecord<T> = {
-        key,
-        status: 'COMPLETED',
-        result,
-        timestamp: Date.now(),
-      };
-      this.setRecord(key, completedRecord);
+      this.set(key, result);
       return result;
-    } catch (err: any) {
-      const failedRecord: IdempotencyRecord<T> = {
+    } catch (error: any) {
+      const errorMsg = typeof error === 'string' ? error : (error.message || 'Operation failed');
+      this.cache.set(key, {
         key,
-        status: 'FAILED',
-        error: err?.message || 'Action failed',
+        error: errorMsg,
         timestamp: Date.now(),
-      };
-      this.setRecord(key, failedRecord);
-      throw err;
+        status: 'FAILED'
+      });
+      throw errorMsg;
+    } finally {
+      this.pendingKeys.delete(key);
     }
+  }
+
+  async executeIdempotent<T = any>(
+    key: string,
+    action: () => Promise<T>
+  ): Promise<{ result: T; cached: boolean }> {
+    const cached = this.has(key);
+    const result = await this.execute(key, action);
+    return { result, cached };
   }
 }
 
