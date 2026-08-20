@@ -51,12 +51,11 @@
 
 ---
 
-## 🚀 Sprint 2 Resiliency & CQRS Engine Architecture (Days 10–13)
+## 🚀 Sprint 2 Resiliency & Concurrency Controls (Days 10–13)
 
 | Issue # | Title | Assigned Agent | Status |
 | :--- | :--- | :--- | :---: |
 | **#7 & #69–#73** | Multi-Stage Dockerfile, Nginx SPA Server, docker-compose & CQRS Bus | ⚙️ `BAI` | ✅ Closed (Day 10) |
 | **#79–#83** | Idempotency Key Manager, Optimistic UI Rollbacks & Interaction Test Suite | ⚙️ `BAI` / 👁️ `UXAI` | ✅ Closed (Day 11) |
-| **#72** | Optimistic Concurrency Control (OCC Locking) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 12) |
-| **#73** | High-Concurrency Virtualization & Performance Tuning | 🎨 `Fai` / 👁️ `UXAI` | 📋 Scheduled (Day 12) |
+| **#85–#88** | Optimistic Concurrency Control (OCC), List Virtualization & Concurrency Tests | ⚙️ `BAI` / 🎨 `Fai` / 📐 `AAI` | ✅ Closed (Day 12) |
 | **#6** | Playwright Concurrency Stress Testing & Tag v2.0-beta | 🧪 `QAI` / 🔀 `GAI` | 📋 Scheduled (Day 13) |
