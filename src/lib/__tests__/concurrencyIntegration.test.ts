@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { cqrsBus } from '../cqrs';
+import '../cqrs/commands';
+import { COMMAND_TYPES } from '../cqrs/commands';
 import { idempotencyManager } from '../idempotency';
 import { occManager, StaleDataConflictError } from '../occ';
 import { computeVirtualWindow } from '../virtualization';
@@ -11,7 +13,7 @@ describe('Sprint 2 End-to-End Concurrency & Resiliency Pipeline', () => {
 
     const commandAction = async () => {
       executionCount++;
-      return await cqrsBus.dispatchCommand('ASSIGNMENT:SUBMIT', {
+      return await cqrsBus.dispatchCommand(COMMAND_TYPES.SUBMIT_ASSIGNMENT, {
         courseId: 1,
         assignmentId: 888,
         studentId: 'std_101',
