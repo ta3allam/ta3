@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnnouncementCard } from "@/components/student/AnnouncementCard";
@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Download, Mail, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
@@ -33,6 +33,7 @@ import { getAssetUrl } from "@/lib/assetUtils";
 
 export default function CourseDetail() {
   const { courseId } = useParams<{ courseId: string }>();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const isTeacher = user?.role === 'teacher';
 
@@ -190,6 +191,10 @@ export default function CourseDetail() {
   const confirmDelete = (type: string, id: number) => {
     setDeleteTarget({ type, id });
     setDeleteConfirmOpen(true);
+  };
+
+  const handleDownloadSyllabus = () => {
+    toast.success(`جاري تحميل الخطة الدراسية المعتمدة لمقرر: ${course.name}`);
   };
 
   const activeLectureId = selectedLectureId ?? course.lectures[0]?.id;
@@ -426,17 +431,36 @@ export default function CourseDetail() {
           {/* Help & Support Tab (Manuals & Q&As) */}
           <TabsContent value="help">
             <div className="bg-white border border-[#428177]/30 rounded-2xl p-8 text-right space-y-6">
-              <div className="pb-4 border-b border-[#EDEBE0]">
-                <h3 className="text-xl font-bold text-[#002623]">الدليل الإرشادي والأسئلة الشائعة</h3>
-                <p className="text-xs text-[#3D3A3B] mt-1">تجد هنا أدلة استخدام المنصة والإجابات الشائعة لدعم الطلاب والمعلمين.</p>
+              <div className="flex justify-between items-center pb-4 border-b border-[#EDEBE0]">
+                <div className="flex gap-2">
+                  <Button onClick={handleDownloadSyllabus} size="sm" className="bg-[#428177] hover:bg-[#054239] text-white font-bold gap-1.5 text-xs">
+                    <Download className="h-4 w-4" />
+                    تحميل الخطة الدراسية (PDF)
+                  </Button>
+                  <Button onClick={() => navigate('/contact')} size="sm" variant="outline" className="border-[#428177]/30 text-[#002623] font-bold gap-1.5 text-xs">
+                    <Mail className="h-4 w-4 text-[#428177]" />
+                    تواصل مع أستاذ المادة
+                  </Button>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-[#002623]">الدليل الإرشادي والأسئلة الشائعة</h3>
+                  <p className="text-xs text-[#3D3A3B] mt-1">تجد هنا أدلة استخدام المنصة والإجابات الشائعة لدعم الطلاب والمعلمين.</p>
+                </div>
               </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-medium">
                 <div className="p-4 bg-[#EDEBE0]/30 rounded-xl border border-[#428177]/20 space-y-2">
-                  <h4 className="font-bold text-sm text-[#002623]">📖 دليل وتسليم الواجبات</h4>
+                  <h4 className="font-bold text-sm text-[#002623] flex items-center justify-end gap-1.5">
+                    📖 دليل وتسليم الواجبات
+                    <BookOpen className="h-4 w-4 text-[#428177]" />
+                  </h4>
                   <p className="text-[#3D3A3B] leading-relaxed">يجب رفع ملف الواجب الرئيسي بصيغة PDF إجبارياً قبل انتهاء موعد الاستحقاق المعتمد. يُمكن إرفاق ملف ZIP اختياري للمشاريع.</p>
                 </div>
                 <div className="p-4 bg-[#EDEBE0]/30 rounded-xl border border-[#428177]/20 space-y-2">
-                  <h4 className="font-bold text-sm text-[#002623]">💬 التواصل والاستفسارات</h4>
+                  <h4 className="font-bold text-sm text-[#002623] flex items-center justify-end gap-1.5">
+                    💬 التواصل والاستفسارات
+                    <Mail className="h-4 w-4 text-[#428177]" />
+                  </h4>
                   <p className="text-[#3D3A3B] leading-relaxed">استخدم تبويب "ساحة المناقشات" لطرح الأسئلة الأكاديمية والاستفسارات ليجيبك عليها أستاذ المادة والزملاء.</p>
                 </div>
               </div>

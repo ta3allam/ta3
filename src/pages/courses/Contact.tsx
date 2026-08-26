@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Send, User, CheckCheck, ArrowRight, Clock, Mail, MessageSquare } from "lucide-react";
+import { Send, User, CheckCheck, ArrowRight, Clock, Users } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface ChatMessage {
   id: number;
@@ -15,6 +16,13 @@ interface ChatMessage {
   senderName: string;
   content: string;
   createdAt: string;
+}
+
+interface StudentConversation {
+  id: string;
+  name: string;
+  lastMessage: string;
+  unread: boolean;
 }
 
 function formatStandardTime(dateStr: string): string {
@@ -31,6 +39,15 @@ export default function CourseContact() {
   const { courseData } = useCourseData();
   const course = courseData[Number(courseId)];
 
+  const isTeacher = user?.role === 'teacher';
+
+  const [studentList] = useState<StudentConversation[]>([
+    { id: 'std_101', name: 'أحمد علي', lastMessage: 'هل يمكن توضيح سؤال الواجب الثالث؟', unread: true },
+    { id: 'std_102', name: 'سارة محمود', lastMessage: 'تم رفع الملف المطلوبة في الوقت المحدد', unread: false },
+    { id: 'std_103', name: 'محمد العتيبي', lastMessage: 'شكراً دكتور على الملاحظات', unread: false }
+  ]);
+  const [selectedStudentId, setSelectedStudentId] = useState('std_101');
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -38,11 +55,12 @@ export default function CourseContact() {
 
   useEffect(() => {
     if (!courseId) return;
-    const key = `ta3_chat_${courseId}`;
+    const key = `ta3_chat_${courseId}_${selectedStudentId}`;
     const saved = localStorage.getItem(key);
     if (saved) {
       setMessages(JSON.parse(saved));
     } else {
+      const activeStudent = studentList.find(s => s.id === selectedStudentId);
       const initialMessages: ChatMessage[] = [
         {
           id: 1,
@@ -50,12 +68,19 @@ export default function CourseContact() {
           senderName: course?.teacher || "د. خالد",
           content: "مرحباً بك في مقررنا الدراسي. يمكنك طرح استفساراتك هنا وسأقوم بالرد عليها في أقرب وقت خلال الساعات المكتبية.",
           createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
+        },
+        {
+          id: 2,
+          sender: 'student',
+          senderName: activeStudent?.name || "أحمد علي",
+          content: activeStudent?.lastMessage || "أهلاً دكتور، لدي استفسار بسيط في الشريحة رقم 12.",
+          createdAt: new Date(Date.now() - 1800000).toISOString()
         }
       ];
       setMessages(initialMessages);
       localStorage.setItem(key, JSON.stringify(initialMessages));
     }
-  }, [courseId, course]);
+  }, [courseId, course, selectedStudentId, studentList]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -75,7 +100,7 @@ export default function CourseContact() {
 
     const updated = [...messages, newMsg];
     setMessages(updated);
-    localStorage.setItem(`ta3_chat_${courseId}`, JSON.stringify(updated));
+    localStorage.setItem(`ta3_chat_${courseId}_${selectedStudentId}`, JSON.stringify(updated));
     setInputText("");
 
     if (user.role === 'student') {
@@ -90,10 +115,10 @@ export default function CourseContact() {
         };
         const withReply = [...updated, autoReply];
         setMessages(withReply);
-        localStorage.setItem(`ta3_chat_${courseId}`, JSON.stringify(withReply));
+        localStorage.setItem(`ta3_chat_${courseId}_${selectedStudentId}`, JSON.stringify(withReply));
         setIsTyping(false);
         toast.info("تم تلقي رد جديد من المعلم");
-      }, 1800);
+      }, 1500);
     }
   };
 
@@ -108,6 +133,7 @@ export default function CourseContact() {
   }
 
   const backPath = user?.role === 'teacher' ? `/teacher/courses/${courseId}` : `/student/courses/${courseId}`;
+  const activeStudent = studentList.find(s => s.id === selectedStudentId);
 
   return (
     <DashboardLayout title={`التواصل مع المعلم - ${course.name}`}>
@@ -123,7 +149,9 @@ export default function CourseContact() {
               <span>/</span>
               <span className="font-bold text-[#002623]">المراسلة والتواصل</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-[#002623]">مراسلة أستاذ المادة: {course.teacher}</h1>
+            <h1 className="text-3xl font-extrabold text-[#002623]">
+              {isTeacher ? `محادثات الطلاب في مقرر: ${course.name}` : `مراسلة أستاذ المادة: ${course.teacher}`}
+            </h1>
             <p className="text-xs text-[#3D3A3B] font-medium">قناة تواصل مباشرة ومحمية لمناقشة التساؤلات الفردية والملاحظات الخاصة بالمقرر</p>
           </div>
 
@@ -135,38 +163,77 @@ export default function CourseContact() {
 
         {/* Chat Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Office Hours Sidebar Card */}
+          {/* Sidebar Column: Office Hours or Multi-Student List */}
           <div className="lg:col-span-1 space-y-4">
-            <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden text-right">
-              <CardContent className="p-5 space-y-4">
-                <div className="flex items-center gap-2 justify-start text-[#002623] border-b border-[#EDEBE0] pb-3">
-                  <User className="w-5 h-5 text-[#428177]" />
-                  <div>
-                    <h3 className="font-bold text-sm">{course.teacher}</h3>
-                    <span className="text-[11px] text-[#3D3A3B]">أستاذ مقرر {course.code}</span>
-                  </div>
+            {isTeacher ? (
+              <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden text-right">
+                <div className="p-3 bg-[#EDEBE0]/60 border-b border-[#428177]/20 font-bold text-xs text-[#002623] flex items-center gap-2">
+                  <Users className="w-4 h-4 text-[#428177]" />
+                  قائمة محادثات الطلاب
                 </div>
+                <div className="divide-y max-h-[460px] overflow-y-auto">
+                  {studentList.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => setSelectedStudentId(s.id)}
+                      className={`w-full p-3 text-right text-xs transition-colors flex items-center gap-3 ${
+                        selectedStudentId === s.id ? 'bg-[#428177]/10 font-bold border-r-4 border-[#428177]' : 'hover:bg-[#EDEBE0]/20'
+                      }`}
+                    >
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                          {s.name.substring(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="overflow-hidden space-y-0.5 flex-1">
+                        <p className="text-[#002623] font-bold">{s.name}</p>
+                        <p className="text-[11px] text-muted-foreground truncate">{s.lastMessage}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </Card>
+            ) : (
+              <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden text-right">
+                <CardContent className="p-5 space-y-4">
+                  <div className="flex items-center gap-2 justify-start text-[#002623] border-b border-[#EDEBE0] pb-3">
+                    <User className="w-5 h-5 text-[#428177]" />
+                    <div>
+                      <h3 className="font-bold text-sm">{course.teacher}</h3>
+                      <span className="text-[11px] text-[#3D3A3B]">أستاذ مقرر {course.code}</span>
+                    </div>
+                  </div>
 
-                <div className="space-y-2.5 text-xs text-[#3D3A3B]">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#002623]">حالة الاستجابة:</span>
-                    <span className="bg-[#428177]/15 text-[#054239] px-2 py-0.5 rounded-full font-bold">نشط اليوم</span>
+                  <div className="space-y-2.5 text-xs text-[#3D3A3B]">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#002623]">حالة الاستجابة:</span>
+                      <span className="bg-[#428177]/15 text-[#054239] px-2 py-0.5 rounded-full font-bold">نشط اليوم</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#002623]">البريد الأكاديمي:</span>
+                      <span className="font-semibold dir-ltr">teacher@ta3.edu</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#002623]">المكتب:</span>
+                      <span className="font-semibold">مبنى العلوم - 204</span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#002623]">البريد الأكاديمي:</span>
-                    <span className="font-semibold dir-ltr">teacher@ta3.edu</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-[#002623]">المكتب:</span>
-                    <span className="font-semibold">مبنى العلوم - 204</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Chat Feed & Input */}
           <div className="lg:col-span-3 flex flex-col h-[520px] bg-white border border-[#428177]/30 rounded-2xl p-4 shadow-sm">
+            <div className="flex justify-between items-center pb-3 mb-2 border-b border-[#EDEBE0]">
+              <span className="font-bold text-sm text-[#002623]">
+                {isTeacher ? `محادثة الطالب: ${activeStudent?.name}` : `محادثة المعلم: ${course.teacher}`}
+              </span>
+              <span className="text-xs text-[#3D3A3B] bg-[#EDEBE0] px-2.5 py-1 rounded-full font-bold">
+                اتصال آمن ومحمي
+              </span>
+            </div>
+
             <div className="flex-1 bg-[#EDEBE0]/20 rounded-xl p-4 overflow-y-auto space-y-4 border border-[#428177]/10">
               {messages.map((msg) => {
                 const isMe = (user?.role === 'teacher' && msg.sender === 'teacher') || 
@@ -221,7 +288,7 @@ export default function CourseContact() {
               <Input
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder={user?.role === 'teacher' ? "اكتب رسالة للطلاب..." : `اكتب رسالتك لـ ${course.teacher}...`}
+                placeholder={isTeacher ? `اكتب رسالتك للطالب ${activeStudent?.name}...` : `اكتب رسالتك لـ ${course.teacher}...`}
                 className="flex-1 text-right border-[#428177]/30 focus-visible:ring-[#428177] h-10 text-sm font-medium bg-white"
                 required
               />
