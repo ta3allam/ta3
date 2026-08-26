@@ -1,67 +1,42 @@
-# 🎓 Ta3 (تعلّم) - Modern Arabic-First Enterprise LMS
+# 🏛️ Ta3 (تعلّم) - The Arabic Learning Marketplace & Creator Community Platform
 
-> **Ta3 (تعلّم)** is a high-aesthetic, RTL-native, enterprise-grade Learning Management System (LMS) designed for modern education across the MENA region. Built with React 18, TypeScript, Tailwind CSS, Supabase, and PostgreSQL.
-
----
-
-## 📌 Executive Overview
-
-Ta3 connects Students, Teachers, and Administrators in a unified, role-based platform that features real-time Q&A discussions, cloud file storage, database-enforced Row-Level Security (RLS), and adaptive academic dashboards.
-
-```mermaid
-graph TD
-    User([Browser / Mobile Client]) -->|RTL React UI| FE[Frontend App - React 18 / Vite / Nginx]
-    FE -->|Supabase Auth & REST| BE[PostgreSQL Database & RLS Policies]
-    FE -->|S3 Upload & Download| ST[Supabase Storage Buckets]
-    FE -->|WebSocket Q&A Channel| RT[Supabase Realtime Engine]
-```
+> **The Arabic platform where people learn, teach, and build communities around knowledge.**  
+> *Skool + Udemy + Coursera for the MENA Region*
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## 🌟 Executive Overview
 
-### 1. Prerequisites
-- **Node.js**: v20+
-- **npm** or **pnpm**
-
-### 2. Environment Setup
-Copy the environment template and configure your keys:
-```bash
-cp .env.example .env.local
-```
-
-### 3. Run Locally with Vite
-```bash
-npm install
-npm run dev
-```
-
-### 4. Run Tests
-```bash
-npx vitest run src/
-```
-
-### 5. Deploy to GitHub Pages
-```bash
-npm run git
-```
+**Ta3 (تعلّم)** is an Arabic-first learning marketplace and creator community platform designed specifically for the MENA region. Combining course delivery (LMS), creator economy tools, Skool-style community feeds, and low-bandwidth Levant cloud infrastructure, Ta3 empowers Arabic creators to monetize their knowledge and learners to build relationships around education.
 
 ---
 
-## 🏃 Product Master Roadmap
+## 🚀 Core Platform Pillars
 
-- ✅ **Sprint 1 (Days 1–5): Foundation & Role-Based UI Architecture**
-  - Isolated student, teacher, and admin dashboards; unified course detail view (`Courses.tsx`); study groups catalog (`Groups.tsx`); academic calendar (`GlobalCalendarDialog.tsx`); asset path resolution (`getAssetUrl`).
-- ✅ **Sprint 2 (Days 6–9): PostgreSQL, Supabase Auth, Cloud Storage & Real-time Q&A**
-  - PostgreSQL relational schema (`001_initial_schema.sql`), seed data (`002_seed_data.sql`), Supabase Auth SDK & RLS policies (`003_rls_policies.sql`), Supabase Storage file uploads (`005_storage_buckets.sql`, `storage.ts`), real-time WebSocket discussions & solution marking (`discussions.ts`).
-- 📋 **Sprint 2 Resiliency & Production Release (Days 10–13)**
-  - Docker multi-stage build & Nginx staging, CQRS read/write separation, Idempotency key manager, Optimistic Concurrency Control (OCC locking), high-concurrency performance tuning, and Playwright release verification (`v2.0-beta`).
+1. **📚 Learn (LMS Core Engine)**: Course catalogs, lectures, video previews, assignments, PDF/ZIP submissions, grading console, and progress tracking.
+2. **💬 Community (Skool-Style Feeds)**: Community feeds, discussion posts, upvotes, live webinars, cohort events, and study groups.
+3. **🛒 Marketplace & Creator Economy**: Free, paid one-time, subscription, and cohort pricing models with 10–15% marketplace commission and creator payout balance dashboards.
+4. **🇱🇧 Levant High-Volume Infrastructure**: Offline-first PWA with IndexedDB draft storage, TUS resumable 512KB chunked uploads on 3G, Redis read-caching, and BullMQ worker queue for 11:59 PM submission spikes.
 
 ---
 
-## 📄 Core Documentation
-- 📐 [arch.md](arch.md) - Comprehensive Frontend & Backend C4 / Standard Mermaid Architecture Spec
-- 🗄️ [erd.md](erd.md) - PostgreSQL Relational Database Schema & ERD Specification
-- 🏆 [.agents/REWARDS_PUNISHMENTS.md](.agents/REWARDS_PUNISHMENTS.md) - Agent Team Leaderboard & XP Progression
-- 📜 [.agents/AGENTS.md](.agents/AGENTS.md) - Agent Operating System & Mandatory Git Rules
-- 🗂️ [.github/PROJECTS.md](.github/PROJECTS.md) - Master Milestone Schedule & Task Status
+## 🎨 Brand Design System
+
+- **Primary Colors**:
+  - `Mountain Teal`: `#428177`
+  - `Ivory Mist`: `#EDEBE0`
+  - `Damask Red`: `#6B1F2A`
+  - `White`: `#FFFFFF`
+- **Secondary Colors**:
+  - `Forest`: `#002623`
+  - `Emerald Shadow`: `#054239`
+  - `Golden Wheat`: `#988561`
+  - `Antique Sand`: `#B9A779`
+- **Layout**: Native RTL (Right-to-Left) with standard Arabic numerals (1, 2, 3, 4, 5, 6, 7, 8, 9, 0).
+
+---
+
+## 📜 Operating Rules & Git Guidelines
+- **Git Policy**: Never push directly to `main`. Work strictly in feature branches (`feature/<agent>-<feature-name>`).
+- **Activity Target**: Minimum **10 GitHub activities per shift** (Issues, Commits, PRs, Comments, Merges).
+- **PR Quality Gate**: Every PR requires static typecheck `npx tsc --noEmit` and Vitest test pass verification by **GAI**.
