@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCourseData } from "@/contexts/CourseContext";
 import { Submission } from "@/pages/courses/types";
 import { toast } from "sonner";
-import { FileText, Award, MessageSquare, Check, AlertCircle } from "lucide-react";
+import { FileText, Award, MessageSquare, Check, AlertCircle, Download, Paperclip } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface GradingConsoleProps {
@@ -29,6 +29,8 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
   const [selectedSub, setSelectedSub] = useState<Submission | null>(null);
   const [grade, setGrade] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [feedbackFile, setFeedbackFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const course = courseData[courseId];
   const submissions = course?.submissions?.filter((s) => s.assignmentId === assignmentId) || [];
@@ -37,6 +39,7 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
     setSelectedSub(sub);
     setGrade(sub.grade !== undefined ? sub.grade.toString() : "");
     setFeedback(sub.feedback || "");
+    setFeedbackFile(null);
   };
 
   const handleSaveGrade = (e: React.FormEvent) => {
@@ -49,17 +52,59 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
       return;
     }
 
-    gradeSubmission(courseId, selectedSub.id, gradeNum, feedback.trim() || undefined);
+    let updatedFeedback = feedback.trim();
+    if (feedbackFile) {
+      updatedFeedback += ` [ملف التغذية الراجعة المرفق: ${feedbackFile.name}]`;
+    }
+
+    gradeSubmission(courseId, selectedSub.id, gradeNum, updatedFeedback || undefined);
     toast.success(`تم حفظ تقييم الطالب ${selectedSub.studentName}`);
     setSelectedSub(null);
+  };
+
+  const handleExportCSV = () => {
+    if (submissions.length === 0) {
+      toast.info("لا توجد بيانات تسليمات للتصدير");
+      return;
+    }
+
+    const headers = ["اسم الطالب", "تاريخ التسليم", "اسم الملف", "الدرجة", "الملاحظات"];
+    const rows = submissions.map((s) => [
+      `"${s.studentName}"`,
+      `"${formatStandardDate(s.submittedAt)}"`,
+      `"${s.fileName}"`,
+      s.grade !== undefined ? s.grade : "غير مقيم",
+      `"${s.feedback || ''}"`
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `grades_assignment_${assignmentId}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("تم تصدير كشف الدرجات بنجاح بصيغة CSV");
   };
 
   return (
     <div className="space-y-4" dir="rtl">
       <div className="flex justify-between items-center">
-        <span className="text-xs text-[#3D3A3B] bg-[#EDEBE0] font-bold px-3 py-1 rounded-full border border-[#428177]/20">
-          إجمالي التسليمات: {submissions.length}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-[#3D3A3B] bg-[#EDEBE0] font-bold px-3 py-1 rounded-full border border-[#428177]/20">
+            إجمالي التسليمات: {submissions.length}
+          </span>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleExportCSV}
+            className="text-xs font-bold gap-1.5 border-[#428177]/30 text-[#002623] hover:bg-[#428177]/10"
+          >
+            <Download className="h-3.5 w-3.5 text-[#428177]" />
+            تصدير كشف الدرجات (CSV)
+          </Button>
+        </div>
         <h4 className="font-bold text-lg text-[#002623]">قائمة تسليمات الطلاب</h4>
       </div>
 
@@ -200,8 +245,36 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
                   onChange={(e) => setFeedback(e.target.value)}
                   className="text-right text-xs bg-white border-[#428177]/30 text-[#002623]"
                   placeholder="اكتب التوجيهات والملاحظات للطالب..."
-                  rows={4}
+                  rows={3}
                 />
+              </div>
+
+              {/* Feedback File Attachment */}
+              <div className="space-y-1.5">
+                <Label className="block text-xs font-bold text-[#002623] flex items-center gap-1 justify-end">
+                  <Paperclip className="h-3.5 w-3.5 text-[#428177]" />
+                  إرفاق ملف ملاحظات للمعلم (اختياري)
+                </Label>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={(e) => setFeedbackFile(e.target.files?.[0] || null)}
+                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="text-xs font-bold border-[#428177]/30 text-[#002623]"
+                  >
+                    اختر ملف
+                  </Button>
+                  <span className="text-xs text-muted-foreground truncate">
+                    {feedbackFile ? feedbackFile.name : "لم يتم اختيار ملف"}
+                  </span>
+                </div>
               </div>
 
               <div className="flex gap-2 pt-2">

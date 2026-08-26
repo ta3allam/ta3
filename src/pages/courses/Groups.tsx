@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Users, Plus, UserCheck, ArrowRight, ShieldCheck, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2 } from "lucide-react";
+import { Users, Plus, ArrowRight, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2, MessageSquare, Send } from "lucide-react";
 import { toast } from "sonner";
 
 export interface GroupMember {
@@ -26,6 +26,13 @@ export interface GroupApplication {
   status: 'pending' | 'accepted' | 'rejected';
 }
 
+export interface GroupMessage {
+  id: number;
+  senderName: string;
+  text: string;
+  timestamp: string;
+}
+
 export interface StudyGroup {
   id: number;
   name: string;
@@ -33,6 +40,7 @@ export interface StudyGroup {
   leaderName: string;
   members: GroupMember[];
   applications: GroupApplication[];
+  messages?: GroupMessage[];
   maxMembers: number;
 }
 
@@ -45,12 +53,16 @@ export default function CourseGroups() {
   const isTeacher = user?.role === 'teacher';
 
   const [groups, setGroups] = useState<StudyGroup[]>([]);
-  const [viewLayout, setViewLayout] = useState<'list' | 'grid'>('list'); // Default is LIST view as requested
+  const [viewLayout, setViewLayout] = useState<'list' | 'grid'>('list');
 
   // Teacher Create Group Modal state
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDesc, setNewGroupDesc] = useState("");
+
+  // Group Chat Modal state
+  const [activeChatGroup, setActiveChatGroup] = useState<StudyGroup | null>(null);
+  const [chatMessageText, setChatMessageText] = useState("");
 
   useEffect(() => {
     if (!courseId) return;
@@ -62,7 +74,10 @@ export default function CourseGroups() {
         const sanitized = parsed.map((g) => ({
           ...g,
           members: g.members || [],
-          applications: g.applications || []
+          applications: g.applications || [],
+          messages: g.messages || [
+            { id: 1, senderName: "أحمد علي", text: "أهلاً بالجميع، سنقوم بمراجعة تمارين الواجب اليوم الساعة 6 مساءً", timestamp: "قبل ساعة" }
+          ]
         }));
         setGroups(sanitized);
       } catch (e) {
@@ -83,6 +98,9 @@ export default function CourseGroups() {
           ],
           applications: [
             { id: 101, studentName: "خالد سعيد", appliedAt: new Date().toISOString(), status: 'pending' }
+          ],
+          messages: [
+            { id: 1, senderName: "أحمد علي", text: "أهلاً بالجميع، سنقوم بمراجعة تمارين الواجب اليوم الساعة 6 مساءً", timestamp: "قبل ساعة" }
           ]
         },
         {
@@ -92,7 +110,8 @@ export default function CourseGroups() {
           leaderName: "د. خالد",
           maxMembers: 4,
           members: [],
-          applications: []
+          applications: [],
+          messages: []
         }
       ];
       setGroups(defaultGroups);
@@ -117,7 +136,8 @@ export default function CourseGroups() {
       leaderName: user.name,
       maxMembers: 5,
       members: [],
-      applications: []
+      applications: [],
+      messages: []
     };
 
     const updated = [newGroup, ...groups];
@@ -126,6 +146,32 @@ export default function CourseGroups() {
     setNewGroupName("");
     setNewGroupDesc("");
     setDialogOpen(false);
+  };
+
+  // Send Internal Group Chat Message
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatMessageText.trim() || !activeChatGroup || !user) return;
+
+    const newMessage: GroupMessage = {
+      id: Date.now(),
+      senderName: user.name,
+      text: chatMessageText.trim(),
+      timestamp: "الآن"
+    };
+
+    const updatedGroups = groups.map(g => {
+      if (g.id === activeChatGroup.id) {
+        const msgs = [...(g.messages || []), newMessage];
+        const updated = { ...g, messages: msgs };
+        setActiveChatGroup(updated);
+        return updated;
+      }
+      return g;
+    });
+
+    saveGroups(updatedGroups);
+    setChatMessageText("");
   };
 
   // Teacher Delete Study Group
@@ -338,7 +384,7 @@ export default function CourseGroups() {
                   <TableHead className="text-right font-bold text-[#002623]">اسم المجموعة</TableHead>
                   <TableHead className="text-right font-bold text-[#002623]">الوصف</TableHead>
                   <TableHead className="text-center font-bold text-[#002623]">الأعضاء الحاليون</TableHead>
-                  <TableHead className="text-center font-bold text-[#002623]">طلبات المعلقة</TableHead>
+                  <TableHead className="text-center font-bold text-[#002623]">محادثة المجموعة</TableHead>
                   <TableHead className="text-center font-bold text-[#002623]">الإجراءات والعمليات</TableHead>
                 </TableRow>
               </TableHeader>
@@ -348,7 +394,6 @@ export default function CourseGroups() {
                   const applications = group.applications || [];
                   const isMember = user && members.some(m => m.name === user.name);
                   const hasPendingApp = user && applications.some(a => a.studentName === user.name && a.status === 'pending');
-                  const pendingApps = applications.filter(a => a.status === 'pending');
 
                   return (
                     <TableRow key={group.id} className="hover:bg-[#EDEBE0]/20 transition-colors">
@@ -359,12 +404,16 @@ export default function CourseGroups() {
                           {members.length} / {group.maxMembers || 5} أعضاء
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-center font-semibold text-xs">
-                        {pendingApps.length > 0 ? (
-                          <Badge className="bg-[#988561]/20 text-[#002623] font-bold">{pendingApps.length} طلبات</Badge>
-                        ) : (
-                          <span className="text-[#3D3A3B] text-[11px]">لا يوجد</span>
-                        )}
+                      <TableCell className="text-center">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setActiveChatGroup(group)}
+                          className="border-[#428177]/30 text-[#002623] hover:bg-[#428177]/10 text-xs font-bold gap-1"
+                        >
+                          <MessageSquare className="h-3.5 w-3.5 text-[#428177]" />
+                          دردشة الفريق ({group.messages?.length || 0})
+                        </Button>
                       </TableCell>
                       <TableCell className="text-center">
                         <div className="flex items-center justify-center gap-2">
@@ -466,6 +515,16 @@ export default function CourseGroups() {
                     </div>
 
                     <div className="pt-2 border-t border-[#EDEBE0] flex justify-between items-center">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setActiveChatGroup(group)}
+                        className="border-[#428177]/30 text-[#002623] hover:bg-[#428177]/10 text-xs font-bold gap-1"
+                      >
+                        <MessageSquare className="h-3.5 w-3.5 text-[#428177]" />
+                        محادثة المجموعة
+                      </Button>
+
                       {isMember ? (
                         <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-3">
                           أنت عضو بالفريق ✅
@@ -497,7 +556,7 @@ export default function CourseGroups() {
           </div>
         )}
 
-        {/* Pending Group Applications Approval Section (Visible to Group Members & Teacher) */}
+        {/* Pending Group Applications Approval Section */}
         {groups.some(g => (isTeacher || (g.members || []).some(m => user && m.name === user.name)) && (g.applications || []).some(a => a.status === 'pending')) && (
           <Card className="border border-[#988561]/40 bg-white shadow-sm rounded-2xl text-right">
             <CardHeader className="pb-2 bg-[#EDEBE0]/40 border-b border-[#428177]/10">
@@ -534,6 +593,52 @@ export default function CourseGroups() {
               ))}
             </CardContent>
           </Card>
+        )}
+
+        {/* Group Internal Chat Dialog */}
+        {activeChatGroup && (
+          <Dialog open={!!activeChatGroup} onOpenChange={() => setActiveChatGroup(null)}>
+            <DialogContent dir="rtl" className="max-w-lg bg-white border border-[#428177] text-right">
+              <DialogHeader className="border-b pb-3">
+                <DialogTitle className="text-right text-[#002623] font-bold text-base flex items-center justify-between">
+                  <span>غرفة محادثة المجموعة: {activeChatGroup.name}</span>
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-3 py-2">
+                <div className="h-64 overflow-y-auto space-y-2.5 p-3 border rounded-xl bg-muted/20 text-xs">
+                  {activeChatGroup.messages && activeChatGroup.messages.length > 0 ? (
+                    activeChatGroup.messages.map((m) => (
+                      <div key={m.id} className={`p-2.5 rounded-xl max-w-[85%] ${m.senderName === user?.name ? 'mr-auto bg-[#428177] text-white' : 'ml-auto bg-white border text-foreground'}`}>
+                        <div className="flex justify-between items-center mb-1 gap-2">
+                          <span className="font-bold text-[11px]">{m.senderName}</span>
+                          <span className="text-[10px] opacity-75">{m.timestamp}</span>
+                        </div>
+                        <p className="leading-relaxed">{m.text}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12 text-muted-foreground text-xs">
+                      لا توجد رسائل في هذه المجموعة بعد. كن أول من يكتب!
+                    </div>
+                  )}
+                </div>
+
+                <form onSubmit={handleSendMessage} className="flex gap-2">
+                  <Input
+                    placeholder="اكتب رسالتك لأعضاء الفريق..."
+                    value={chatMessageText}
+                    onChange={(e) => setChatMessageText(e.target.value)}
+                    className="text-right text-xs bg-white border-[#428177]/40"
+                  />
+                  <Button type="submit" className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs gap-1">
+                    <Send className="h-3.5 w-3.5" />
+                    إرسال
+                  </Button>
+                </form>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
       </div>
     </DashboardLayout>
