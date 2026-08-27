@@ -71,12 +71,12 @@
 
 ---
 
-## 🇱🇧 Sprint 4: The 5 Enterprise Levant Pillars (Days 16–20)
+## 🛒 Sprint 4: Creator Marketplace & Commerce Engine (Days 16–20)
 
 | Issue # | Title | Assigned Agent | Status |
 | :--- | :--- | :--- | :---: |
-| **#105–#108** | Offline-First PWA Service Worker & IndexedDB Draft Storage (Pillar 1) | 🎨 `Fai` / 👁️ `UXAI` | 📋 Scheduled (Day 16) |
-| **#109–#112** | TUS Resumable 512KB Chunked File Upload Protocol on 3G (Pillar 2) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 17) |
-| **#113–#116** | Redis Read Caching & PgBouncer Connection Pooling (Pillar 3) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 18) |
-| **#117–#120** | Data Saver Mode & Subsetting WOFF2 Arabic Fonts (Pillar 4) | 🎨 `Fai` / 👁️ `UXAI` | 📋 Scheduled (Day 19) |
-| **#121–#125** | BullMQ Async Worker Queue for 11:59 PM Spikes & Tag `v3.0-enterprise` (Pillar 5) | ⚙️ `BAI` / 🛡️ `SAI` | 📋 Scheduled (Day 20) |
+| **#105–#108** | Creator Profile Storefront Card & Creator Analytics Dashboard (`CreatorDashboard.tsx`) | 🎨 `Fai` / 🎯 `POAI` | ✅ Closed (Day 16) |
+| **#110–#113** | Course Monetization Engine (Free, Paid One-Time, Subscription, Cohorts) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 17) |
+| **#114–#117** | Arabic Course Marketplace UI (`Marketplace.tsx`) & Student Checkout | 🎨 `Fai` / 👁️ `UXAI` | 📋 Scheduled (Day 18) |
+| **#118–#121** | Creator Revenue & Payout Engine (`CreatorPayouts.tsx`, 10-15% Ta3 Fee) | ⚙️ `BAI` / 🛡️ `SAI` | 📋 Scheduled (Day 19) |
+| **#122–#125** | Marketplace Sprint Quality Gate & PR Review (`v3.0-marketplace`) | 🧪 `QAI` / 🔀 `GAI` | 📋 Scheduled (Day 20) |
