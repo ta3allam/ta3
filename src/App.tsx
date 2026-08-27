@@ -16,6 +16,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const TeacherDashboard = lazy(() => import("./pages/teacher/TeacherDashboard"));
 const StudentDashboard = lazy(() => import("./pages/student/StudentDashboard"));
+const CreatorDashboard = lazy(() => import("./pages/creator/CreatorDashboard"));
 const CoursesPage = lazy(() => import("./pages/courses/Courses"));
 const CourseTimeline = lazy(() => import("./pages/courses/Timeline"));
 const CourseGroups = lazy(() => import("./pages/courses/Groups"));
@@ -51,7 +52,11 @@ const App = () => (
                       <Route path="/admin" element={<AdminDashboard />} />
                     </Route>
 
-                    {/* Teacher Routes */}
+                    {/* Teacher & Creator Routes */}
+                    <Route element={<RequireAuth allowedRoles={['teacher', 'admin', 'student']} />}>
+                      <Route path="/creator" element={<CreatorDashboard />} />
+                    </Route>
+
                     <Route element={<RequireAuth allowedRoles={['teacher']} />}>
                       <Route path="/teacher" element={<TeacherDashboard />} />
                       <Route path="/teacher/courses/:courseId" element={<CoursesPage />} />
@@ -70,9 +75,7 @@ const App = () => (
                       <Route path="/student/courses/:courseId/contact" element={<CourseContact />} />
                     </Route>
 
-                    {/* Shared Courses Routes - Refactored to avoid ambiguity if needed, 
-                        but keeping consistent with role-based access above for now. 
-                        Added a catch to redirect general /courses to appropriate dashboard */}
+                    {/* Shared Courses Routes */}
                     <Route element={<RequireAuth allowedRoles={['student', 'teacher', 'admin']} />}>
                       <Route path="/courses" element={<Navigate to="/" replace />} />
                       <Route path="/courses/:courseId/*" element={<CoursesPage />} />

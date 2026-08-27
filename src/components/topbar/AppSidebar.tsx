@@ -5,7 +5,8 @@ import {
   MessageSquare,
   Calendar,
   Users,
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from "lucide-react";
 import {
   Sidebar,
@@ -30,11 +31,11 @@ const AppSidebar = () => {
   const isAdminPath = pathname.startsWith("/admin");
 
   // Don't show sidebar for student/teacher on dashboard as requested
-  if ((user?.role === 'student' || user?.role === 'teacher') && isDashboardPath) {
+  if ((user?.role === 'student' || user?.role === 'teacher') && isDashboardPath && pathname !== "/creator") {
     return null;
   }
 
-  // Admin always sees the sidebar (as the request says ignore admin for now, keeping it basic)
+  // Admin view
   if (user?.role === 'admin' || isAdminPath) {
     return (
       <Sidebar collapsible="icon" side="right">
@@ -43,7 +44,7 @@ const AppSidebar = () => {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel className="text-right">الإدارة</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-right">الإدارة والصناع</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -51,6 +52,15 @@ const AppSidebar = () => {
                     <NavLink to="/admin" className="flex items-center gap-2 justify-end">
                       <span>لوحة التحكم</span>
                       <LayoutDashboard className="h-4 w-4" />
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/creator"}>
+                    <NavLink to="/creator" className="flex items-center gap-2 justify-end">
+                      <span>لوحة صانع المحتوى</span>
+                      <Sparkles className="h-4 w-4 text-[#428177]" />
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -65,7 +75,6 @@ const AppSidebar = () => {
   // Inside a course view for student/teacher
   if (isCoursePath) {
     const dashboardUrl = user?.role === 'teacher' ? "/teacher" : "/student";
-    // Improved regex to handle various path structures
     const courseMatch = pathname.match(/(?:student|teacher)?\/courses\/(\d+)/);
     const courseId = courseMatch ? courseMatch[1] : "";
     const roleBase = user?.role === 'teacher' ? "/teacher" : "/student";
@@ -130,6 +139,15 @@ const AppSidebar = () => {
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/creator"}>
+                    <NavLink to="/creator" className="flex items-center gap-2 justify-end">
+                      <span>لوحة صانع المحتوى</span>
+                      <Sparkles className="h-4 w-4 text-[#428177]" />
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -150,6 +168,15 @@ const AppSidebar = () => {
                   <NavLink to="/" className="flex items-center gap-2 justify-end">
                     <span>الرئيسية</span>
                     <Home className="h-4 w-4" />
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/creator"}>
+                  <NavLink to="/creator" className="flex items-center gap-2 justify-end">
+                    <span>لوحة صانع المحتوى</span>
+                    <Sparkles className="h-4 w-4 text-[#428177]" />
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
