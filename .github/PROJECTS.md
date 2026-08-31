@@ -76,7 +76,7 @@
 | Issue # | Title | Assigned Agent | Status |
 | :--- | :--- | :--- | :---: |
 | **#105–#108** | Creator Profile Storefront Card & Creator Analytics Dashboard (`CreatorDashboard.tsx`) | 🎨 `Fai` / 🎯 `POAI` | ✅ Closed (Day 16) |
-| **#110–#113** | Course Monetization Engine (Free, Paid One-Time, Subscription, Cohorts) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 17) |
+| **#110–#113** | Course Monetization Engine (Free, Paid One-Time, Subscription, Cohorts) | ⚙️ `BAI` / 📐 `AAI` | ✅ Closed (Day 17) |
 | **#114–#117** | Arabic Course Marketplace UI (`Marketplace.tsx`) & Student Checkout | 🎨 `Fai` / 👁️ `UXAI` | 📋 Scheduled (Day 18) |
 | **#118–#121** | Creator Revenue & Payout Engine (`CreatorPayouts.tsx`, 10-15% Ta3 Fee) | ⚙️ `BAI` / 🛡️ `SAI` | 📋 Scheduled (Day 19) |
 | **#122–#125** | Marketplace Sprint Quality Gate & PR Review (`v3.0-marketplace`) | 🧪 `QAI` / 🔀 `GAI` | 📋 Scheduled (Day 20) |
