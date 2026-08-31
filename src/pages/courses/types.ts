@@ -1,3 +1,5 @@
+import { PricingType } from "@/types/pricing";
+
 export interface Announcement {
     id: number;
     title: string;
@@ -56,6 +58,7 @@ export interface Submission {
 }
 
 export interface Course {
+    id?: number;
     name: string;
     code: string;
     category: string;
@@ -64,6 +67,10 @@ export interface Course {
     teacher: string;
     language: string;
     bgImage?: string;
+    pricingType?: PricingType;
+    priceCents?: number;
+    currency?: string;
+    cohortStartDate?: string;
     announcements: Announcement[];
     events: CourseEvent[];
     assignments: Assignment[];
