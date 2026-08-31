@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { CourseData, Announcement, Lecture, CourseEvent, Assignment, Submission } from '@/pages/courses/types';
 import { MockDataEngine } from '@/lib/MockDataEngine';
+import { PricingType } from '@/types/pricing';
 
 interface CourseContextType {
   courseData: CourseData;
@@ -19,6 +20,7 @@ interface CourseContextType {
   addCourse: (course: { name: string; code: string; category?: string; teacher?: string }) => void;
   addSubmission: (courseId: number, submission: Omit<Submission, 'id'>) => void;
   gradeSubmission: (courseId: number, submissionId: number, grade: number, feedback?: string) => void;
+  updateCoursePricing: (courseId: number, config: { pricingType: PricingType; priceCents: number; currency: string }) => void;
 }
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
@@ -257,6 +259,22 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const updateCoursePricing = useCallback((courseId: number, config: { pricingType: PricingType; priceCents: number; currency: string }) => {
+    setCourseData((prev) => {
+      const course = prev[courseId];
+      if (!course) return prev;
+      return {
+        ...prev,
+        [courseId]: {
+          ...course,
+          pricingType: config.pricingType,
+          priceCents: config.priceCents,
+          currency: config.currency,
+        },
+      };
+    });
+  }, []);
+
   const value = useMemo(
     () => ({
       courseData,
@@ -275,6 +293,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
       addCourse,
       addSubmission,
       gradeSubmission,
+      updateCoursePricing,
     }),
     [
       courseData,
@@ -293,6 +312,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
       addCourse,
       addSubmission,
       gradeSubmission,
+      updateCoursePricing,
     ]
   );
 
