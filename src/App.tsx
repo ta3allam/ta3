@@ -17,6 +17,7 @@ const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const TeacherDashboard = lazy(() => import("./pages/teacher/TeacherDashboard"));
 const StudentDashboard = lazy(() => import("./pages/student/StudentDashboard"));
 const CreatorDashboard = lazy(() => import("./pages/creator/CreatorDashboard"));
+const Marketplace = lazy(() => import("./pages/marketplace/Marketplace"));
 const CoursesPage = lazy(() => import("./pages/courses/Courses"));
 const CourseTimeline = lazy(() => import("./pages/courses/Timeline"));
 const CourseGroups = lazy(() => import("./pages/courses/Groups"));
@@ -52,11 +53,13 @@ const App = () => (
                       <Route path="/admin" element={<AdminDashboard />} />
                     </Route>
 
-                    {/* Teacher & Creator Routes */}
+                    {/* Shared Creator & Marketplace Routes */}
                     <Route element={<RequireAuth allowedRoles={['teacher', 'admin', 'student']} />}>
                       <Route path="/creator" element={<CreatorDashboard />} />
+                      <Route path="/marketplace" element={<Marketplace />} />
                     </Route>
 
+                    {/* Teacher Routes */}
                     <Route element={<RequireAuth allowedRoles={['teacher']} />}>
                       <Route path="/teacher" element={<TeacherDashboard />} />
                       <Route path="/teacher/courses/:courseId" element={<CoursesPage />} />
