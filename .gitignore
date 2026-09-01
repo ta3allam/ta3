@@ -3,7 +3,6 @@ logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
@@ -25,5 +24,7 @@ supabase/
 *.sw?
 *.env
 
-# Antigravity Workspace Customizations
+# Antigravity Workspace Customizations & UXAI Visual Auditing Screenshots
 .agents/
+uxai-screenshots/
+screenshots/uxai-audits/
