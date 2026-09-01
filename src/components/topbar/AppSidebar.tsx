@@ -6,7 +6,8 @@ import {
   Calendar,
   Users,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  ShoppingBag
 } from "lucide-react";
 import {
   Sidebar,
@@ -31,7 +32,7 @@ const AppSidebar = () => {
   const isAdminPath = pathname.startsWith("/admin");
 
   // Don't show sidebar for student/teacher on dashboard as requested
-  if ((user?.role === 'student' || user?.role === 'teacher') && isDashboardPath && pathname !== "/creator") {
+  if ((user?.role === 'student' || user?.role === 'teacher') && isDashboardPath && pathname !== "/creator" && pathname !== "/marketplace") {
     return null;
   }
 
@@ -44,7 +45,7 @@ const AppSidebar = () => {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel className="text-right">الإدارة والصناع</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-right">الإدارة والسوق</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -52,6 +53,15 @@ const AppSidebar = () => {
                     <NavLink to="/admin" className="flex items-center gap-2 justify-end">
                       <span>لوحة التحكم</span>
                       <LayoutDashboard className="h-4 w-4" />
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/marketplace"}>
+                    <NavLink to="/marketplace" className="flex items-center gap-2 justify-end">
+                      <span>سوق الدورات</span>
+                      <ShoppingBag className="h-4 w-4 text-[#428177]" />
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -141,6 +151,15 @@ const AppSidebar = () => {
                 </SidebarMenuItem>
 
                 <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/marketplace"}>
+                    <NavLink to="/marketplace" className="flex items-center gap-2 justify-end">
+                      <span>سوق الدورات</span>
+                      <ShoppingBag className="h-4 w-4 text-[#428177]" />
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
                   <SidebarMenuButton asChild isActive={pathname === "/creator"}>
                     <NavLink to="/creator" className="flex items-center gap-2 justify-end">
                       <span>لوحة صانع المحتوى</span>
@@ -168,6 +187,15 @@ const AppSidebar = () => {
                   <NavLink to="/" className="flex items-center gap-2 justify-end">
                     <span>الرئيسية</span>
                     <Home className="h-4 w-4" />
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/marketplace"}>
+                  <NavLink to="/marketplace" className="flex items-center gap-2 justify-end">
+                    <span>سوق الدورات</span>
+                    <ShoppingBag className="h-4 w-4 text-[#428177]" />
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
