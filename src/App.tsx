@@ -17,6 +17,7 @@ const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const TeacherDashboard = lazy(() => import("./pages/teacher/TeacherDashboard"));
 const StudentDashboard = lazy(() => import("./pages/student/StudentDashboard"));
 const CreatorDashboard = lazy(() => import("./pages/creator/CreatorDashboard"));
+const CreatorPayouts = lazy(() => import("./pages/creator/CreatorPayouts"));
 const Marketplace = lazy(() => import("./pages/marketplace/Marketplace"));
 const CoursesPage = lazy(() => import("./pages/courses/Courses"));
 const CourseTimeline = lazy(() => import("./pages/courses/Timeline"));
@@ -56,6 +57,7 @@ const App = () => (
                     {/* Shared Creator & Marketplace Routes */}
                     <Route element={<RequireAuth allowedRoles={['teacher', 'admin', 'student']} />}>
                       <Route path="/creator" element={<CreatorDashboard />} />
+                      <Route path="/creator/payouts" element={<CreatorPayouts />} />
                       <Route path="/marketplace" element={<Marketplace />} />
                     </Route>
 
