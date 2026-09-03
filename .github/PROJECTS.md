@@ -79,4 +79,16 @@
 | **#110–#113** | Course Monetization Engine (Free, Paid One-Time, Subscription, Cohorts) | ⚙️ `BAI` / 📐 `AAI` | ✅ Closed (Day 17) |
 | **#114–#117** | Arabic Course Marketplace UI (`Marketplace.tsx`) & Student Checkout | 🎨 `Fai` / 👁️ `UXAI` | ✅ Closed (Day 18) |
 | **#120–#123** | Creator Revenue & Payout Engine (`CreatorPayouts.tsx`, 10-15% Ta3 Fee) | ⚙️ `BAI` / 🛡️ `SAI` | ✅ Closed (Day 19) |
-| **#125–#128** | Marketplace Sprint Quality Gate & PR Review (`v3.0-marketplace`) | 🧪 `QAI` / 🔀 `GAI` | 📋 Scheduled (Day 20) |
+| **#125–#129** | Master Marketplace E2E Test Suite, Quality Gate & Release Tag `v3.0-marketplace` | 🧪 `QAI` / 🔀 `GAI` | 🎉 Released (`v3.0-marketplace`) |
+
+---
+
+## 💬 Sprint 5: Skool Creator Communities & Levant 5 Pillars (Days 21–25)
+
+| Issue # | Title | Assigned Agent | Status |
+| :--- | :--- | :--- | :---: |
+| **#130–#133** | Creator Community Feeds & Discussion Posts (`CommunityFeed.tsx`) | 🎨 `Fai` / 👁️ `UXAI` | 📋 Scheduled (Day 21) |
+| **#134–#137** | Offline-First PWA & IndexedDB Engine (Service Worker `sw.js` & Fonts) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 22) |
+| **#138–#141** | TUS Resumable 512KB Chunked Upload Protocol on 3G (`resumableUpload.ts`) | ⚙️ `BAI` / 🛡️ `SAI` | 📋 Scheduled (Day 23) |
+| **#142–#145** | Redis Read Caching & PgBouncer Connection Pooling (`redisCache.ts`) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 24) |
+| **#146–#149** | BullMQ Async Worker Queue for 11:59 PM Spikes & Release Tag `v3.5-community` | 🧪 `QAI` / 🔀 `GAI` | 📋 Scheduled (Day 25) |
