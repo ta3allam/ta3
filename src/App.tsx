@@ -9,6 +9,7 @@ import RequireAuth from "@/components/layout/RequireAuth";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CourseProvider } from "./contexts/CourseContext";
 import BackgroundDecor from "@/components/layout/BackgroundDecor";
+import { OfflineBanner } from "@/components/layout/OfflineBanner";
 
 // Lazy load pages for better performance
 const Login = lazy(() => import("./pages/Login"));
@@ -19,6 +20,7 @@ const StudentDashboard = lazy(() => import("./pages/student/StudentDashboard"));
 const CreatorDashboard = lazy(() => import("./pages/creator/CreatorDashboard"));
 const CreatorPayouts = lazy(() => import("./pages/creator/CreatorPayouts"));
 const Marketplace = lazy(() => import("./pages/marketplace/Marketplace"));
+const CommunityFeed = lazy(() => import("./pages/community/CommunityFeed"));
 const CoursesPage = lazy(() => import("./pages/courses/Courses"));
 const CourseTimeline = lazy(() => import("./pages/courses/Timeline"));
 const CourseGroups = lazy(() => import("./pages/courses/Groups"));
@@ -40,6 +42,7 @@ const App = () => (
       <AuthProvider>
         <CourseProvider>
           <TooltipProvider>
+            <OfflineBanner />
             <BackgroundDecor />
             <div className="relative z-10 bg-transparent">
               <Toaster />
@@ -54,11 +57,12 @@ const App = () => (
                       <Route path="/admin" element={<AdminDashboard />} />
                     </Route>
 
-                    {/* Shared Creator & Marketplace Routes */}
+                    {/* Shared Creator, Community & Marketplace Routes */}
                     <Route element={<RequireAuth allowedRoles={['teacher', 'admin', 'student']} />}>
                       <Route path="/creator" element={<CreatorDashboard />} />
                       <Route path="/creator/payouts" element={<CreatorPayouts />} />
                       <Route path="/marketplace" element={<Marketplace />} />
+                      <Route path="/community" element={<CommunityFeed />} />
                     </Route>
 
                     {/* Teacher Routes */}
