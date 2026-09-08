@@ -88,6 +88,6 @@
 | Issue # | Title | Assigned Agent | Status |
 | :--- | :--- | :--- | :---: |
 | **#130–#136** | Skool Community Feeds (`CommunityFeed.tsx`) & Offline-First PWA Engine (`sw.js`) | 🎨 `Fai` / ⚙️ `BAI` | ✅ Closed (Days 21 & 22) |
-| **#138–#141** | TUS Resumable 512KB Chunked Upload Protocol on 3G (`resumableUpload.ts`) | ⚙️ `BAI` / 🛡️ `SAI` | 📋 Scheduled (Day 23) |
-| **#142–#145** | Redis Read Caching & PgBouncer Connection Pooling (`redisCache.ts`) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 24) |
-| **#146–#149** | BullMQ Async Worker Queue for 11:59 PM Spikes & Release Tag `v3.5-community` | 🧪 `QAI` / 🔀 `GAI` | 📋 Scheduled (Day 25) |
+| **#138–#142** | TUS Resumable 512KB Chunked Upload Protocol on 3G (`resumableUpload.ts`) | ⚙️ `BAI` / 🛡️ `SAI` | ✅ Closed (Day 23) |
+| **#143–#146** | Redis Read Caching & PgBouncer Connection Pooling (`redisCache.ts`) | ⚙️ `BAI` / 📐 `AAI` | 📋 Scheduled (Day 24) |
+| **#147–#150** | BullMQ Async Worker Queue for 11:59 PM Spikes & Release Tag `v3.5-community` | 🧪 `QAI` / 🔀 `GAI` | 📋 Scheduled (Day 25) |
