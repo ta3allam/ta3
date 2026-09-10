@@ -8,6 +8,7 @@ import { AdminMetricsOverview } from '@/components/admin/AdminMetricsOverview';
 import { UserManagementTable, UserItem } from '@/components/admin/UserManagementTable';
 import { CourseRequestsTable, RequestItem } from '@/components/admin/CourseRequestsTable';
 import { CourseCatalogTable, CourseCatalogItem } from '@/components/admin/CourseCatalogTable';
+import { PlatformAuditLog } from '@/components/admin/PlatformAuditLog';
 import { useCourseData } from '@/contexts/CourseContext';
 import { getAssetUrl } from '@/lib/assetUtils';
 import { supabase } from '@/lib/supabase';
@@ -23,9 +24,9 @@ export default function AdminDashboard() {
       setUsers(JSON.parse(savedUsers));
     } else {
       const defaultUsers: UserItem[] = [
-        { id: 1, name: 'أحمد علي', role: 'طالب', username: 'student' },
-        { id: 2, name: 'سارة محمد', role: 'طالب', username: 'student2' },
-        { id: 3, name: 'د. خالد', role: 'معلم', username: 'teacher' },
+        { id: 1, name: 'أحمد علي', role: 'طالب', username: 'student', status: 'active' },
+        { id: 2, name: 'سارة محمد', role: 'طالب', username: 'student2', status: 'active' },
+        { id: 3, name: 'د. خالد', role: 'معلم', username: 'teacher', status: 'active' },
       ];
       setUsers(defaultUsers);
       localStorage.setItem('ta3_admin_users', JSON.stringify(defaultUsers));
@@ -69,6 +70,7 @@ export default function AdminDashboard() {
       name: userInput.name,
       username: userInput.username,
       role: userInput.role,
+      status: 'active'
     };
 
     // Invoke Supabase Auth / Profile API
@@ -90,6 +92,16 @@ export default function AdminDashboard() {
   const handleDeleteUser = async (id: number) => {
     saveUsers(users.filter((u) => u.id !== id));
     toast.success('تم حذف المستخدم بنجاح');
+  };
+
+  const handleRoleChange = (userId: string | number, newRole: string) => {
+    const updated = users.map(u => u.id === userId ? { ...u, role: newRole } : u);
+    saveUsers(updated);
+  };
+
+  const handleStatusToggle = (userId: string | number, newStatus: string) => {
+    const updated = users.map(u => u.id === userId ? { ...u, status: newStatus as any } : u);
+    saveUsers(updated);
   };
 
   const handleApproveRequest = async (id: number) => {
@@ -147,7 +159,7 @@ export default function AdminDashboard() {
               </div>
               <h1 className="text-3xl font-extrabold tracking-tight text-[#002623]">لوحة تحكم المسؤول ⚙️</h1>
               <p className="text-[#3D3A3B] mt-2 text-sm max-w-xl font-medium">
-                إدارة الحسابات، إضافة واعتماد المقررات الأكاديمية حصرياً، ومعالجة طلبات التسجيل الفردية.
+                إدارة الحسابات، ترقية صناع المحتوى، تعليق الحسابات، ومراقبة سجل العمليات الأمني.
               </p>
             </div>
           </div>
@@ -160,40 +172,50 @@ export default function AdminDashboard() {
           pendingRequests={requests.length}
         />
 
-        <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden">
-          <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10">
-            <CardTitle className="text-lg font-bold text-[#002623]">مركز الإدارة والعمليات المركزية</CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <Tabs defaultValue="users" dir="rtl">
-              <TabsList className="grid grid-cols-3 mb-6 max-w-md bg-[#EDEBE0] p-1 rounded-xl">
-                <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المستخدمون ({users.length})</TabsTrigger>
-                <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">الطلبات ({requests.length})</TabsTrigger>
-                <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المقررات ({courseCatalogItems.length})</TabsTrigger>
-              </TabsList>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden">
+              <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10">
+                <CardTitle className="text-lg font-bold text-[#002623]">مركز الإدارة والعمليات المركزية</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <Tabs defaultValue="users" dir="rtl">
+                  <TabsList className="grid grid-cols-3 mb-6 max-w-md bg-[#EDEBE0] p-1 rounded-xl">
+                    <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المستخدمون ({users.length})</TabsTrigger>
+                    <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">الطلبات ({requests.length})</TabsTrigger>
+                    <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المقررات ({courseCatalogItems.length})</TabsTrigger>
+                  </TabsList>
 
-              <TabsContent value="users">
-                <UserManagementTable
-                  users={users}
-                  onAddUser={handleAddUser}
-                  onDeleteUser={handleDeleteUser}
-                />
-              </TabsContent>
+                  <TabsContent value="users">
+                    <UserManagementTable
+                      users={users}
+                      onAddUser={handleAddUser}
+                      onDeleteUser={handleDeleteUser}
+                      onRoleChange={handleRoleChange}
+                      onStatusToggle={handleStatusToggle}
+                    />
+                  </TabsContent>
 
-              <TabsContent value="requests">
-                <CourseRequestsTable
-                  requests={requests}
-                  onApprove={handleApproveRequest}
-                  onReject={handleRejectRequest}
-                />
-              </TabsContent>
+                  <TabsContent value="requests">
+                    <CourseRequestsTable
+                      requests={requests}
+                      onApprove={handleApproveRequest}
+                      onReject={handleRejectRequest}
+                    />
+                  </TabsContent>
 
-              <TabsContent value="courses">
-                <CourseCatalogTable courses={courseCatalogItems} onAddCourse={handleAddCourse} />
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+                  <TabsContent value="courses">
+                    <CourseCatalogTable courses={courseCatalogItems} onAddCourse={handleAddCourse} />
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-1">
+            <PlatformAuditLog />
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   );
