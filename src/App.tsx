@@ -20,6 +20,7 @@ const StudentDashboard = lazy(() => import("./pages/student/StudentDashboard"));
 const CreatorDashboard = lazy(() => import("./pages/creator/CreatorDashboard"));
 const CreatorPayouts = lazy(() => import("./pages/creator/CreatorPayouts"));
 const CreatorAnalytics = lazy(() => import("./pages/analytics/CreatorAnalytics"));
+const CohortEvents = lazy(() => import("./pages/cohorts/CohortEvents"));
 const Marketplace = lazy(() => import("./pages/marketplace/Marketplace"));
 const CommunityFeed = lazy(() => import("./pages/community/CommunityFeed"));
 const CoursesPage = lazy(() => import("./pages/courses/Courses"));
@@ -63,6 +64,7 @@ const App = () => (
                       <Route path="/creator" element={<CreatorDashboard />} />
                       <Route path="/creator/payouts" element={<CreatorPayouts />} />
                       <Route path="/analytics" element={<CreatorAnalytics />} />
+                      <Route path="/cohorts" element={<CohortEvents />} />
                       <Route path="/marketplace" element={<Marketplace />} />
                       <Route path="/community" element={<CommunityFeed />} />
                     </Route>
