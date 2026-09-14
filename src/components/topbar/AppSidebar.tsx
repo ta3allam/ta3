@@ -8,7 +8,8 @@ import {
   ArrowRight,
   Sparkles,
   ShoppingBag,
-  Wallet
+  Wallet,
+  LineChart
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,7 +34,7 @@ const AppSidebar = () => {
   const isAdminPath = pathname.startsWith("/admin");
 
   // Don't show sidebar for student/teacher on dashboard as requested
-  if ((user?.role === 'student' || user?.role === 'teacher') && isDashboardPath && pathname !== "/creator" && pathname !== "/marketplace" && pathname !== "/creator/payouts" && pathname !== "/community") {
+  if ((user?.role === 'student' || user?.role === 'teacher') && isDashboardPath && pathname !== "/creator" && pathname !== "/marketplace" && pathname !== "/creator/payouts" && pathname !== "/community" && pathname !== "/analytics") {
     return null;
   }
 
@@ -54,6 +55,15 @@ const AppSidebar = () => {
                     <NavLink to="/admin" className="flex items-center gap-2 justify-end">
                       <span>لوحة التحكم</span>
                       <LayoutDashboard className="h-4 w-4" />
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/analytics"}>
+                    <NavLink to="/analytics" className="flex items-center gap-2 justify-end">
+                      <span>إحصائيات المنصة</span>
+                      <LineChart className="h-4 w-4 text-[#428177]" />
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -170,6 +180,15 @@ const AppSidebar = () => {
                 </SidebarMenuItem>
 
                 <SidebarMenuItem>
+                  <SidebarMenuButton asChild isActive={pathname === "/analytics"}>
+                    <NavLink to="/analytics" className="flex items-center gap-2 justify-end">
+                      <span>تحليلات المساق</span>
+                      <LineChart className="h-4 w-4 text-[#428177]" />
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
                   <SidebarMenuButton asChild isActive={pathname === "/community"}>
                     <NavLink to="/community" className="flex items-center gap-2 justify-end">
                       <span>مجتمع المعرفة</span>
@@ -224,6 +243,15 @@ const AppSidebar = () => {
                   <NavLink to="/" className="flex items-center gap-2 justify-end">
                     <span>الرئيسية</span>
                     <Home className="h-4 w-4" />
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === "/analytics"}>
+                  <NavLink to="/analytics" className="flex items-center gap-2 justify-end">
+                    <span>إحصائيات الأداء</span>
+                    <LineChart className="h-4 w-4 text-[#428177]" />
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
