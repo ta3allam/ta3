@@ -4,6 +4,19 @@
 > All tasks have explicit status and agent assignments.
 > **Documentation Lead**: 🎯 **POAI**
 
+## 🚀 Active 3-Day Sprint: Platform Optimization, UI Polish & Mockup-Ready Refinement (Days 1–3)
+
+> 🔒 **Feature Freeze Enforced**: No new features are to be introduced. 100% focused on optimizing, refining, and polishing all existing features across all roles (Student, Teacher, Creator, Admin) for a professional, mockup-ready presentation.
+
+| Issue # | Title | Assigned Agent | Status |
+| :--- | :--- | :--- | :---: |
+| **#180** | **Visual Theme & Header Reskin**: Deep Forest TopBar (`#002623`), Warm Cream Canvas (`#EDEBE0`) & Elevation Harmony | 🎨 `Fai` / 👁️ `UXAI` | 📋 Planned (Day 1) |
+| **#181** | **Course Details & Interaction Refinement**: Polish lectures, timeline, submissions, discussions & modals across all views | 🎨 `Fai` / 👁️ `UXAI` | 📋 Planned (Day 1) |
+| **#182** | **Role Journey & Interaction Optimization**: Polish Student, Teacher, Creator & Admin workflows with realistic mock data & states | 🎨 `Fai` / 📐 `AAI` | 📋 Planned (Day 2) |
+| **#183** | **Strict Role Boundary & Action Isolation**: Airtight `RequireAuth` route guards and action control isolation (zero UI leakage) | 🛡️ `SAI` / 📐 `AAI` | 📋 Planned (Day 2) |
+| **#184** | **Interaction & RBAC Test Suite**: Vitest verification for role workflows, action locks, and regression safety | 🧪 `QAI` | 📋 Planned (Day 3) |
+| **#185** | **Mockup-Ready Visual Audit & Gatekeeping**: `tsc --noEmit` 0-error gate, UX review, PR merge to `main` | 🔀 `GAI` / 🎯 `POAI` | 📋 Planned (Day 3) |
+
 ---
 
 ## 🏃 Sprint 1: Frontend Baseline & Core LMS Architecture (Days 1–5)
