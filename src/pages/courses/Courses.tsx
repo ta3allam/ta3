@@ -231,6 +231,7 @@ export default function CourseDetail() {
               <TabsTrigger value="home" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الرئيسية</TabsTrigger>
               <TabsTrigger value="content" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">المحتوى والمحاضرات</TabsTrigger>
               <TabsTrigger value="assignments" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الواجبات والتكليفات</TabsTrigger>
+              <TabsTrigger value="discussions" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">ساحة المناقشات</TabsTrigger>
               <TabsTrigger value="help" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الدليل والمساعدة</TabsTrigger>
             </TabsList>
           </div>
