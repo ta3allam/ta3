@@ -4,18 +4,19 @@
 > All tasks have explicit status and agent assignments.
 > **Documentation Lead**: 🎯 **POAI**
 
-## 🚀 Active 3-Day Sprint: Platform Optimization, UI Polish & Mockup-Ready Refinement (Days 1–3)
+## 🚀 5-Day Master Overhaul Sprint: Professional Mockup, Role Boundaries & Experience Overhaul (Days 1–5)
 
-> 🔒 **Feature Freeze Enforced**: No new features are to be introduced. 100% focused on optimizing, refining, and polishing all existing features across all roles (Student, Teacher, Creator, Admin) for a professional, mockup-ready presentation.
+> 🎯 **Master Objective**: Transform Ta3 from junior mockup to commercial-grade Arabic learning & creator platform.
+> 🔒 **Feature Freeze**: Zero irrelevant features. 100% focus on deep, intuitive role experiences, strict navigation context separation, realistic Arabic UI, and supreme admin governance.
+> 📊 **Shift Activity Target**: Minimum **20 GitHub activities per day** (Issues, Commits, PRs, Reviews, Merges).
 
-| Issue # | Title | Assigned Agent | Status |
-| :--- | :--- | :--- | :---: |
-| **#180 (#168)** | **Visual Theme & Header Reskin**: Deep Forest TopBar (`#002623`), Warm Cream Canvas (`#EDEBE0`) & Elevation Harmony | 🎨 `Fai` / 👁️ `UXAI` | ✅ Closed (Day 1) |
-| **#181 (#169)** | **Course Details & Interaction Refinement**: Polish lectures, timeline, submissions, discussions & modals across all views | 🎨 `Fai` / 👁️ `UXAI` | ✅ Closed (Day 1) |
-| **#182 (#171)** | **Role Journey & Interaction Optimization**: Polish Student, Teacher, Creator & Admin workflows with realistic mock data & states | 🎨 `Fai` / 📐 `AAI` | ✅ Closed (Day 2) |
-| **#183 (#172, #173)** | **Strict Role Boundary & Action Isolation**: Airtight `RequireAuth` route guards and action control isolation (zero UI leakage) | 🛡️ `SAI` / 📐 `AAI` | ✅ Closed (Day 2) |
-| **#184** | **Interaction & RBAC Test Suite**: Vitest verification for role workflows, action locks, and regression safety | 🧪 `QAI` | 📋 Planned (Day 3) |
-| **#185** | **Mockup-Ready Visual Audit & Gatekeeping**: `tsc --noEmit` 0-error gate, UX review, PR merge to `main` | 🔀 `GAI` / 🎯 `POAI` | 📋 Planned (Day 3) |
+| Day | Focus Area & Deliverables | Assigned Agents | Target Activities | Status |
+| :---: | :--- | :--- | :---: | :---: |
+| **Day 1** | **Navigation Topology & Course Context Isolation**:<br>• Separate Global Control Panel (Overview dashboards) from Course-Specific Sidebars.<br>• Purge global items (wallet, market, live events) from course view sidebar.<br>• Remove confusing topbar role switcher tab; make topbar clean & realistic. | 🎨 `Fai`<br>👁️ `UXAI`<br>📐 `AAI` | 20+ Activities | 📋 Planned |
+| **Day 2** | **Professional User Profile & Identity Center**:<br>• Rich user profile drawer/modal (avatar upload, bio, specialization, course counts, certificates earned, security credentials).<br>• Realism polish for Student, Teacher, Creator & Admin personal data states. | 🎨 `Fai`<br>🛡️ `SAI`<br>👁️ `UXAI` | 20+ Activities | 📋 Planned |
+| **Day 3** | **Role Financial Separation (Creator vs. Institutional Teacher)**:<br>• Strictly isolate Financial Wallet (`CreatorPayouts.tsx`) to Independent Creators only.<br>• School/University Teachers manage curriculum & grading without wallet clutter.<br>• Polish student learning flow & interactive homework submissions. | ⚙️ `BAI`<br>🛡️ `SAI`<br>🎨 `Fai` | 20+ Activities | 📋 Planned |
+| **Day 4** | **Supreme Admin Governance & Executive Observer Console**:<br>• Platform-wide financial & transaction oversight (NO personal wallet).<br>• Course Moderation Console (Approve, Suspend, Delete courses & posts).<br>• Multi-tier user hierarchy & promotion engine with detailed audit logs. | 🛡️ `SAI`<br>⚙️ `BAI`<br>🎨 `Fai` | 20+ Activities | 📋 Planned |
+| **Day 5** | **Commercial-Grade Marketplace & Creator Studio Overhaul**:<br>• Arabic Udemy/Coursera marketplace catalog with rich filters, video previews, syllabus accordions, and checkout modal.<br>• Creator Studio with drag-and-drop course builder & student CRM.<br>• Full Vitest test suite pass & `tsc --noEmit` 0-error gate. | 🎨 `Fai`<br>🧪 `QAI`<br>🔀 `GAI` | 20+ Activities | 📋 Planned |
 
 ---
 
