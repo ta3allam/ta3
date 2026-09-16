@@ -4,9 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCourseData } from "@/contexts/CourseContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Submission } from "@/pages/courses/types";
 import { toast } from "sonner";
-import { FileText, Award, MessageSquare, Check, AlertCircle, Download, Paperclip } from "lucide-react";
+import { FileText, Award, MessageSquare, Check, AlertCircle, Download, Paperclip, ShieldAlert } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface GradingConsoleProps {
@@ -25,12 +26,24 @@ function formatStandardDate(dateString: string): string {
 }
 
 export default function GradingConsole({ courseId, assignmentId }: GradingConsoleProps) {
+  const { user } = useAuth();
   const { courseData, gradeSubmission } = useCourseData();
   const [selectedSub, setSelectedSub] = useState<Submission | null>(null);
   const [grade, setGrade] = useState("");
   const [feedback, setFeedback] = useState("");
   const [feedbackFile, setFeedbackFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isAuthorized = user?.role === 'teacher' || user?.role === 'admin';
+
+  if (!isAuthorized) {
+    return (
+      <div className="p-6 text-center text-xs font-bold text-rose-800 bg-rose-50 border border-rose-200 rounded-2xl flex items-center justify-center gap-2" dir="rtl">
+        <ShieldAlert className="h-4 w-4 text-rose-600" />
+        <span>عذراً، تقتصر صلاحية رصد الدرجات وإدارة التقييمات على مدرسي المقرر والمشرفين فقط.</span>
+      </div>
+    );
+  }
 
   const course = courseData[courseId];
   const submissions = course?.submissions?.filter((s) => s.assignmentId === assignmentId) || [];
