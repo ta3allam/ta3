@@ -3,19 +3,17 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { getAssetUrl } from "@/lib/assetUtils";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Helmet } from "react-helmet-async";
-import { useAuth, UserRole } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   LogOut,
   User as UserIcon,
   Bell,
   Search,
   CheckCircle2,
-  Sparkles,
   ShieldAlert,
   GraduationCap,
   BookOpen,
-  ArrowRightLeft,
-  ChevronDown
+  Sparkles
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -37,17 +35,17 @@ interface TopBarProps {
   hideSidebarTrigger?: boolean;
 }
 
-const TopBar = ({ title, hideSidebarTrigger }: TopBarProps) => {
+export default function TopBar({ title, hideSidebarTrigger }: TopBarProps) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { user, logout, login } = useAuth();
+  const { user, logout } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [notifications, setNotifications] = useState([
-    { id: 1, title: "تم رفع الواجب الجديد: البرمجة الهيكلية الموزعة", time: "قبل 10 دقائق", unread: true },
-    { id: 2, title: "إعلان جديد: موعد ورشة البث المباشر (TUS Protocol)", time: "قبل ساعة", unread: true },
-    { id: 3, title: "تم تقييم واجب الرياضيات وحساب المعدل التراكمي", time: "أمس", unread: false }
+    { id: 1, title: "تم رفع المحاضرة الرابعة: بروتوكول التجزئة 512KB TUS", time: "قبل 10 دقائق", unread: true },
+    { id: 2, title: "تذكير: ورشة عمل تفاعلية مباشرة تبدأ اليوم في 7:00 م", time: "قبل ساعة", unread: true },
+    { id: 3, title: "تم اعتماد درجات واجب الرياضيات المتقدمة", time: "أمس", unread: false }
   ]);
 
   const handleLogout = () => {
@@ -67,32 +65,17 @@ const TopBar = ({ title, hideSidebarTrigger }: TopBarProps) => {
     toast.success("تم تعليم جميع الإشعارات كمقروءة");
   };
 
-  const handleQuickRoleSwitch = (newRole: UserRole) => {
-    if (newRole === user?.role) return;
-    // Fast switcher for mockup demonstrations
-    const mockCredentials: Record<UserRole, { user: string; pass: string; route: string }> = {
-      student: { user: "student", pass: "password", route: "/student" },
-      teacher: { user: "teacher", pass: "password", route: "/teacher" },
-      admin: { user: "admin", pass: "password", route: "/admin" }
-    };
-
-    const target = mockCredentials[newRole];
-    login(target.user, target.pass);
-    navigate(target.route);
-    toast.info(`تم التبديل إلى منظور: ${newRole === 'admin' ? 'مدير النظام' : newRole === 'teacher' ? 'المعلّم وصانع المحتوى' : 'الطالب'}`);
-  };
-
   const unreadCount = notifications.filter(n => n.unread).length;
 
   const getRoleBadgeStyle = (role?: string) => {
     switch (role) {
       case 'admin':
-        return { label: 'مدير النظام', color: 'bg-[#6B1F2A] text-white border-[#6B1F2A]/60', icon: ShieldAlert };
+        return { label: 'مشرف عام النظام', color: 'bg-[#6B1F2A] text-white border-[#6B1F2A]/60', icon: ShieldAlert };
       case 'teacher':
-        return { label: 'معلّم / صانع محتوى', color: 'bg-[#428177] text-white border-[#428177]/60', icon: GraduationCap };
+        return { label: 'معلّم أكاديمي', color: 'bg-[#428177] text-white border-[#428177]/60', icon: GraduationCap };
       case 'student':
       default:
-        return { label: 'طالب', color: 'bg-[#988561] text-white border-[#988561]/60', icon: BookOpen };
+        return { label: 'طالب مسجل', color: 'bg-[#988561] text-white border-[#988561]/60', icon: BookOpen };
     }
   };
 
@@ -108,7 +91,7 @@ const TopBar = ({ title, hideSidebarTrigger }: TopBarProps) => {
       </Helmet>
 
       <div className="container h-16 flex items-center justify-between flex-row-reverse gap-4 px-4 md:px-6">
-        {/* User Profile, Role Switcher & Actions (Right side in reversed flow) */}
+        {/* User Profile, Notifications & Search (Right side in RTL/Reversed flow) */}
         <div className="flex items-center gap-2.5 sm:gap-3.5">
           {/* Global Search Input */}
           <form onSubmit={handleSearchSubmit} className="relative hidden md:flex items-center">
@@ -118,63 +101,15 @@ const TopBar = ({ title, hideSidebarTrigger }: TopBarProps) => {
               placeholder="البحث في المساقات والمحتوى..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-3 pr-9 h-9 text-xs w-48 lg:w-64 text-right bg-[#053833]/90 text-[#EDEBE0] placeholder:text-[#988561]/80 border-[#428177]/40 focus-visible:border-[#428177] focus-visible:ring-1 focus-visible:ring-[#428177] rounded-xl"
+              className="pl-3 pr-9 h-9 text-xs w-48 lg:w-64 text-right bg-[#053833]/90 text-[#EDEBE0] placeholder:text-[#988561]/80 border-[#428177]/40 focus-visible:border-[#428177] focus-visible:ring-1 focus-visible:ring-[#428177] rounded-xl font-medium"
             />
           </form>
 
-          {/* Quick Mockup Role Switcher */}
-          <DropdownMenu dir="rtl">
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="hidden sm:flex items-center gap-1.5 h-8 px-2.5 text-xs font-bold bg-[#053833] text-[#EDEBE0] border-[#428177]/40 hover:bg-[#428177]/20 hover:text-white rounded-xl shadow-xs"
-              >
-                <RoleIcon className="h-3.5 w-3.5 text-[#988561]" />
-                <span>{roleInfo.label}</span>
-                <ChevronDown className="h-3 w-3 text-muted-foreground mr-0.5 opacity-70" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-52 text-right bg-white text-[#002623] border border-[#428177]/30 shadow-lg rounded-xl" align="end">
-              <DropdownMenuLabel className="text-xs font-extrabold text-muted-foreground flex items-center gap-1.5 p-2.5">
-                <ArrowRightLeft className="h-3.5 w-3.5 text-[#428177]" />
-                <span>تبديل المنظور للعرض (Mockup Preview)</span>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-[#EDEBE0]" />
-              <DropdownMenuItem
-                className={`cursor-pointer justify-between text-xs py-2 ${user?.role === 'student' ? 'bg-[#EDEBE0]/60 font-bold' : ''}`}
-                onClick={() => handleQuickRoleSwitch('student')}
-              >
-                <span className="flex items-center gap-2">
-                  <BookOpen className="h-3.5 w-3.5 text-[#988561]" />
-                  <span>منظور الطالب (Student)</span>
-                </span>
-                {user?.role === 'student' && <CheckCircle2 className="h-3.5 w-3.5 text-[#428177]" />}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={`cursor-pointer justify-between text-xs py-2 ${user?.role === 'teacher' ? 'bg-[#EDEBE0]/60 font-bold' : ''}`}
-                onClick={() => handleQuickRoleSwitch('teacher')}
-              >
-                <span className="flex items-center gap-2">
-                  <GraduationCap className="h-3.5 w-3.5 text-[#428177]" />
-                  <span>منظور المعلّم وصانع المحتوى</span>
-                </span>
-                {user?.role === 'teacher' && <CheckCircle2 className="h-3.5 w-3.5 text-[#428177]" />}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className={`cursor-pointer justify-between text-xs py-2 ${user?.role === 'admin' ? 'bg-[#EDEBE0]/60 font-bold' : ''}`}
-                onClick={() => handleQuickRoleSwitch('admin')}
-              >
-                <span className="flex items-center gap-2">
-                  <ShieldAlert className="h-3.5 w-3.5 text-[#6B1F2A]" />
-                  <span>منظور المشرف العام (Admin)</span>
-                </span>
-                {user?.role === 'admin' && <CheckCircle2 className="h-3.5 w-3.5 text-[#428177]" />}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Role Status Tag (Non-interactive authentic indicator) */}
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#053833] border border-[#428177]/30 text-xs font-bold text-[#EDEBE0]">
+            <RoleIcon className="h-3.5 w-3.5 text-[#988561]" />
+            <span>{roleInfo.label}</span>
+          </div>
 
           {/* Notifications Dropdown */}
           <DropdownMenu dir="rtl">
@@ -285,6 +220,9 @@ const TopBar = ({ title, hideSidebarTrigger }: TopBarProps) => {
               alt="تعلّم"
               className="h-8 w-auto inline-block align-middle brightness-110"
             />
+            <span className="hidden sm:inline-block text-sm font-black tracking-wide text-[#EDEBE0]">
+              تعلّـم
+            </span>
           </NavLink>
         </div>
       </div>
@@ -328,6 +266,4 @@ const TopBar = ({ title, hideSidebarTrigger }: TopBarProps) => {
       </Dialog>
     </header>
   );
-};
-
-export default TopBar;
+}

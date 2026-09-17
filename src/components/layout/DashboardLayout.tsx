@@ -1,48 +1,24 @@
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import TopBar from "../topbar/TopBar";
 import AppSidebar from "../topbar/AppSidebar";
-import { useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface DashboardLayoutProps {
   title?: string;
   children: React.ReactNode;
 }
 
-const DashboardLayout = ({ title, children }: DashboardLayoutProps) => {
-  const { pathname } = useLocation();
-  const { user } = useAuth();
-
-  const isCoursePath = pathname.includes("/courses/");
-  const isStudentOrTeacher = user?.role === 'student' || user?.role === 'teacher';
-
-  // Determine if we should show the sidebar at all
-  const showSidebar = !isStudentOrTeacher || isCoursePath;
-
-  if (!showSidebar) {
-    return (
-      <div className="min-h-screen flex flex-col w-full">
-        <TopBar title={title} hideSidebarTrigger />
-        <main className="dashboard-content">
-          {children}
-        </main>
-      </div>
-    );
-  }
-
+export default function DashboardLayout({ title, children }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="min-h-screen flex w-full bg-[#EDEBE0]/40">
         <AppSidebar />
-        <SidebarInset>
+        <SidebarInset className="bg-transparent">
           <TopBar title={title} />
-          <div className="dashboard-content">
+          <main className="dashboard-content">
             {children}
-          </div>
+          </main>
         </SidebarInset>
       </div>
     </SidebarProvider>
   );
-};
-
-export default DashboardLayout;
+}
