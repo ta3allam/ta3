@@ -285,9 +285,6 @@ const TopBar = ({ title, hideSidebarTrigger }: TopBarProps) => {
               alt="تعلّم"
               className="h-8 w-auto inline-block align-middle brightness-110"
             />
-            <span className="hidden sm:inline-block text-sm font-black tracking-wide text-[#EDEBE0]">
-              تعلّـم
-            </span>
           </NavLink>
         </div>
       </div>
