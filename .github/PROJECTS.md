@@ -11,8 +11,8 @@
 > 📊 **Shift Activity Target**: Minimum **20 GitHub activities per day** (Issues, Commits, PRs, Reviews, Merges).
 
 | Day | Focus Area & Deliverables | Assigned Agents | Target Activities | Status |
-| :---: | :--- | :--- | :---: | :---: |
-| **Day 1** | **Navigation Topology & Course Context Isolation**:<br>• Separate Global Control Panel (Overview dashboards) from Course-Specific Sidebars.<br>• Purge global items (wallet, market, live events) from course view sidebar.<br>• Remove confusing topbar role switcher tab; make topbar clean & realistic. | 🎨 `Fai`<br>👁️ `UXAI`<br>📐 `AAI` | 20+ Activities | 📋 Planned |
+| :---: | :--- | :--- | :--- | :---: |
+| **Day 1** | **Navigation Topology & Course Context Isolation**:<br>• Separate Global Control Panel (Overview dashboards) from Course-Specific Sidebars.<br>• Purge global items (wallet, market, live events) from course view sidebar.<br>• Remove confusing topbar role switcher tab; make topbar clean & realistic. | 🎨 `Fai`<br>👁️ `UXAI`<br>📐 `AAI` | 20+ Activities | ✅ Closed (PR #179) |
 | **Day 2** | **Professional User Profile & Identity Center**:<br>• Rich user profile drawer/modal (avatar upload, bio, specialization, course counts, certificates earned, security credentials).<br>• Realism polish for Student, Teacher, Creator & Admin personal data states. | 🎨 `Fai`<br>🛡️ `SAI`<br>👁️ `UXAI` | 20+ Activities | 📋 Planned |
 | **Day 3** | **Role Financial Separation (Creator vs. Institutional Teacher)**:<br>• Strictly isolate Financial Wallet (`CreatorPayouts.tsx`) to Independent Creators only.<br>• School/University Teachers manage curriculum & grading without wallet clutter.<br>• Polish student learning flow & interactive homework submissions. | ⚙️ `BAI`<br>🛡️ `SAI`<br>🎨 `Fai` | 20+ Activities | 📋 Planned |
 | **Day 4** | **Supreme Admin Governance & Executive Observer Console**:<br>• Platform-wide financial & transaction oversight (NO personal wallet).<br>• Course Moderation Console (Approve, Suspend, Delete courses & posts).<br>• Multi-tier user hierarchy & promotion engine with detailed audit logs. | 🛡️ `SAI`<br>⚙️ `BAI`<br>🎨 `Fai` | 20+ Activities | 📋 Planned |
