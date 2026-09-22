@@ -112,4 +112,24 @@ describe('Professional User Profile & Identity Center Unit Tests (Day 2 Overhaul
     expect(currentSession).toBeDefined();
     expect(currentSession?.browser).toContain('Chrome');
   });
+
+  it('Session Revocation: successfully terminates remote active session by ID', () => {
+    const student = MockAuthEngine.authenticateMock('student');
+    const initialSessionCount = student?.activeSessions?.length || 0;
+    expect(initialSessionCount).toBe(2);
+
+    const updated = MockAuthEngine.terminateSession('SESS-02');
+    expect(updated?.activeSessions?.length).toBe(1);
+    expect(updated?.activeSessions?.find((s) => s.id === 'SESS-02')).toBeUndefined();
+  });
+
+  it('Avatar Update: persists custom Base64 avatar URL in user profile state', () => {
+    MockAuthEngine.authenticateMock('student');
+    const mockDataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+    const updated = MockAuthEngine.updateUserProfile({ avatar: mockDataUrl });
+
+    expect(updated?.avatar).toBe(mockDataUrl);
+    const reloaded = MockAuthEngine.getSavedUser();
+    expect(reloaded?.avatar).toBe(mockDataUrl);
+  });
 });
