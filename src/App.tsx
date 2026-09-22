@@ -23,6 +23,7 @@ const CreatorAnalytics = lazy(() => import("./pages/analytics/CreatorAnalytics")
 const CohortEvents = lazy(() => import("./pages/cohorts/CohortEvents"));
 const Marketplace = lazy(() => import("./pages/marketplace/Marketplace"));
 const CommunityFeed = lazy(() => import("./pages/community/CommunityFeed"));
+const UserProfilePage = lazy(() => import("./pages/profile/UserProfilePage"));
 const CoursesPage = lazy(() => import("./pages/courses/Courses"));
 const CourseTimeline = lazy(() => import("./pages/courses/Timeline"));
 const CourseGroups = lazy(() => import("./pages/courses/Groups"));
@@ -59,7 +60,7 @@ const App = () => (
                       <Route path="/admin" element={<AdminDashboard />} />
                     </Route>
 
-                    {/* Shared Creator, Community, Marketplace & Analytics Routes */}
+                    {/* Shared Creator, Community, Marketplace, Analytics & Profile Routes */}
                     <Route element={<RequireAuth allowedRoles={['teacher', 'admin', 'student']} />}>
                       <Route path="/creator" element={<CreatorDashboard />} />
                       <Route path="/creator/payouts" element={<CreatorPayouts />} />
@@ -67,6 +68,7 @@ const App = () => (
                       <Route path="/cohorts" element={<CohortEvents />} />
                       <Route path="/marketplace" element={<Marketplace />} />
                       <Route path="/community" element={<CommunityFeed />} />
+                      <Route path="/profile" element={<UserProfilePage />} />
                     </Route>
 
                     {/* Teacher Routes */}
