@@ -342,12 +342,15 @@ export default function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-3 border-t border-[#EDEBE0] flex flex-col gap-1 text-right text-[11px]">
-        <div className="flex items-center justify-between text-[#002623] font-bold">
+        <NavLink
+          to="/profile"
+          className="flex items-center justify-between text-[#002623] hover:bg-[#EDEBE0]/60 p-2 rounded-xl transition-colors font-bold group"
+        >
           <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-            متصل الآن
+            الملف الشخصي
           </span>
-          <span className="truncate">{user?.name || "زائر"}</span>
-        </div>
+          <span className="truncate group-hover:text-[#428177]">{user?.name || "الملف الشخصي"}</span>
+        </NavLink>
       </SidebarFooter>
     </Sidebar>
   );
