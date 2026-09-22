@@ -244,6 +244,13 @@ export class MockAuthEngine {
     return updatedUser;
   }
 
+  public static terminateSession(sessionId: string): User | null {
+    const currentUser = this.getSavedUser();
+    if (!currentUser || !currentUser.activeSessions) return null;
+    const filtered = currentUser.activeSessions.filter((s) => s.id !== sessionId);
+    return this.updateUserProfile({ activeSessions: filtered });
+  }
+
   public static clearSession(): void {
     this.saveUser(null);
   }
