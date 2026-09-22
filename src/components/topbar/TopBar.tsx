@@ -4,6 +4,7 @@ import { getAssetUrl } from "@/lib/assetUtils";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/contexts/AuthContext";
+import UserProfileModal from "@/components/profile/UserProfileModal";
 import {
   LogOut,
   User as UserIcon,
@@ -13,7 +14,8 @@ import {
   ShieldAlert,
   GraduationCap,
   BookOpen,
-  Sparkles
+  Sparkles,
+  ExternalLink
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -26,7 +28,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
@@ -41,7 +42,7 @@ export default function TopBar({ title, hideSidebarTrigger }: TopBarProps) {
   const { user, logout } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [notifications, setNotifications] = useState([
     { id: 1, title: "تم رفع المحاضرة الرابعة: بروتوكول التجزئة 512KB TUS", time: "قبل 10 دقائق", unread: true },
     { id: 2, title: "تذكير: ورشة عمل تفاعلية مباشرة تبدأ اليوم في 7:00 م", time: "قبل ساعة", unread: true },
@@ -73,6 +74,8 @@ export default function TopBar({ title, hideSidebarTrigger }: TopBarProps) {
         return { label: 'مشرف عام النظام', color: 'bg-[#6B1F2A] text-white border-[#6B1F2A]/60', icon: ShieldAlert };
       case 'teacher':
         return { label: 'معلّم أكاديمي', color: 'bg-[#428177] text-white border-[#428177]/60', icon: GraduationCap };
+      case 'creator':
+        return { label: 'صانع محتوى مستقل', color: 'bg-[#988561] text-white border-[#988561]/60', icon: Sparkles };
       case 'student':
       default:
         return { label: 'طالب مسجل', color: 'bg-[#988561] text-white border-[#988561]/60', icon: BookOpen };
@@ -167,14 +170,14 @@ export default function TopBar({ title, hideSidebarTrigger }: TopBarProps) {
                 className="relative h-9 w-9 rounded-full p-0 ring-2 ring-[#428177]/50 hover:ring-[#428177] transition-all"
               >
                 <Avatar className="h-9 w-9">
-                  <AvatarImage src="" alt={user?.name} />
+                  <AvatarImage src={user?.avatar} alt={user?.name} />
                   <AvatarFallback className="bg-[#428177] text-white font-extrabold text-xs">
                     {user?.name?.substring(0, 2) || "يو"}
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-60 bg-white text-[#002623] border border-[#428177]/30 shadow-xl rounded-2xl p-2" align="end" forceMount>
+            <DropdownMenuContent className="w-64 bg-white text-[#002623] border border-[#428177]/30 shadow-xl rounded-2xl p-2" align="end" forceMount>
               <DropdownMenuLabel className="font-normal p-2">
                 <div className="flex flex-col space-y-1 text-right">
                   <p className="text-sm font-extrabold leading-none text-[#002623]">{user?.name}</p>
@@ -189,10 +192,17 @@ export default function TopBar({ title, hideSidebarTrigger }: TopBarProps) {
               <DropdownMenuSeparator className="bg-[#EDEBE0]" />
               <DropdownMenuItem
                 className="cursor-pointer justify-end text-xs font-bold rounded-xl py-2 hover:bg-[#EDEBE0]"
-                onClick={() => setProfileDialogOpen(true)}
+                onClick={() => setProfileModalOpen(true)}
               >
-                <span className="ml-2">الملف الشخصي والإعدادات</span>
+                <span className="ml-2">الملف الشخصي السريع (نافذة)</span>
                 <UserIcon className="h-4 w-4 text-[#428177]" />
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer justify-end text-xs font-bold rounded-xl py-2 hover:bg-[#EDEBE0]"
+                onClick={() => navigate('/profile')}
+              >
+                <span className="ml-2">صفحة الحساب والشهادات الكاملة</span>
+                <ExternalLink className="h-4 w-4 text-[#988561]" />
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-[#EDEBE0]" />
               <DropdownMenuItem
@@ -227,43 +237,11 @@ export default function TopBar({ title, hideSidebarTrigger }: TopBarProps) {
         </div>
       </div>
 
-      {/* User Profile Settings Modal */}
-      <Dialog open={profileDialogOpen} onOpenChange={setProfileDialogOpen}>
-        <DialogContent className="max-w-md text-right bg-white rounded-2xl border border-[#428177]/30 shadow-2xl" dir="rtl">
-          <DialogHeader>
-            <DialogTitle className="text-base font-extrabold text-[#002623] flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-[#428177]" />
-              إعدادات الحساب والملف الشخصي
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="flex items-center gap-3 p-3.5 border border-[#428177]/20 rounded-2xl bg-[#EDEBE0]/40">
-              <Avatar className="h-12 w-12 border border-[#428177]/30">
-                <AvatarFallback className="bg-[#428177] text-white font-black text-sm">
-                  {user?.name?.substring(0, 2) || "يو"}
-                </AvatarFallback>
-              </Avatar>
-              <div className="space-y-1">
-                <h4 className="font-extrabold text-sm text-[#002623]">{user?.name}</h4>
-                <p className="text-xs text-muted-foreground font-medium">@{user?.username}</p>
-              </div>
-            </div>
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between p-2.5 border-b border-[#EDEBE0]">
-                <span className="text-muted-foreground font-medium">نوع الحساب:</span>
-                <span className="font-bold text-[#002623]">{roleInfo.label}</span>
-              </div>
-              <div className="flex justify-between p-2.5 border-b border-[#EDEBE0]">
-                <span className="text-muted-foreground font-medium">حالة الحساب:</span>
-                <span className="font-bold text-emerald-700 flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-                  نشط وموثق
-                </span>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Comprehensive Multi-Tab User Profile Modal */}
+      <UserProfileModal
+        isOpen={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+      />
     </header>
   );
 }
