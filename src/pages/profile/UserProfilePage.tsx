@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,7 +40,7 @@ import {
 import { toast } from 'sonner';
 
 export default function UserProfilePage() {
-  const { user, updateProfile, toggleTwoFactor } = useAuth();
+  const { user, updateProfile, toggleTwoFactor, terminateSession } = useAuth();
 
   // Form State
   const [name, setName] = useState(user?.name || '');
@@ -122,12 +122,47 @@ export default function UserProfilePage() {
     setConfirmPassword('');
   };
 
+  // File input ref for avatar upload
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleAvatarUpload = () => {
-    toast.info('تم تفعيل مستكشف الصور: اختر صورة شخصية بدقة 500x500 أو أعلى');
+    fileInputRef.current?.click();
   };
 
-  const handleTerminateSession = (sessionId: string) => {
-    toast.success(`تم إنهاء الجلسة ${sessionId} بنجاح وتسجيل الخروج من الجهاز البعيد`);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('يرجى اختيار ملف صورة صالح (PNG, JPG, WebP)');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('حجم الصورة كبير جداً، يرجى اختيار صورة أقل من 2 ميغابايت');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      const success = await updateProfile({ avatar: dataUrl });
+      if (success) {
+        toast.success('تم تحديث الصورة الشخصية بنجاح');
+      } else {
+        toast.error('تعذر تحديث الصورة الشخصية');
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleTerminateSession = async (sessionId: string) => {
+    const success = await terminateSession(sessionId);
+    if (success) {
+      toast.success('تم إنهاء الجلسة بنجاح وتسجيل الخروج من الجهاز البعيد');
+    } else {
+      toast.error('تعذر إنهاء الجلسة');
+    }
   };
 
   return (
@@ -136,6 +171,15 @@ export default function UserProfilePage() {
         <title>الملف الشخصي وإعدادات الحساب | تعلّـم</title>
         <meta name="description" content="إدارة الهوية والبيانات الشخصية والأمان والشهادات الأكاديمية على منصة تعلّم" />
       </Helmet>
+
+      {/* Hidden File Input for Avatar Upload */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        className="hidden"
+      />
 
       <div className="space-y-6 text-right" dir="rtl">
         {/* Profile Card Container */}

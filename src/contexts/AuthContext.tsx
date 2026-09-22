@@ -16,6 +16,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   updateProfile: (updatedData: Partial<User>) => Promise<boolean>;
   toggleTwoFactor: () => Promise<boolean>;
+  terminateSession: (sessionId: string) => Promise<boolean>;
   isAuthenticated: boolean;
 }
 
@@ -183,6 +184,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return false;
   }, [user]);
 
+  const terminateSession = useCallback(async (sessionId: string): Promise<boolean> => {
+    if (!user) return false;
+    const updated = MockAuthEngine.terminateSession(sessionId);
+    if (updated) {
+      setUser(updated);
+      return true;
+    }
+    return false;
+  }, [user]);
+
   const logout = useCallback(async () => {
     try {
       await supabase.auth.signOut();
@@ -201,9 +212,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       updateProfile,
       toggleTwoFactor,
+      terminateSession,
       isAuthenticated: !!user,
     }),
-    [user, login, register, logout, updateProfile, toggleTwoFactor]
+    [user, login, register, logout, updateProfile, toggleTwoFactor, terminateSession]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
