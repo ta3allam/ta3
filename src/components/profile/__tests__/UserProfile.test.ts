@@ -1,5 +1,28 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { MockAuthEngine, MOCK_USERS } from '@/lib/MockAuthEngine';
+
+// Simple in-memory localStorage mock for node environment
+const localStorageMock = (() => {
+  let store: Record<string, string> = {};
+  return {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
+      store[key] = value.toString();
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
+  };
+})();
+
+Object.defineProperty(globalThis, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+});
+
+import { MockAuthEngine } from '@/lib/MockAuthEngine';
 import { Certificate, UserSession } from '@/types/user';
 
 describe('Professional User Profile & Identity Center Unit Tests (Day 2 Overhaul)', () => {
@@ -44,7 +67,7 @@ describe('Professional User Profile & Identity Center Unit Tests (Day 2 Overhaul
     const teacher = MockAuthEngine.authenticateMock('teacher');
     expect(teacher).not.toBeNull();
     expect(teacher?.role).toBe('teacher');
-    expect(teacher?.name).toContain('دalia' || 'د. داليا');
+    expect(teacher?.name).toContain('د. داليا سليمان');
     expect(teacher?.stats?.activeStudentsCount).toBe(340);
     expect(teacher?.stats?.totalEarningsUsd).toBeUndefined(); // Strictly no wallet metrics
   });
