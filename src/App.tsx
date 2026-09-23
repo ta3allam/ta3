@@ -60,10 +60,14 @@ const App = () => (
                       <Route path="/admin" element={<AdminDashboard />} />
                     </Route>
 
-                    {/* Shared Creator, Community, Marketplace, Analytics & Profile Routes */}
-                    <Route element={<RequireAuth allowedRoles={['teacher', 'admin', 'student']} />}>
+                    {/* Independent Creator & Financial Payout Routes (Strict Isolation) */}
+                    <Route element={<RequireAuth allowedRoles={['creator', 'admin']} />}>
                       <Route path="/creator" element={<CreatorDashboard />} />
                       <Route path="/creator/payouts" element={<CreatorPayouts />} />
+                    </Route>
+
+                    {/* Shared Community, Marketplace, Analytics, Cohorts & Profile Routes */}
+                    <Route element={<RequireAuth allowedRoles={['student', 'teacher', 'creator', 'admin']} />}>
                       <Route path="/analytics" element={<CreatorAnalytics />} />
                       <Route path="/cohorts" element={<CohortEvents />} />
                       <Route path="/marketplace" element={<Marketplace />} />

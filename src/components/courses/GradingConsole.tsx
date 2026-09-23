@@ -31,6 +31,13 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
   const [selectedSub, setSelectedSub] = useState<Submission | null>(null);
   const [grade, setGrade] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [useRubric, setUseRubric] = useState(false);
+  const [rubricScores, setRubricScores] = useState({
+    contentAccuracy: 35,
+    implementation: 35,
+    documentation: 15,
+    timeliness: 15,
+  });
   const [feedbackFile, setFeedbackFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -52,7 +59,22 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
     setSelectedSub(sub);
     setGrade(sub.grade !== undefined ? sub.grade.toString() : "");
     setFeedback(sub.feedback || "");
+    setUseRubric(false);
+    setRubricScores({
+      contentAccuracy: 35,
+      implementation: 35,
+      documentation: 15,
+      timeliness: 15,
+    });
     setFeedbackFile(null);
+  };
+
+  const applyRubricGrade = () => {
+    const total = rubricScores.contentAccuracy + rubricScores.implementation + rubricScores.documentation + rubricScores.timeliness;
+    setGrade(total.toString());
+    const rubricSummary = `[تفصيل معايير التقييم: دقة المحتوى: ${rubricScores.contentAccuracy}/35 | جودة التنفيذ: ${rubricScores.implementation}/35 | التوثيق والشرح: ${rubricScores.documentation}/15 | الالتزام بالمواعيد: ${rubricScores.timeliness}/15]`;
+    setFeedback(prev => prev ? `${prev}\n\n${rubricSummary}` : rubricSummary);
+    toast.success(`تم احتساب الدرجة بالمعايير: ${total}/100`);
   };
 
   const handleSaveGrade = (e: React.FormEvent) => {
@@ -229,11 +251,85 @@ export default function GradingConsole({ courseId, assignmentId }: GradingConsol
                 )}
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="grade" className="block text-xs font-bold text-[#002623] flex items-center gap-1 justify-end">
-                  <Award className="h-3.5 w-3.5 text-[#988561]" />
-                  رصد الدرجة (أرقام قياسية من 0 إلى 100)
-                </Label>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setUseRubric(!useRubric)}
+                    className="text-xs text-[#428177] hover:bg-[#428177]/10 font-bold p-0 h-auto"
+                  >
+                    {useRubric ? "← إخفاء معايير التقييم (Rubric)" : "⚡ استخدام معايير التقييم الذكية (Rubric)"}
+                  </Button>
+                  <Label htmlFor="grade" className="text-xs font-bold text-[#002623] flex items-center gap-1">
+                    <Award className="h-3.5 w-3.5 text-[#988561]" />
+                    الدرجة النهائية (من 100):
+                  </Label>
+                </div>
+
+                {useRubric && (
+                  <div className="p-3 bg-[#EDEBE0]/40 rounded-xl border border-[#428177]/20 space-y-2.5 text-xs">
+                    <div className="font-bold text-[#002623] text-[11px] pb-1 border-b border-[#428177]/10">
+                      معايير سلم الدرجات (Rubric):
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Label className="text-[10px] text-[#3D3A3B]">دقة المحتوى (من 35)</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="35"
+                          value={rubricScores.contentAccuracy}
+                          onChange={(e) => setRubricScores(prev => ({ ...prev, contentAccuracy: Number(e.target.value) }))}
+                          className="h-7 text-xs bg-white"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-[10px] text-[#3D3A3B]">جودة التنفيذ (من 35)</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="35"
+                          value={rubricScores.implementation}
+                          onChange={(e) => setRubricScores(prev => ({ ...prev, implementation: Number(e.target.value) }))}
+                          className="h-7 text-xs bg-white"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-[10px] text-[#3D3A3B]">التوثيق والتنسيق (من 15)</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="15"
+                          value={rubricScores.documentation}
+                          onChange={(e) => setRubricScores(prev => ({ ...prev, documentation: Number(e.target.value) }))}
+                          className="h-7 text-xs bg-white"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-[10px] text-[#3D3A3B]">الالتزام بالموعد (من 15)</Label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="15"
+                          value={rubricScores.timeliness}
+                          onChange={(e) => setRubricScores(prev => ({ ...prev, timeliness: Number(e.target.value) }))}
+                          className="h-7 text-xs bg-white"
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={applyRubricGrade}
+                      className="w-full h-7 text-xs bg-[#428177] hover:bg-[#054239] text-white font-bold"
+                    >
+                      تطبيق مجموع المعايير على الدرجة
+                    </Button>
+                  </div>
+                )}
+
                 <Input
                   id="grade"
                   type="number"
