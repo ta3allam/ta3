@@ -148,6 +148,30 @@ export default function TeacherDashboard() {
           </Card>
         </div>
 
+        {/* Academic Performance & Distribution Overview */}
+        <div className="grid gap-4 md:grid-cols-4">
+          <div className="bg-white p-4 rounded-2xl border border-[#428177]/30 shadow-sm text-right">
+            <span className="text-[11px] font-bold text-[#3D3A3B] block">نسبة إنجاز الواجبات</span>
+            <span className="text-2xl font-black text-[#054239] mt-1 block">94.2%</span>
+            <span className="text-[10px] text-emerald-700 font-bold">تسليم في الموعد المحدد</span>
+          </div>
+          <div className="bg-white p-4 rounded-2xl border border-[#428177]/30 shadow-sm text-right">
+            <span className="text-[11px] font-bold text-[#3D3A3B] block">مرتبة امتياز (90-100)</span>
+            <span className="text-2xl font-black text-[#002623] mt-1 block">18 طالب</span>
+            <span className="text-[10px] text-[#428177] font-bold">37.5% من الشعب</span>
+          </div>
+          <div className="bg-white p-4 rounded-2xl border border-[#428177]/30 shadow-sm text-right">
+            <span className="text-[11px] font-bold text-[#3D3A3B] block">مرتبة جيد جداً (75-89)</span>
+            <span className="text-2xl font-black text-[#988561] mt-1 block">22 طالب</span>
+            <span className="text-[10px] text-[#988561] font-bold">45.8% من الشعب</span>
+          </div>
+          <div className="bg-white p-4 rounded-2xl border border-[#428177]/30 shadow-sm text-right">
+            <span className="text-[11px] font-bold text-[#3D3A3B] block">متوسط الدرجات العام</span>
+            <span className="text-2xl font-black text-[#002623] mt-1 block">86.4 / 100</span>
+            <span className="text-[10px] text-[#054239] font-bold">مستوى أكاديمي متقدم</span>
+          </div>
+        </div>
+
         {/* Pending Submissions Alert Box */}
         {pendingSubmissions.length > 0 && (
           <Card className="border border-[#988561]/40 bg-[#EDEBE0]/40 shadow-sm rounded-2xl text-right">

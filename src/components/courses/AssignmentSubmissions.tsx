@@ -178,13 +178,25 @@ export default function AssignmentSubmissions({ courseId, assignment }: Assignme
           {mySubmission.grade !== undefined ? (
             <div className="space-y-3">
               <div className="flex items-center justify-between bg-[#428177]/10 border border-[#428177]/30 rounded-xl p-4">
-                <span className="text-[#002623] font-black text-xl">{mySubmission.grade} / 100</span>
-                <span className="text-xs text-[#3D3A3B] font-bold">الدرجة النهائية</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#002623] font-black text-2xl">{mySubmission.grade} / 100</span>
+                  {mySubmission.grade >= 90 && (
+                    <span className="bg-emerald-600/20 text-emerald-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-600/30">
+                      ممتاز 🌟
+                    </span>
+                  )}
+                  {mySubmission.grade >= 75 && mySubmission.grade < 90 && (
+                    <span className="bg-[#988561]/20 text-[#002623] text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-[#988561]/30">
+                      جيد جداً ✨
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs text-[#3D3A3B] font-bold">الدرجة المعتمدة</span>
               </div>
               {mySubmission.feedback && (
-                <div className="bg-[#988561]/10 border border-[#988561]/30 rounded-xl p-4 text-xs space-y-1">
-                  <span className="text-[#260F14] font-bold block">ملاحظات المعلم:</span>
-                  <p className="text-[#002623] leading-relaxed font-medium">{mySubmission.feedback}</p>
+                <div className="bg-[#EDEBE0]/40 border border-[#428177]/20 rounded-xl p-4 text-xs space-y-2">
+                  <span className="text-[#002623] font-bold block">ملاحظات وتقييم المعلم التفصيلي:</span>
+                  <p className="text-[#3D3A3B] leading-relaxed font-medium whitespace-pre-line">{mySubmission.feedback}</p>
                 </div>
               )}
             </div>
