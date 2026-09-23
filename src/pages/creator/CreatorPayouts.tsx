@@ -237,6 +237,7 @@ export default function CreatorPayouts() {
                     <th className="p-3.5">طريقة الاستلام</th>
                     <th className="p-3.5">التاريخ</th>
                     <th className="p-3.5">الحالة</th>
+                    <th className="p-3.5 text-center">إيصال التحويل</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -258,6 +259,17 @@ export default function CreatorPayouts() {
                             جاري المراجعة والتحويل
                           </Badge>
                         )}
+                      </td>
+                      <td className="p-3.5 text-center">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => toast.success(`تم تحميل إيصال التحويل المالي ${po.id} بصيغة PDF`)}
+                          className="text-xs font-bold text-[#428177] hover:bg-[#428177]/10 h-7 gap-1"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          إيصال السحب
+                        </Button>
                       </td>
                     </tr>
                   ))}
