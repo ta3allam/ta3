@@ -5,7 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-import { DollarSign, Landmark, Send, ShieldCheck, Wallet } from "lucide-react";
+import { DollarSign, Landmark, Send, ShieldCheck, Wallet, Smartphone, CreditCard } from "lucide-react";
+
+export type PayoutMethod = 'bank' | 'wise' | 'paypal' | 'zaincash' | 'shamcash' | 'usdt';
 
 interface PayoutRequestDialogProps {
   open: boolean;
@@ -13,7 +15,7 @@ interface PayoutRequestDialogProps {
   availableBalance: number;
   onRequestPayout: (payout: {
     amount: number;
-    method: 'bank' | 'wise' | 'paypal' | 'usdt';
+    method: PayoutMethod;
     accountDetails: string;
   }) => void;
 }
@@ -25,7 +27,7 @@ export function PayoutRequestDialog({
   onRequestPayout
 }: PayoutRequestDialogProps) {
   const [amountInput, setAmountInput] = useState<string>(availableBalance.toString());
-  const [method, setMethod] = useState<'bank' | 'wise' | 'paypal' | 'usdt'>('bank');
+  const [method, setMethod] = useState<PayoutMethod>('bank');
   const [accountDetails, setAccountDetails] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -57,12 +59,30 @@ export function PayoutRequestDialog({
     onOpenChange(false);
   };
 
+  const getMethodPlaceholder = () => {
+    switch (method) {
+      case 'bank':
+        return 'رقم الآيبان (IBAN) واسم البنك واسم المستفيد الكامل';
+      case 'wise':
+        return 'البريد الإلكتروني المسجل في Wise وحساب العملة';
+      case 'paypal':
+        return 'البريد الإلكتروني المسجل في PayPal';
+      case 'zaincash':
+        return 'رقم هاتف محفظة زين كاش (الأردن / العراق)';
+      case 'shamcash':
+        return 'رقم الحساب المصرفي / محفظة سيريتل كاش أو شام بنك';
+      case 'usdt':
+      default:
+        return 'عنوان محفظة USDT (شبكة TRC20 أو Arbitrum)';
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent dir="rtl" className="max-w-md bg-white border border-[#428177] text-right">
-        <DialogHeader className="border-b pb-3">
-          <DialogTitle className="text-right text-[#002623] font-bold text-base flex items-center justify-between">
-            <span>طلب سحب الأرباح للمحفظة</span>
+      <DialogContent dir="rtl" className="max-w-md bg-white border border-[#428177]/30 text-right rounded-3xl shadow-2xl p-6">
+        <DialogHeader className="border-b border-[#EDEBE0] pb-3">
+          <DialogTitle className="text-right text-[#002623] font-black text-base flex items-center justify-between">
+            <span>طلب سحب أرباح صانع المحتوى</span>
             <span className="text-xs bg-[#428177]/10 text-[#054239] px-2.5 py-1 rounded-full font-extrabold">
               الرصيد المتاح: ${availableBalance}
             </span>
@@ -83,30 +103,50 @@ export function PayoutRequestDialog({
               step="1"
               value={amountInput}
               onChange={(e) => setAmountInput(e.target.value)}
-              className="text-right font-bold border-[#428177]/40 text-[#002623]"
+              className="text-right font-bold border-[#428177]/40 text-[#002623] rounded-xl text-xs"
               required
             />
             <p className="text-[11px] text-muted-foreground">الحد الأدنى لطلب السحب هو $50 دولار أمريكي.</p>
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs font-bold text-[#002623]">اختر طريقة استلام الأرباح:</Label>
+            <Label className="text-xs font-bold text-[#002623]">اختر طريقة وقناة استلام الأرباح:</Label>
             <RadioGroup
               value={method}
-              onValueChange={(val) => setMethod(val as 'bank' | 'wise' | 'paypal' | 'usdt')}
+              onValueChange={(val) => setMethod(val as PayoutMethod)}
               className="space-y-2"
             >
-              <div className="flex items-center justify-between p-3 border rounded-xl hover:bg-muted/20 cursor-pointer">
+              <div className="flex items-center justify-between p-2.5 border border-[#EDEBE0] rounded-xl hover:bg-[#EDEBE0]/30 cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="bank" id="m-bank" />
                   <Label htmlFor="m-bank" className="cursor-pointer text-xs font-bold flex items-center gap-1.5">
                     <Landmark className="h-4 w-4 text-[#428177]" />
-                    تحويل بنكي محلي / دولي (IBAN / SWIFT)
+                    تحويل بنكي مباشر (IBAN / SWIFT)
                   </Label>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-3 border rounded-xl hover:bg-muted/20 cursor-pointer">
+              <div className="flex items-center justify-between p-2.5 border border-[#EDEBE0] rounded-xl hover:bg-[#EDEBE0]/30 cursor-pointer transition-colors">
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="zaincash" id="m-zain" />
+                  <Label htmlFor="m-zain" className="cursor-pointer text-xs font-bold flex items-center gap-1.5">
+                    <Smartphone className="h-4 w-4 text-[#988561]" />
+                    محفظة زين كاش (ZainCash - الأردن / العراق)
+                  </Label>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 border border-[#EDEBE0] rounded-xl hover:bg-[#EDEBE0]/30 cursor-pointer transition-colors">
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="shamcash" id="m-sham" />
+                  <Label htmlFor="m-sham" className="cursor-pointer text-xs font-bold flex items-center gap-1.5">
+                    <CreditCard className="h-4 w-4 text-[#428177]" />
+                    شام بنك / سيريتل كاش (ShamBank - سوريا)
+                  </Label>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 border border-[#EDEBE0] rounded-xl hover:bg-[#EDEBE0]/30 cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="wise" id="m-wise" />
                   <Label htmlFor="m-wise" className="cursor-pointer text-xs font-bold flex items-center gap-1.5">
@@ -116,12 +156,12 @@ export function PayoutRequestDialog({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-3 border rounded-xl hover:bg-muted/20 cursor-pointer">
+              <div className="flex items-center justify-between p-2.5 border border-[#EDEBE0] rounded-xl hover:bg-[#EDEBE0]/30 cursor-pointer transition-colors">
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="usdt" id="m-usdt" />
                   <Label htmlFor="m-usdt" className="cursor-pointer text-xs font-bold flex items-center gap-1.5">
                     <Wallet className="h-4 w-4 text-[#988561]" />
-                    محفظة رقمية مشفرة (USDT TRC20 / ERC20)
+                    محفظة رقمية مشفرة (USDT TRC20)
                   </Label>
                 </div>
               </div>
@@ -130,38 +170,32 @@ export function PayoutRequestDialog({
 
           <div className="space-y-1.5">
             <Label htmlFor="account-details" className="text-xs font-bold text-[#002623]">
-              بيانات الحساب / المحفظة:
+              بيانات المستفيد ورقم الحساب / المحفظة:
             </Label>
             <Input
               id="account-details"
-              placeholder={
-                method === 'bank'
-                  ? 'رقم الآيبان (IBAN) واسم البنك واسم المستفيد'
-                  : method === 'wise'
-                  ? 'البريد الإلكتروني المسجل في Wise'
-                  : 'عنوان محفظة USDT'
-              }
+              placeholder={getMethodPlaceholder()}
               value={accountDetails}
               onChange={(e) => setAccountDetails(e.target.value)}
-              className="text-right text-xs border-[#428177]/40"
+              className="text-right text-xs border-[#428177]/40 rounded-xl"
               required
             />
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground justify-center">
+          <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground justify-center pt-1">
             <ShieldCheck className="h-3.5 w-3.5 text-[#428177]" />
-            <span>تتم معالجة عمليات السحب وتدقيقها أمنياً خلال 24–48 ساعة عمل</span>
+            <span>تتم معالجة السحوبات والتحقق الأمني خلال 24–48 ساعة عمل</span>
           </div>
 
           <div className="flex gap-2 pt-2">
-            <Button type="submit" className="flex-1 bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs">
-              تأكيد وتقديم طلب السحب
+            <Button type="submit" className="flex-1 bg-[#002623] hover:bg-[#054239] text-[#EDEBE0] font-bold text-xs rounded-xl shadow-md">
+              تأكيد وإرسال طلب السحب
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="w-24 font-bold border-[#428177]/30 text-xs"
+              className="w-24 font-bold border-[#428177]/30 text-xs rounded-xl hover:bg-[#EDEBE0]"
             >
               إلغاء
             </Button>

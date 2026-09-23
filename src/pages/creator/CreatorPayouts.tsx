@@ -82,7 +82,18 @@ export default function CreatorPayouts() {
       {
         id: `PO-${Math.floor(100 + Math.random() * 900)}`,
         amount: payout.amount,
-        method: payout.method === 'bank' ? 'تحويل بنكي' : payout.method === 'wise' ? 'Wise Transfer' : 'USDT TRC20',
+        method:
+          payout.method === 'bank'
+            ? 'تحويل بنكي (IBAN)'
+            : payout.method === 'wise'
+            ? 'Wise Transfer'
+            : payout.method === 'zaincash'
+            ? 'محفظة زين كاش (ZainCash)'
+            : payout.method === 'shamcash'
+            ? 'شام بنك / سيريتل كاش'
+            : payout.method === 'paypal'
+            ? 'PayPal'
+            : 'محفظة رقمية (USDT TRC20)',
         date: new Date().toISOString().split('T')[0],
         status: 'processing'
       },
