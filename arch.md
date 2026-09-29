@@ -1,150 +1,153 @@
-# Ta3 (تعلّم) - Arabic Learning Marketplace & Creator Platform Architecture
+# 🏛️ Ta3 (تعلّم) — System Architecture Specification
 
 ## Executive Overview
-**Ta3 (تعلّم)** is an enterprise-grade, Arabic-native Learning Marketplace & Creator Community Platform (*Skool + Udemy + Coursera for the MENA Region*) built with React 18, TypeScript, Tailwind CSS, `shadcn/ui`, and a hybrid Supabase PostgreSQL backend with resilient CQRS, PWA offline engines, and cloud infrastructure.
+**Ta3 (تعلّم)** is an enterprise-grade, Arabic-native Learning Marketplace & Creator Community Platform (*The Skool + Udemy + Coursera of the MENA Region*) built with React 18, TypeScript, Tailwind CSS, `shadcn/ui`, and a resilient local/hybrid Supabase PostgreSQL backend with offline-first PWA caching and regional Levant payment engines.
 
-The platform provides unified experiences for **Learners**, **Creators**, **Institutions**, and **System Administrators**, combining course delivery (LMS), creator monetization, Skool-style community feeds, and high-concurrency Levant infrastructure (PWA, TUS resumable uploads, Redis caching).
+The platform provides unified, role-segregated experiences for **Learners**, **Creators/Instructors**, and **SuperAdmins**, eliminating AI cloud operational overhead in favor of authentic community engagement, structured video learning, live cohort calendars, and regional cashflow mechanics.
 
 ---
 
 ## 🏛️ System Architecture Diagrams (Mermaid)
 
 ### Level 1: System Context Diagram
-The System Context diagram displays how different users interact with **Ta3 Ecosystem** and external cloud providers.
+The System Context diagram displays how users and regional infrastructure interact with the **Ta3 Ecosystem**.
 
 ```mermaid
 graph TD
     subgraph Users [" Platform Ecosystem Users "]
-        Learner["🎓 Learner (طالب / متعلم)<br/>Enrolls in courses, joins communities, tracks progress"]
-        Creator["👨‍💻 Creator / Instructor (صانع محتوى / معلم)<br/>Publishes courses, monetization, community feeds, earnings"]
-        Admin["🛡️ System Admin (مدير النظام)<br/>Role governance, security controls, course approval"]
+        Learner["🎓 Learner / Student (طالب)<br/>Enrolls in courses, upvotes in community, tracks XP"]
+        Creator["👨‍🏫 Creator / Instructor (صانع محتوى / معلم)<br/>Publishes courses, moderates channels, manages payouts"]
+        Admin["🛡️ SuperAdmin (مدير النظام)<br/>Role governance, GMV audits, manual receipt verification"]
     end
 
     subgraph Platform [" Core Ta3 Platform Ecosystem "]
-        Ta3App["💻 Ta3 Marketplace & Community Web Application<br/>(React 18, TypeScript, Tailwind CSS, shadcn/ui)"]
+        Ta3App["💻 Ta3 Web & PWA Client<br/>(React 18, TypeScript, Tailwind CSS, shadcn/ui)"]
+        AffiliateHub["🔗 Curated Affiliate Course Directory<br/>(Global partners: Coursera, Udemy)"]
     end
 
-    subgraph Cloud [" Cloud & Commerce Infrastructure "]
+    subgraph Infrastructure [" Levant & Cloud Infrastructure "]
+        MockEngine["💾 MockDataEngine & IndexedDB<br/>Local reactive storage & offline drafts"]
         SupabaseDB[("🗄️ Supabase PostgreSQL DB<br/>Relational data & RLS policies")]
-        SupabaseAuth["🔑 Supabase Auth & RBAC<br/>JWT Auth & Role Claims"]
-        SupabaseStorage["☁️ Supabase Storage<br/>Course media & assignment files"]
-        RedisCache["🚀 Redis Memory Cache<br/>Dashboard read query cache"]
-        BullMQQueue["📬 BullMQ Worker Queue<br/>11:59 PM submission spike queue"]
+        LevantGateways["💵 Regional Cashflow Engine<br/>ShamCash, Syriatel, ZainCash, Hawala, USDT"]
     end
 
     Learner -->|HTTPS / PWA| Ta3App
     Creator -->|HTTPS / Web| Ta3App
     Admin -->|HTTPS / Web| Ta3App
 
-    Ta3App -->|PostgREST API| SupabaseDB
-    Ta3App -->|Auth SDK| SupabaseAuth
-    Ta3App -->|S3 Upload/Download| SupabaseStorage
-    Ta3App -->|Cache Queries| RedisCache
-    Ta3App -->|Async Jobs| BullMQQueue
+    Ta3App -->|Local Persistence| MockEngine
+    Ta3App -->|PostgREST / Realtime| SupabaseDB
+    Ta3App -->|External Links| AffiliateHub
+    Ta3App -->|Manual Receipts| LevantGateways
 ```
 
 ---
 
-### Level 2: Container Diagram (Marketplace, Community & LMS)
+### Level 2: Skool-Style Community & Classroom Container Diagram
 
 ```mermaid
 graph TD
     subgraph Browser [" Client Web Browser / PWA "]
         subgraph FrontendSPA [" Ta3 Single Page Application "]
             UI["📱 React UI Components & Layouts"]
-            MarketplaceUI["🛒 Marketplace & Checkout Console"]
-            CommunityUI["💬 Skool-Style Community Feeds"]
-            CreatorUI["📊 Creator Analytics & Payouts"]
-            PWAEngine["🔌 Service Worker PWA & IndexedDB"]
+            CommunityUI["💬 Skool-Style Community Feed & Channels"]
+            LeaderboardUI["🏆 Gamification & XP Level Tracker"]
+            MarketplaceUI["🛒 Marketplace & Affiliate Hub"]
+            ClassroomUI["📚 Modular Video Classroom & Resource Vault"]
+            PaymentUI["💵 Regional Levant Checkout & Receipt Uploader"]
+            PWAEngine["🔌 Service Worker & IndexedDB Offline Store"]
         end
     end
 
-    subgraph Backend [" Supabase Cloud & Resiliency Backend "]
-        AuthSvc["🔐 Auth Service (GoTrue)"]
-        PostgresDB[("DATABASE: PostgreSQL 15<br/>Relational Tables + RLS Policies")]
-        StorageBuckets["🗂️ Storage Buckets"]
-        TUSUpload["📦 TUS Resumable Upload Server"]
-        RedisServer["🚀 Redis Cache Server"]
+    subgraph Storage [" Data & State Layer "]
+        LocalState["💾 MockDataEngine / Reactive Subscribers"]
+        SupabaseClient["🔑 Supabase PostgREST Client"]
     end
 
-    UI --> MarketplaceUI
     UI --> CommunityUI
-    UI --> CreatorUI
+    UI --> LeaderboardUI
+    UI --> MarketplaceUI
+    UI --> ClassroomUI
+    UI --> PaymentUI
     UI --> PWAEngine
 
-    MarketplaceUI -->|Checkout & Orders| PostgresDB
-    CommunityUI -->|Post Feed Queries| RedisServer
-    CreatorUI -->|Earnings & Analytics| PostgresDB
-    PWAEngine -->|Offline Sync| TUSUpload
-    TUSUpload --> StorageBuckets
+    CommunityUI --> LocalState
+    LeaderboardUI --> LocalState
+    MarketplaceUI --> LocalState
+    ClassroomUI --> LocalState
+    PaymentUI --> LocalState
+    PWAEngine --> LocalState
 ```
 
 ---
 
-### Level 3: Code & Data Model Diagram (Expanded Marketplace Schema)
+### Level 3: Data Model & Gamification Entity Relationships
 
 ```mermaid
 erDiagram
-    PROFILES ||--o{ COURSES : "creates"
-    PROFILES ||--o{ COMMUNITIES : "manages"
-    COURSES ||--o{ COMMUNITIES : "includes"
-    COMMUNITIES ||--o{ COMMUNITY_POSTS : "contains"
     PROFILES ||--o{ COMMUNITY_POSTS : "authors"
-    PROFILES ||--o{ ORDERS : "purchases"
-    COURSES ||--o{ ORDERS : "sold_in"
-    PROFILES ||--o{ CREATOR_PAYOUTS : "receives"
+    PROFILES ||--o{ POST_COMMENTS : "writes"
+    COMMUNITY_POSTS ||--o{ POST_COMMENTS : "has"
+    COMMUNITY_POSTS ||--o{ POST_UPVOTES : "receives"
+    PROFILES ||--o{ COURSES : "teaches"
+    PROFILES ||--o{ ORDERS : "places"
+    COURSES ||--o{ ORDERS : "purchased_in"
+    COURSES ||--o{ LECTURES : "contains"
+    COURSES ||--o{ ASSIGNMENTS : "assigns"
 
     PROFILES {
         uuid id PK
         string name
-        string username
         string role
-        boolean is_creator
-        string bio
+        integer level
+        integer xp_points
         decimal wallet_balance
+        boolean is_verified_creator
+    }
+
+    COMMUNITY_POSTS {
+        string id PK
+        string channel_id
+        uuid author_id FK
+        string title
+        string content
+        string code_snippet
+        integer upvotes_count
+        integer comments_count
+        boolean is_pinned
+        timestamp created_at
+    }
+
+    POST_COMMENTS {
+        string id PK
+        string post_id FK
+        uuid author_id FK
+        string content
+        timestamp created_at
+    }
+
+    POST_UPVOTES {
+        uuid id PK
+        string post_id FK
+        uuid user_id FK
+        integer xp_awarded
+        timestamp created_at
     }
 
     COURSES {
         bigint id PK
         string name
-        string code
         uuid teacher_id FK
         string pricing_type
         integer price_cents
         string currency
-    }
-
-    COMMUNITIES {
-        bigint id PK
-        bigint course_id FK
-        uuid creator_id FK
-        string name
-        string description
-    }
-
-    COMMUNITY_POSTS {
-        bigint id PK
-        bigint community_id FK
-        uuid author_id FK
-        string title
-        string content
-        integer likes_count
-    }
-
-    ORDERS {
-        uuid id PK
-        uuid student_id FK
-        bigint course_id FK
-        decimal amount_paid
-        decimal platform_fee
-        decimal creator_earnings
-        string status
+        string bg_image
     }
 ```
 
 ---
 
-## 🎨 Theme & Brand Color Guidelines (Strictly Preserved)
+## 🎨 Brand Design Tokens (Strictly Preserved)
 - **Primary**:
   - `Mountain Teal`: `#428177`
   - `Ivory Mist`: `#EDEBE0`
@@ -155,8 +158,4 @@ erDiagram
   - `Emerald Shadow`: `#054239`
   - `Golden Wheat`: `#988561`
   - `Antique Sand`: `#B9A779`
-  - `Deep Umber`: `#260F14`
-  - `Black Cherry`: `#4A151E`
-  - `Charcoal`: `#161616`
-  - `Stone`: `#3D3A3B`
-- **Typography & Numerals**: RTL layout alignment, standard Arabic digits (1, 2, 3, 4, 5, 6, 7, 8, 9, 0).
+- **Typography**: Native Arabic RTL, Standard Arabic Numerals (1, 2, 3, 4, 5, 6, 7, 8, 9, 0).
