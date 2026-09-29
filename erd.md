@@ -1,7 +1,13 @@
-# 🗄️ PostgreSQL Database ERD Schema: Ta3 (تعلّم) LMS
+# 🗄️ PostgreSQL Database ERD Schema: Ta3 (تعلّم) Platform
 
 ```mermaid
 erDiagram
+    PROFILES ||--o{ COMMUNITY_POSTS : "authors"
+    PROFILES ||--o{ POST_COMMENTS : "comments"
+    COMMUNITY_POSTS ||--o{ POST_COMMENTS : "contains"
+    COMMUNITY_POSTS ||--o{ POST_UPVOTES : "receives"
+    PROFILES ||--o{ POST_UPVOTES : "casts"
+    
     PROFILES ||--o{ COURSES : "teaches"
     PROFILES ||--o{ ENROLLMENTS : "enrolled in"
     COURSES ||--o{ ENROLLMENTS : "has"
@@ -10,18 +16,51 @@ erDiagram
     COURSES ||--o{ ASSIGNMENTS : "assigns"
     ASSIGNMENTS ||--o{ SUBMISSIONS : "receives"
     PROFILES ||--o{ SUBMISSIONS : "submits"
-    COURSES ||--o{ DISCUSSIONS : "has"
-    PROFILES ||--o{ DISCUSSIONS : "authors"
-    COURSES ||--o{ STUDY_GROUPS : "hosts"
-    STUDY_GROUPS ||--o{ GROUP_MEMBERS : "contains"
-    PROFILES ||--o{ GROUP_MEMBERS : "joins"
+    PROFILES ||--o{ ORDERS : "places"
+    COURSES ||--o{ ORDERS : "sold_in"
 
     PROFILES {
         uuid id PK
         string name
         string username UK
         string role
+        integer level
+        integer xp_points
         string avatar_url
+        decimal wallet_balance
+        boolean is_creator
+        timestamp created_at
+    }
+
+    COMMUNITY_POSTS {
+        string id PK
+        string channel_id
+        uuid author_id FK
+        string title
+        string content
+        string code_snippet
+        string code_language
+        text_array tags
+        integer upvotes_count
+        integer comments_count
+        boolean is_pinned
+        timestamp created_at
+    }
+
+    POST_COMMENTS {
+        string id PK
+        string post_id FK
+        uuid author_id FK
+        string content
+        integer upvotes_count
+        timestamp created_at
+    }
+
+    POST_UPVOTES {
+        uuid id PK
+        string post_id FK
+        uuid user_id FK
+        integer xp_awarded
         timestamp created_at
     }
 
@@ -32,8 +71,23 @@ erDiagram
         string category
         string difficulty
         uuid teacher_id FK
+        string pricing_type
+        integer price_cents
+        string currency
         string bg_image
-        string period
+        timestamp created_at
+    }
+
+    ORDERS {
+        uuid id PK
+        uuid student_id FK
+        bigint course_id FK
+        decimal amount_paid
+        decimal platform_fee
+        decimal creator_earnings
+        string payment_method
+        string receipt_url
+        string status
         timestamp created_at
     }
 
@@ -50,17 +104,9 @@ erDiagram
         string title
         string description
         string duration
+        string video_url
+        string audio_url
         int order_num
-        timestamp created_at
-    }
-
-    MATERIALS {
-        bigserial id PK
-        bigint lecture_id FK
-        bigint course_id FK
-        string title
-        string type
-        string url
         timestamp created_at
     }
 
@@ -82,32 +128,5 @@ erDiagram
         numeric grade
         string feedback
         timestamp submitted_at
-    }
-
-    DISCUSSIONS {
-        bigserial id PK
-        bigint course_id FK
-        uuid author_id FK
-        string title
-        string content
-        timestamp created_at
-    }
-
-    STUDY_GROUPS {
-        bigserial id PK
-        bigint course_id FK
-        string name
-        string description
-        uuid leader_id FK
-        int max_members
-        timestamp created_at
-    }
-
-    GROUP_MEMBERS {
-        bigserial id PK
-        bigint group_id FK
-        uuid student_id FK
-        string role
-        timestamp joined_at
     }
 ```
