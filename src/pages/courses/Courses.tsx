@@ -14,6 +14,7 @@ import AssignmentDialog from "@/components/courses/AssignmentDialog";
 import AssignmentSubmissions from "@/components/courses/AssignmentSubmissions";
 import GradingConsole from "@/components/courses/GradingConsole";
 import CourseDiscussions from "@/components/courses/CourseDiscussions";
+import { ResourceVault } from "@/components/courses/ResourceVault";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,12 +25,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2, Download, Mail, BookOpen } from "lucide-react";
+import { Plus, Pencil, Trash2, Download, Mail, BookOpen, CheckCircle2, Award, Sparkles, FolderArchive } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
 import { EventType } from "./types";
 import { getAssetUrl } from "@/lib/assetUtils";
+
 
 export default function CourseDetail() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -201,10 +203,15 @@ export default function CourseDetail() {
   const selectedLecture = course.lectures.find(l => l.id === activeLectureId);
   const bannerBg = course.bgImage || (course.category?.includes("رياضيات") ? '/coursesbg/math.png' : '/coursesbg/coding.png');
 
+  // Calculate lecture completion progress
+  const completedCount = (course.lectures || []).filter(l => localStorage.getItem(`lecture_completed_${l.id}`) === 'true').length;
+  const totalLectures = (course.lectures || []).length;
+  const completionPercentage = totalLectures > 0 ? Math.round((completedCount / totalLectures) * 100) : 0;
+
   return (
     <DashboardLayout title={course.name}>
       <div className="space-y-6" dir="rtl">
-        {/* Course Header Banner */}
+        {/* Course Header Banner with Gamified Progress Bar */}
         <div 
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
           style={{
@@ -215,11 +222,38 @@ export default function CourseDetail() {
         >
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
             <div>
-              <span className="inline-block px-3 py-1 rounded-full bg-[#428177]/10 text-[#428177] text-xs font-bold mb-2 border border-[#428177]/30">
-                مقرر دراسي • {course.code}
-              </span>
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <span className="inline-block px-3 py-1 rounded-full bg-[#428177]/10 text-[#428177] text-xs font-bold border border-[#428177]/30">
+                  مقرر دراسي • {course.code}
+                </span>
+                {completionPercentage === 100 ? (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-600/15 text-emerald-800 text-xs font-bold border border-emerald-600/30">
+                    <Award className="w-3.5 h-3.5 text-emerald-700" />
+                    مكتمل بنسبة 100% — مؤهل للشهادة 🎓
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#988561]/15 text-[#002623] text-xs font-bold border border-[#988561]/30">
+                    <Sparkles className="w-3.5 h-3.5 text-[#988561]" />
+                    التقدم: {completedCount} من {totalLectures} درس
+                  </span>
+                )}
+              </div>
               <h1 className="text-3xl font-extrabold text-[#002623]">{course.name}</h1>
               <p className="text-xs text-[#3D3A3B] mt-1 font-medium">المعلم المسؤول: {course.teacher || "أستاذ المادة"}</p>
+            </div>
+
+            {/* Progress Percentage Badge and Visual Gauge */}
+            <div className="w-full md:w-64 bg-white/80 backdrop-blur-xs p-3.5 rounded-2xl border border-[#428177]/30 space-y-2">
+              <div className="flex justify-between items-center text-xs font-bold">
+                <span className="text-[#002623]">إنجاز المقرر:</span>
+                <span className="text-[#428177] font-mono font-extrabold">{completionPercentage}%</span>
+              </div>
+              <div className="w-full bg-[#EDEBE0] h-2.5 rounded-full overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-[#428177] to-[#054239] h-full transition-all duration-500 rounded-full"
+                  style={{ width: `${completionPercentage}%` }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -230,11 +264,13 @@ export default function CourseDetail() {
             <TabsList className="w-full justify-start bg-transparent gap-1">
               <TabsTrigger value="home" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الرئيسية</TabsTrigger>
               <TabsTrigger value="content" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">المحتوى والمحاضرات</TabsTrigger>
+              <TabsTrigger value="vault" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">خزنة الموارد المفتوحة</TabsTrigger>
               <TabsTrigger value="assignments" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الواجبات والتكليفات</TabsTrigger>
               <TabsTrigger value="discussions" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">ساحة المناقشات</TabsTrigger>
               <TabsTrigger value="help" className="flex-1 font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white">الدليل والمساعدة</TabsTrigger>
             </TabsList>
           </div>
+
 
           {/* Home Tab */}
           <TabsContent value="home">
@@ -336,8 +372,16 @@ export default function CourseDetail() {
             </div>
           </TabsContent>
 
+          {/* Resource Vault Tab */}
+          <TabsContent value="vault">
+            <div className="pt-2">
+              <ResourceVault courseTitle={course.name} />
+            </div>
+          </TabsContent>
+
           {/* Assignments Tab */}
           <TabsContent value="assignments">
+
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-[#002623]">قائمة الواجبات المعتمدة</h2>
