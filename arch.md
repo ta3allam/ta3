@@ -3,7 +3,7 @@
 ## Executive Overview
 **Ta3 (تعلّم)** is an enterprise-grade, Arabic-native Learning Marketplace & Creator Community Platform (*The Skool + Udemy + Coursera of the MENA Region*) built with React 18, TypeScript, Tailwind CSS, `shadcn/ui`, and a resilient local/hybrid Supabase PostgreSQL backend with offline-first PWA caching and regional Levant payment engines.
 
-The platform provides unified, role-segregated experiences for **Learners**, **Creators/Instructors**, and **SuperAdmins**, eliminating AI cloud operational overhead in favor of authentic community engagement, structured video learning, live cohort calendars, and regional cashflow mechanics.
+The platform provides unified, role-segregated experiences for **Learners**, **Creators/Instructors**, and **SuperAdmins**, eliminating AI cloud operational overhead in favor of authentic community engagement, structured modular video/audio learning, live cohort calendars, and regional cashflow mechanics.
 
 ---
 
@@ -22,11 +22,13 @@ graph TD
 
     subgraph Platform [" Core Ta3 Platform Ecosystem "]
         Ta3App["💻 Ta3 Web & PWA Client<br/>(React 18, TypeScript, Tailwind CSS, shadcn/ui)"]
+        VaultHub["🗄️ Resource Vault Engine<br/>PDFs, Code ZIPs, Cheat Sheets, Templates"]
         AffiliateHub["🔗 Curated Affiliate Course Directory<br/>(Global partners: Coursera, Udemy)"]
     end
 
     subgraph Infrastructure [" Levant & Cloud Infrastructure "]
         MockEngine["💾 MockDataEngine & IndexedDB<br/>Local reactive storage & offline drafts"]
+        AudioVideoSvc["🎧 Dual-Mode Video & Audio-Only Player<br/>Low-Bandwidth AAC 64kbps stream (85%+ saving)"]
         SupabaseDB[("🗄️ Supabase PostgreSQL DB<br/>Relational data & RLS policies")]
         LevantGateways["💵 Regional Cashflow Engine<br/>ShamCash, Syriatel, ZainCash, Hawala, USDT"]
     end
@@ -36,112 +38,106 @@ graph TD
     Admin -->|HTTPS / Web| Ta3App
 
     Ta3App -->|Local Persistence| MockEngine
+    Ta3App -->|Media Stream| AudioVideoSvc
     Ta3App -->|PostgREST / Realtime| SupabaseDB
+    Ta3App -->|Download Resources| VaultHub
     Ta3App -->|External Links| AffiliateHub
     Ta3App -->|Manual Receipts| LevantGateways
 ```
 
 ---
 
-### Level 2: Skool-Style Community & Classroom Container Diagram
+### Level 2: Modular Classroom & Low-Bandwidth Streaming Container
 
 ```mermaid
 graph TD
     subgraph Browser [" Client Web Browser / PWA "]
-        subgraph FrontendSPA [" Ta3 Single Page Application "]
-            UI["📱 React UI Components & Layouts"]
-            CommunityUI["💬 Skool-Style Community Feed & Channels"]
-            LeaderboardUI["🏆 Gamification & XP Level Tracker"]
-            MarketplaceUI["🛒 Marketplace & Affiliate Hub"]
-            ClassroomUI["📚 Modular Video Classroom & Resource Vault"]
-            PaymentUI["💵 Regional Levant Checkout & Receipt Uploader"]
-            PWAEngine["🔌 Service Worker & IndexedDB Offline Store"]
+        subgraph ClassroomSPA [" Ta3 Classroom Single Page App "]
+            LessonPlayer["🎬 InteractiveLessonPlayer<br/>Video & 64kbps Low-Bandwidth Audio Mode"]
+            ChapterIndex["📑 Timestamp Chapter Navigator"]
+            SmartNotes["📝 Local Storage Smart Notes & Text Export"]
+            VaultTab["🗄️ Resource Vault<br/>PDFs, Source ZIPs, Cheat Sheets"]
+            ProgressGauge["📊 Gamified Course Progress & Certificate Engine"]
         end
     end
 
     subgraph Storage [" Data & State Layer "]
-        LocalState["💾 MockDataEngine / Reactive Subscribers"]
+        LocalCache["💾 LocalStorage & IndexedDB<br/>(lecture_completed_*, lecture_notes_*)"]
         SupabaseClient["🔑 Supabase PostgREST Client"]
     end
 
-    UI --> CommunityUI
-    UI --> LeaderboardUI
-    UI --> MarketplaceUI
-    UI --> ClassroomUI
-    UI --> PaymentUI
-    UI --> PWAEngine
-
-    CommunityUI --> LocalState
-    LeaderboardUI --> LocalState
-    MarketplaceUI --> LocalState
-    ClassroomUI --> LocalState
-    PaymentUI --> LocalState
-    PWAEngine --> LocalState
+    LessonPlayer --> LocalCache
+    ChapterIndex --> LessonPlayer
+    SmartNotes --> LocalCache
+    VaultTab --> LocalCache
+    ProgressGauge --> LocalCache
 ```
 
 ---
 
-### Level 3: Data Model & Gamification Entity Relationships
+### Level 3: Data Model & Classroom Entity Relationships
 
 ```mermaid
 erDiagram
-    PROFILES ||--o{ COMMUNITY_POSTS : "authors"
-    PROFILES ||--o{ POST_COMMENTS : "writes"
-    COMMUNITY_POSTS ||--o{ POST_COMMENTS : "has"
-    COMMUNITY_POSTS ||--o{ POST_UPVOTES : "receives"
-    PROFILES ||--o{ COURSES : "teaches"
-    PROFILES ||--o{ ORDERS : "places"
-    COURSES ||--o{ ORDERS : "purchased_in"
     COURSES ||--o{ LECTURES : "contains"
-    COURSES ||--o{ ASSIGNMENTS : "assigns"
-
-    PROFILES {
-        uuid id PK
-        string name
-        string role
-        integer level
-        integer xp_points
-        decimal wallet_balance
-        boolean is_verified_creator
-    }
-
-    COMMUNITY_POSTS {
-        string id PK
-        string channel_id
-        uuid author_id FK
-        string title
-        string content
-        string code_snippet
-        integer upvotes_count
-        integer comments_count
-        boolean is_pinned
-        timestamp created_at
-    }
-
-    POST_COMMENTS {
-        string id PK
-        string post_id FK
-        uuid author_id FK
-        string content
-        timestamp created_at
-    }
-
-    POST_UPVOTES {
-        uuid id PK
-        string post_id FK
-        uuid user_id FK
-        integer xp_awarded
-        timestamp created_at
-    }
+    LECTURES ||--o{ LECTURE_MATERIALS : "includes"
+    COURSES ||--o{ VAULT_RESOURCES : "provides"
+    LECTURES ||--o{ CHAPTER_TIMESTAMPS : "indexed_by"
+    PROFILES ||--o{ LECTURE_NOTES : "writes"
+    PROFILES ||--o{ LECTURE_COMPLETIONS : "records"
 
     COURSES {
         bigint id PK
         string name
+        string code
         uuid teacher_id FK
-        string pricing_type
-        integer price_cents
-        string currency
         string bg_image
+        integer total_lectures
+    }
+
+    LECTURES {
+        bigint id PK
+        bigint course_id FK
+        string title
+        string description
+        string video_url
+        string audio_url
+        string duration
+        integer order_num
+    }
+
+    CHAPTER_TIMESTAMPS {
+        bigint id PK
+        bigint lecture_id FK
+        string time_code
+        integer seconds
+        string title
+    }
+
+    VAULT_RESOURCES {
+        string id PK
+        bigint course_id FK
+        string title
+        string category
+        string file_url
+        string file_size
+        integer downloads_count
+    }
+
+    LECTURE_COMPLETIONS {
+        uuid id PK
+        uuid user_id FK
+        bigint lecture_id FK
+        boolean is_completed
+        timestamp completed_at
+    }
+
+    LECTURE_NOTES {
+        uuid id PK
+        uuid user_id FK
+        bigint lecture_id FK
+        text content
+        timestamp updated_at
     }
 ```
 
