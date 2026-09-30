@@ -26,6 +26,28 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 
 ---
 
+## 🎓 Classroom Experience & Video/Audio Player Components (Day 2)
+
+### `InteractiveLessonPlayer` (`src/components/courses/InteractiveLessonPlayer.tsx`)
+* **Description**: Adaptive, resilient media player for classroom lectures supporting high-speed video and Levant low-bandwidth audio-only streaming.
+* **Features**:
+  - **Dual Mode (Video & Audio-Only)**: Instant toggle reducing data consumption by ~97% (64 kbps AAC vs 2500 kbps 720p) for 3G and power outage conditions.
+  - **Variable Playback Speed**: Quick selector for `0.75x`, `1.0x`, `1.25x`, `1.5x`, and `2.0x`.
+  - **Timestamped Chapters**: Clickable chapter markers allowing instant seeking through syllabus topics.
+  - **Completion State Dispatch**: Interactive "Mark as Completed" action triggering student progress recalculation.
+
+### `ResourceVault` (`src/components/courses/ResourceVault.tsx`)
+* **Description**: Centralized downloadable assets drawer and repository for enrolled students.
+* **Features**:
+  - **Category Tabs**: Filter resources by `الكل (All)`, `مستندات PDF (Documents)`, `أكواد برمجية (Code)`, `ملخصات وقوالب (Cheatsheets)`.
+  - **Direct & Batch Actions**: Individual file download buttons and full-course ZIP package downloader.
+  - **File Metadata Badges**: Explicit file size and type labeling.
+
+### `CourseProgressSummary` (`src/pages/courses/Courses.tsx`)
+* **Description**: Top-level course header featuring dynamic completion calculations, percentage progress bars, and tab navigators (`المحاضرات (Lectures)`, `حقيبة الموارد (Resource Vault)`, `الملفات المرفقة (Attachments)`).
+
+---
+
 ## 🛒 Marketplace & Levant Payment Components
 
 ### `Marketplace` (`src/pages/marketplace/Marketplace.tsx`)

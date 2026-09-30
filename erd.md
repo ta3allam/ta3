@@ -12,6 +12,8 @@ erDiagram
     PROFILES ||--o{ ENROLLMENTS : "enrolled in"
     COURSES ||--o{ ENROLLMENTS : "has"
     COURSES ||--o{ LECTURES : "contains"
+    COURSES ||--o{ COURSE_RESOURCES : "provides"
+    LECTURES ||--o{ LECTURE_CHAPTERS : "has"
     LECTURES ||--o{ MATERIALS : "includes"
     COURSES ||--o{ ASSIGNMENTS : "assigns"
     ASSIGNMENTS ||--o{ SUBMISSIONS : "receives"
@@ -128,5 +130,24 @@ erDiagram
         numeric grade
         string feedback
         timestamp submitted_at
+    }
+
+    LECTURE_CHAPTERS {
+        uuid id PK
+        bigint lecture_id FK
+        string title
+        int timestamp_sec
+        int order_num
+    }
+
+    COURSE_RESOURCES {
+        string id PK
+        bigint course_id FK
+        string title
+        string category
+        string file_size
+        string download_url
+        int download_count
+        timestamp created_at
     }
 ```
