@@ -10,17 +10,19 @@ import {
   Edit,
   Trash2,
   Eye,
-  PlayCircle,
   BookOpen,
   CheckCircle2,
   HelpCircle,
   StickyNote,
   Save,
+  Radio,
+  FileDown,
   Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MaterialViewerModal, { MaterialItem } from "@/components/courses/MaterialViewerModal";
 import { InteractiveQuizModal } from "@/components/courses/InteractiveQuizModal";
+import { InteractiveLessonPlayer } from "@/components/courses/InteractiveLessonPlayer";
 import { toast } from "sonner";
 
 interface LectureMaterial {
@@ -35,6 +37,9 @@ interface Lecture {
   id: number;
   title: string;
   description?: string;
+  video_url?: string;
+  audio_url?: string;
+  duration?: string;
   materials: LectureMaterial[];
 }
 
@@ -64,7 +69,7 @@ export function LectureDetail({
   const [isCompleted, setIsCompleted] = useState(false);
   const [notes, setNotes] = useState("");
   const [isQuizOpen, setIsQuizOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'content' | 'notes'>('content');
+  const [activeTab, setActiveTab] = useState<'player' | 'content' | 'notes'>('player');
 
   // Load persistence for completion state & notes
   useEffect(() => {
@@ -82,7 +87,7 @@ export function LectureDetail({
       <div className="flex flex-col items-center justify-center h-72 bg-white rounded-3xl border border-dashed border-[#428177]/30 text-muted-foreground p-8 space-y-2 text-right" dir="rtl">
         <BookOpen className="h-10 w-10 text-[#428177]/40 mb-2" />
         <p className="font-bold text-sm text-[#002623]">اختر محاضرة من القائمة الجانبية لعرض تفاصيلها وموادها</p>
-        <span className="text-xs text-muted-foreground">يمكنك تصفح الشرائح، الفيديوهات المسجلة، والملفات المرفقة لكل درس.</span>
+        <span className="text-xs text-muted-foreground">يمكنك تشغيل المحاضرة، تفعيل وضع الصوت الخفيف، وتدوين ملاحظاتك الذكية.</span>
       </div>
     );
   }
@@ -117,7 +122,22 @@ export function LectureDetail({
 
   const handleSaveNotes = () => {
     localStorage.setItem(`lecture_notes_${lecture.id}`, notes);
-    toast.success("تم حفظ الملاحظات الذكية للمحاضرة بنجاح 📝");
+    toast.success("تم حفظ الملاحظات الذكية للمحاضرة في الذاكرة المحلية 📝");
+  };
+
+  const handleExportNotes = () => {
+    if (!notes.trim()) {
+      toast.error("لا توجد ملاحظات مكتوبة للتصدير!");
+      return;
+    }
+    const blob = new Blob([notes], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `notes_lecture_${lecture.id}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("تم تصدير ملاحظات المحاضرة كملف نصي بنجاح 📄");
   };
 
   return (
@@ -182,8 +202,20 @@ export function LectureDetail({
           </div>
         </div>
 
-        {/* Navigation Tabs between Content and Notes */}
+        {/* Navigation Tabs between Player, Content and Notes */}
         <div className="flex border-b border-[#EDEBE0] pt-2 gap-4 text-xs font-bold">
+          <button
+            onClick={() => setActiveTab('player')}
+            className={`pb-2 transition-colors border-b-2 flex items-center gap-1 ${
+              activeTab === 'player'
+                ? 'border-[#428177] text-[#002623]'
+                : 'border-transparent text-muted-foreground hover:text-[#002623]'
+            }`}
+          >
+            <Video className="h-3.5 w-3.5 text-[#428177]" />
+            <span>مشغل الدرس التفاعلي</span>
+          </button>
+
           <button
             onClick={() => setActiveTab('content')}
             className={`pb-2 transition-colors border-b-2 ${
@@ -194,6 +226,7 @@ export function LectureDetail({
           >
             المواد والملخص
           </button>
+
           <button
             onClick={() => setActiveTab('notes')}
             className={`pb-2 transition-colors border-b-2 flex items-center gap-1 ${
@@ -210,7 +243,21 @@ export function LectureDetail({
       </CardHeader>
 
       <CardContent className="p-6 space-y-6">
-        {activeTab === 'content' ? (
+        {activeTab === 'player' ? (
+          /* Interactive Video/Audio Player Screen */
+          <div className="space-y-4">
+            <InteractiveLessonPlayer
+              lectureId={lecture.id}
+              title={lecture.title}
+              duration={lecture.duration || "24:30"}
+              onComplete={() => {
+                setIsCompleted(true);
+                localStorage.setItem(`lecture_completed_${lecture.id}`, 'true');
+              }}
+            />
+          </div>
+        ) : activeTab === 'content' ? (
+          /* Materials & Summary Screen */
           <>
             {lecture.description && (
               <div className="text-right space-y-2 bg-[#EDEBE0]/30 p-4 rounded-2xl border border-[#428177]/15">
@@ -283,11 +330,11 @@ export function LectureDetail({
             </div>
           </>
         ) : (
-          /* Notes Notepad Tab */
+          /* Notes Notepad Tab with Export Action */
           <div className="space-y-4">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-bold text-[#002623]">دفتر ملاحظات الطالب التفاعلي:</span>
-              <span className="text-muted-foreground text-[11px]">يتم حفظ الملاحظات تلقائياً في المتصفح</span>
+              <span className="font-bold text-[#002623]">دفتر ملاحظات الطالب الذكي:</span>
+              <span className="text-muted-foreground text-[11px]">محفوظ تلقائياً في التخزين المحلي</span>
             </div>
 
             <Textarea
@@ -297,7 +344,17 @@ export function LectureDetail({
               className="text-right text-xs bg-white border-[#428177]/30 rounded-2xl min-h-[140px] leading-relaxed"
             />
 
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleExportNotes}
+                className="border-[#428177]/30 text-[#002623] text-xs font-bold rounded-xl gap-1.5"
+              >
+                <FileDown className="h-3.5 w-3.5 text-[#428177]" />
+                <span>تصدير الملاحظات (.txt)</span>
+              </Button>
+
               <Button
                 size="sm"
                 onClick={handleSaveNotes}
