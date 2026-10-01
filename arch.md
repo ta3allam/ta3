@@ -143,6 +143,39 @@ erDiagram
 
 ---
 
+### Level 4: Open Marketplace, Affiliate Hub & Creator Course Studio
+
+```mermaid
+graph TD
+    subgraph MarketplaceBoundary [" 🛒 Ta3 Marketplace & Discovery Engine "]
+        MarketplacePage["🛍️ Marketplace Central View (`Marketplace.tsx`)"]
+        
+        subgraph NativeStream [" Local Creator Courses "]
+            NativeGrid["🏫 Native Course Catalog Grid"]
+            PricingTier["🏷️ PricingBadges (Free / One-Time / Subscription)"]
+            CreatorStudio["🚀 CreatorCourseBuilderModal<br/>(Publishing directly into CourseContext)"]
+            CheckoutModal["💳 CheckoutDialog (Levant Multi-Channel Gateways)"]
+        end
+
+        subgraph AffiliateStream [" Global Certified Affiliates "]
+            AffiliateGrid["🌐 Affiliate Discovery Grid (`AffiliateCourseCard`)"]
+            CouponEngine["🏷️ Coupon & Discount Calculator (Up to 85% Off)"]
+            ProviderRouting["🔗 Provider Redirect Router (Coursera, Udemy, edX, CS50)"]
+            AffiliateModal["📑 Full Syllabus & Trust Overview (`AffiliateCourseModal`)"]
+        end
+    end
+
+    MarketplacePage --> NativeGrid
+    MarketplacePage --> AffiliateGrid
+    NativeGrid --> CheckoutModal
+    CreatorStudio -->|Dynamic Dispatch| NativeGrid
+    AffiliateGrid --> CouponEngine
+    CouponEngine --> AffiliateModal
+    AffiliateModal --> ProviderRouting
+```
+
+---
+
 ## 🎨 Brand Design Tokens (Strictly Preserved)
 - **Primary**:
   - `Mountain Teal`: `#428177`
