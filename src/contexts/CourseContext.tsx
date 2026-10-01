@@ -16,8 +16,17 @@ interface CourseContextType {
   deleteEvent: (courseId: number, eventId: number) => void;
   addAssignment: (courseId: number, assignment: Omit<Assignment, 'id'>) => void;
   updateAssignment: (courseId: number, assignmentId: number, assignment: Partial<Assignment>) => void;
-  deleteAssignment: (courseId: number, assignmentId: number) => void;
-  addCourse: (course: { name: string; code: string; category?: string; teacher?: string }) => void;
+  addCourse: (course: {
+    name: string;
+    code: string;
+    category?: string;
+    teacher?: string;
+    pricingType?: PricingType;
+    priceCents?: number;
+    currency?: string;
+    difficulty?: string;
+    lectures?: Omit<Lecture, 'id'>[];
+  }) => void;
   addSubmission: (courseId: number, submission: Omit<Submission, 'id'>) => void;
   gradeSubmission: (courseId: number, submissionId: number, grade: number, feedback?: string) => void;
   updateCoursePricing: (courseId: number, config: { pricingType: PricingType; priceCents: number; currency: string }) => void;
@@ -203,23 +212,55 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const addCourse = useCallback((course: { name: string; code: string; category?: string; teacher?: string }) => {
+  const addCourse = useCallback((course: {
+    name: string;
+    code: string;
+    category?: string;
+    teacher?: string;
+    pricingType?: PricingType;
+    priceCents?: number;
+    currency?: string;
+    difficulty?: string;
+    lectures?: Omit<Lecture, 'id'>[];
+  }) => {
     setCourseData((prev) => {
       const nextId = Math.max(0, ...Object.keys(prev).map(Number)) + 1;
+      const initialLectures: Lecture[] = course.lectures && course.lectures.length > 0
+        ? course.lectures.map((l, idx) => ({ ...l, id: idx + 1 }))
+        : [
+            {
+              id: 1,
+              title: "المحاضرة التمهيدية والترحيب بالمسار",
+              description: "نظرة عامة على المنهج التدريبي، أهداف الدورة، وخريطة الطريق العملية.",
+              materials: []
+            }
+          ];
+
       return {
         ...prev,
         [nextId]: {
           name: course.name,
           code: course.code,
-          category: course.category || 'عام',
+          category: course.category || 'علوم الحاسوب',
           rating: 5,
-          difficulty: 'متوسط',
+          difficulty: course.difficulty || 'متوسط',
           teacher: course.teacher || 'المعلم',
           language: 'العربية',
-          announcements: [],
+          pricingType: course.pricingType || 'free',
+          priceCents: course.priceCents || 0,
+          currency: course.currency || 'USD',
+          announcements: [
+            {
+              id: 1,
+              title: `مرحباً بكم في دورة ${course.name}!`,
+              content: "يسعدنا انضمامكم لهذا المسار التعليمي المتميز. بإمكانكم البدء بمشاهدة المحاضرات وطرح استفساراتكم.",
+              authorName: course.teacher || 'المعلم',
+              createdAt: new Date().toISOString()
+            }
+          ],
           events: [],
           assignments: [],
-          lectures: [],
+          lectures: initialLectures,
           submissions: [],
         },
       };
