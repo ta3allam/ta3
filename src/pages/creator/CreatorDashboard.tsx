@@ -9,12 +9,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
 import { BookOpen, Users, DollarSign, Sparkles, Plus, Eye, Share2, Award } from "lucide-react";
 import { toast } from "sonner";
-import { getAssetUrl } from "@/lib/assetUtils";
+import { CreatorCourseBuilderModal } from "@/components/creator/CreatorCourseBuilderModal";
 import { Link } from "react-router-dom";
 
 export default function CreatorDashboard() {
   const { user } = useAuth();
   const { courseData } = useCourseData();
+  const [isBuilderOpen, setIsBuilderOpen] = useState(false);
 
   const creatorCourses = Object.values(courseData).filter(c => c.teacher === user?.name || true);
 
@@ -50,10 +51,24 @@ export default function CreatorDashboard() {
               </p>
             </div>
 
-            <Button onClick={handleShareStorefront} className="bg-[#428177] hover:bg-[#054239] text-white font-bold gap-2 shadow-sm">
-              <Share2 className="h-4 w-4" />
-              مشاركة رابط المتجر الشخصي
-            </Button>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              <Button
+                onClick={() => setIsBuilderOpen(true)}
+                className="bg-[#002623] hover:bg-[#054239] text-[#EDEBE0] font-black text-xs gap-2 rounded-xl shadow-sm"
+              >
+                <Plus className="h-4 w-4 text-[#988561]" />
+                <span>إنشاء دورة جديدة 🚀</span>
+              </Button>
+
+              <Button
+                onClick={handleShareStorefront}
+                variant="outline"
+                className="border-[#428177]/40 text-[#002623] hover:bg-[#EDEBE0] font-bold text-xs gap-2 rounded-xl"
+              >
+                <Share2 className="h-4 w-4 text-[#428177]" />
+                <span>مشاركة المتجر</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -162,6 +177,13 @@ export default function CreatorDashboard() {
             </Tabs>
           </CardContent>
         </Card>
+
+        {/* Creator Course Builder Modal */}
+        <CreatorCourseBuilderModal
+          open={isBuilderOpen}
+          onOpenChange={setIsBuilderOpen}
+          defaultTeacherName={user?.name || "المعلم"}
+        />
       </div>
     </DashboardLayout>
   );
