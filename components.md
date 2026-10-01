@@ -48,10 +48,32 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 
 ---
 
-## 🛒 Marketplace & Levant Payment Components
+## 🛒 Marketplace, Affiliate Discovery & Creator Studio (Day 3)
 
 ### `Marketplace` (`src/pages/marketplace/Marketplace.tsx`)
-* **Description**: Course catalog and discovery directory with category filtering, creator preview modals, and direct checkout hooks.
+* **Description**: Central marketplace featuring a master tab switcher between local creator courses and curated global affiliate tracks.
+* **Features**:
+  - **Dual Mode Navigation**: Seamless toggle between *دورات المنصة ومجتمعات المعلمين* and *دليل المسارات والشهادات العالمية بالعمولة*.
+  - **Provider & Category Filters**: Multi-facet filtering by platform (Coursera, Udemy, CS50, edX, DeepLearning.AI, Frontend Masters), category, language, and pricing.
+  - **Creator Onboarding Launcher**: Prominent CTA button opening `CreatorCourseBuilderModal`.
+
+### `AffiliateCourseCard` (`src/components/marketplace/AffiliateCourseCard.tsx`)
+* **Description**: High-conversion card component for presenting external certified tracks.
+* **Features**:
+  - **Platform Provider Badges**: Branded styling for Coursera, Udemy, edX, DeepLearning.AI, and CS50.
+  - **Exclusive Coupon Copy**: 1-click clipboard coupon copying with interactive toast alerts and discounts up to 85%.
+  - **Price Comparison**: Strikethrough original USD price vs discounted student price.
+  - **Arabic Subtitles Indicator**: Visual badges indicating whether full Arabic translation is provided.
+
+### `AffiliateCourseModal` (`src/components/marketplace/AffiliateCourseModal.tsx`)
+* **Description**: Comprehensive overview modal for affiliate tracks displaying curriculum scope, key technologies/skills, provider accreditation details, and referral links.
+
+### `CreatorCourseBuilderModal` (`src/components/creator/CreatorCourseBuilderModal.tsx`)
+* **Description**: Interactive course authoring and studio modal empowering educators to launch new courses.
+* **Features**:
+  - **Metadata & Classification**: Configures title, code slug, category, instructor name, and target difficulty.
+  - **Dynamic Pricing Engine**: Selects between Free, Paid One-Time, and Monthly Subscriptions in USD, SYP, AED, or SAR.
+  - **Syllabus & Lecture Builder**: Add, edit, and reorder lectures and initial module descriptions with instant publication to the marketplace.
 
 ### `CheckoutDialog` (`src/components/marketplace/CheckoutDialog.tsx`)
 * **Description**: Multi-channel checkout modal offering Levant regional payment options (ShamCash, Syriatel Cash, ZainCash, Hawala, USDT).

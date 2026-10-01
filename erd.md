@@ -150,4 +150,34 @@ erDiagram
         int download_count
         timestamp created_at
     }
+
+    AFFILIATE_COURSES {
+        string id PK
+        string title
+        string original_title
+        string provider
+        string category
+        numeric rating
+        integer review_count
+        string instructor
+        string duration
+        string level
+        boolean has_arabic_subtitles
+        string affiliate_url
+        string coupon_code
+        integer discount_percentage
+        numeric original_price_usd
+        numeric discounted_price_usd
+        boolean is_free
+        boolean certificate_included
+        text_array key_skills
+    }
+
+    AFFILIATE_CLICKS {
+        uuid id PK
+        string affiliate_course_id FK
+        uuid user_id FK
+        string referrer_source
+        timestamp clicked_at
+    }
 ```
