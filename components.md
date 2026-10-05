@@ -76,7 +76,20 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
   - **Syllabus & Lecture Builder**: Add, edit, and reorder lectures and initial module descriptions with instant publication to the marketplace.
 
 ### `CheckoutDialog` (`src/components/marketplace/CheckoutDialog.tsx`)
-* **Description**: Multi-channel checkout modal offering Levant regional payment options (ShamCash, Syriatel Cash, ZainCash, Hawala, USDT).
+* **Description**: Multi-channel checkout and manual receipt submission modal customized for Syria and the Levant.
+* **Features**:
+  - **Regional Gateways**: ShamCash, Syriatel Cash, Hawala Al-Haram, ZainCash, USDT (TRC-20), and International Cards.
+  - **Payment Instructions & Copy**: 1-click clipboard copy for recipient accounts, phone numbers, and USSD guidelines.
+  - **Screenshot & TxID Uploader**: Direct image preview with file selector and mandatory transaction reference validation.
+  - **Instant Optimistic Notification**: Dispatches toast and records `pending_verification` receipt in storage.
+
+### `PaymentVerificationQueue` (`src/components/admin/PaymentVerificationQueue.tsx`)
+* **Description**: Centralized financial audit and manual verification console embedded in `AdminDashboard` and `TeacherDashboard`.
+* **Features**:
+  - **Interactive Filtering & Metrics**: Real-time counters for pending, approved, and total USD sales volume.
+  - **High-Res Inspector Modal**: Deep modal view for inspecting full-size receipt screenshots and transaction details.
+  - **1-Click Approval**: Validates receipt, updates status to `approved`, auto-enrolls student in `user.enrolledCourses`, and calculates 85% creator / 15% platform split.
+  - **Rejection Reason Modal**: Captures specific rejection reasoning and sends immediate status updates.
 
 ---
 
