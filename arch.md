@@ -176,6 +176,42 @@ graph TD
 
 ---
 
+### Level 5: Levant Multi-Channel Payment & Manual Verification Pipeline
+
+```mermaid
+graph TD
+    subgraph StudentCheckout [" 💳 Student Checkout & Receipt Submission "]
+        CheckoutDialog["📱 CheckoutDialog<br/>(ShamCash, Syriatel, Hawala, ZainCash, USDT)"]
+        ReceiptUpload["📤 Receipt & Transaction Reference (TxID) Uploader"]
+        OptimisticNotice["⏳ Optimistic Status: `pending_verification`"]
+    end
+
+    subgraph CoreStore [" 🗄️ Persistence & State Sync "]
+        ReceiptStore["💾 ReceiptStore & Reactive Listeners<br/>(LocalStorage + Memory Fallback)"]
+    end
+
+    subgraph AdminQueue [" 🛡️ SuperAdmin / Teacher Verification Console "]
+        QueueUI["📋 PaymentVerificationQueue Component<br/>(`AdminDashboard.tsx` & `TeacherDashboard.tsx`)"]
+        Inspector["🔍 High-Res Receipt Image Inspector"]
+        
+        subgraph Decision [" Verification Decision "]
+            ApproveAction["✅ 1-Click Approve<br/>• Student Instant Course Enrollment<br/>• 85% Creator Earnings Allocation<br/>• 15% Platform Fee Deduction"]
+            RejectAction["❌ Reject with Specific Reason Prompt"]
+        end
+    end
+
+    CheckoutDialog --> ReceiptUpload
+    ReceiptUpload --> OptimisticNotice
+    ReceiptUpload -->|Persist| ReceiptStore
+    ReceiptStore -->|Reactive Sync| QueueUI
+    QueueUI --> Inspector
+    Inspector --> Decision
+    ApproveAction -->|Update State & Enroll| ReceiptStore
+    RejectAction -->|Update Status| ReceiptStore
+```
+
+---
+
 ## 🎨 Brand Design Tokens (Strictly Preserved)
 - **Primary**:
   - `Mountain Teal`: `#428177`

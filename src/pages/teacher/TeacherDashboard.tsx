@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
 import { getAssetUrl } from "@/lib/assetUtils";
 import { Link } from "react-router-dom";
+import { PaymentVerificationQueue } from "@/components/admin/PaymentVerificationQueue";
 
 const officialCourseColors = [
   "bg-[#428177]", // Mountain Teal
@@ -218,8 +219,6 @@ export default function TeacherDashboard() {
                   language={course.language}
                   bgImage={course.bgImage}
                   basePath="/teacher/courses"
-                  backgroundColor={course.backgroundColor}
-                />
               ))}
             </div>
           ) : (
@@ -229,6 +228,19 @@ export default function TeacherDashboard() {
             </div>
           )}
         </div>
+
+        {/* Payment Receipts Verification Section */}
+        <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden text-right">
+          <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10">
+            <CardTitle className="text-base font-bold text-[#002623] flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[#988561]" />
+              <span>تدقيق إيصالات وحوالات الطلاب لمقرراتي 💵</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <PaymentVerificationQueue verifierRole="teacher" />
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );

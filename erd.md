@@ -180,4 +180,30 @@ erDiagram
         string referrer_source
         timestamp clicked_at
     }
+
+    PAYMENT_RECEIPTS {
+        string id PK
+        bigint course_id FK
+        string course_name
+        string course_code
+        string student_id FK
+        string student_name
+        string student_email
+        string student_phone
+        decimal amount
+        string currency
+        string payment_method
+        string transaction_reference UK
+        string receipt_image_url
+        string receipt_image_name
+        string sender_name_or_phone
+        string student_notes
+        string status
+        string rejection_reason
+        decimal creator_earnings
+        decimal platform_fee
+        timestamp created_at
+        timestamp verified_at
+        string verified_by
+    }
 ```
