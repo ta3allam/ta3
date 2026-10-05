@@ -219,6 +219,7 @@ export default function TeacherDashboard() {
                   language={course.language}
                   bgImage={course.bgImage}
                   basePath="/teacher/courses"
+                />
               ))}
             </div>
           ) : (
