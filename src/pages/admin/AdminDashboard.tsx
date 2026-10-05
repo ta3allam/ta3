@@ -13,6 +13,8 @@ import { useCourseData } from '@/contexts/CourseContext';
 import { getAssetUrl } from '@/lib/assetUtils';
 import { supabase } from '@/lib/supabase';
 
+import { PaymentVerificationQueue } from '@/components/admin/PaymentVerificationQueue';
+
 export default function AdminDashboard() {
   const { courseData, addCourse } = useCourseData();
   const [users, setUsers] = useState<UserItem[]>([]);
@@ -179,12 +181,17 @@ export default function AdminDashboard() {
                 <CardTitle className="text-lg font-bold text-[#002623]">مركز الإدارة والعمليات المركزية</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <Tabs defaultValue="users" dir="rtl">
-                  <TabsList className="grid grid-cols-3 mb-6 max-w-md bg-[#EDEBE0] p-1 rounded-xl">
+                <Tabs defaultValue="payments" dir="rtl">
+                  <TabsList className="grid grid-cols-4 mb-6 max-w-xl bg-[#EDEBE0] p-1 rounded-xl">
+                    <TabsTrigger value="payments" className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs">إيصالات الدفع 💵</TabsTrigger>
                     <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المستخدمون ({users.length})</TabsTrigger>
                     <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">الطلبات ({requests.length})</TabsTrigger>
                     <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المقررات ({courseCatalogItems.length})</TabsTrigger>
                   </TabsList>
+
+                  <TabsContent value="payments">
+                    <PaymentVerificationQueue verifierRole="admin" />
+                  </TabsContent>
 
                   <TabsContent value="users">
                     <UserManagementTable
