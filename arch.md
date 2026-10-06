@@ -212,6 +212,39 @@ graph TD
 
 ---
 
+### 5. Cohort Live Events & Interactive Calendar Subsystem
+
+```mermaid
+graph TD
+    subgraph EventCreation [" 👨‍🏫 Instructor Event Scheduling "]
+        CreateModal["📅 CreateEventModal.tsx<br/>Title, Category, Start Date/Time, Duration, Seats, Stream URL"]
+        EventStore["💾 EventStore (LocalStorage & In-Memory Fallback)"]
+    end
+
+    subgraph CalendarUI [" 🗓️ Calendar & Grid Interaction Hub "]
+        PageView["🖥️ CohortEvents.tsx (Dual View)"]
+        CalView["📆 EventCalendarView.tsx (Month Grid & Arabic Weekdays)"]
+        CardView["🎴 WebinarRoomCard.tsx (Countdown, Capacity Bar, iCal/Google Sync)"]
+        TzEngine["🌍 MENA Timezone Converter (Damascus, Cairo, Dubai, Casablanca)"]
+    end
+
+    subgraph LiveStage [" 🔴 Virtual Broadcast Room "]
+        StageModal["📺 LiveSessionStageModal.tsx<br/>• Jitsi/YouTube Stream Embed<br/>• Low-Bandwidth Audio-Only Mode (97% saving)<br/>• Real-Time Q&A & Upvote System"]
+    end
+
+    CreateModal -->|Add Event| EventStore
+    EventStore -->|Fetch Events & RSVPs| PageView
+    PageView --> CalView
+    PageView --> CardView
+    PageView --> TzEngine
+    CardView -->|1-Click RSVP| EventStore
+    CardView -->|Export .ics / GCal| CalendarExport["📥 calendarExport.ts"]
+    CardView -->|Join Live Session| StageModal
+    StageModal -->|Post / Upvote Question| EventStore
+```
+
+---
+
 ## 🎨 Brand Design Tokens (Strictly Preserved)
 - **Primary**:
   - `Mountain Teal`: `#428177`
