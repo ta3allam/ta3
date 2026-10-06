@@ -120,23 +120,47 @@ export function checkSeatAvailability(capacity: number, enrolledCount: number): 
   };
 }
 
+export interface MenaTimezone {
+  id: string;
+  label: string;
+  offset: number; // offset in hours from UTC
+  iana: string;
+}
+
+export const MENA_TIMEZONES: MenaTimezone[] = [
+  { id: 'damascus_riyadh', label: 'دمشق / مكة المكرمة / بغداد (UTC+3)', offset: 3, iana: 'Asia/Damascus' },
+  { id: 'cairo_beirut', label: 'القاهرة / بيروت / القدس (UTC+2)', offset: 2, iana: 'Africa/Cairo' },
+  { id: 'dubai_muscat', label: 'دبي / مسقط (UTC+4)', offset: 4, iana: 'Asia/Dubai' },
+  { id: 'casablanca', label: 'الدار البيضاء / تونس (UTC+1)', offset: 1, iana: 'Africa/Casablanca' },
+  { id: 'utc', label: 'توقيت غرينتش العالمي (UTC)', offset: 0, iana: 'UTC' },
+];
+
 /**
- * Format Arabic event time string with timezone note
+ * Format Arabic event time string with timezone note and custom iana/label
  */
-export function formatArabicEventTime(startTimeIso: string, timezoneLabel: string = 'بتوقيت دمشق / مكة المكرمة'): string {
+export function formatArabicEventTime(
+  startTimeIso: string,
+  timezoneLabel: string = 'بتوقيت دمشق / مكة المكرمة',
+  timeZoneIana?: string
+): string {
   try {
     const date = new Date(startTimeIso);
     if (isNaN(date.getTime())) return 'موعد غير محدد';
 
-    const formatter = new Intl.DateTimeFormat('ar-SY', {
+    const options: Intl.DateTimeFormatOptions = {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
-    });
+    };
 
+    if (timeZoneIana && timeZoneIana !== 'auto') {
+      options.timeZone = timeZoneIana;
+    }
+
+    const formatter = new Intl.DateTimeFormat('ar-SY', options);
     return `${formatter.format(date)} (${timezoneLabel})`;
   } catch {
     return startTimeIso;
