@@ -206,4 +206,38 @@ erDiagram
         timestamp verified_at
         string verified_by
     }
+
+    COHORT_EVENTS {
+        string id PK
+        string title
+        text description
+        string instructor_name
+        string instructor_avatar
+        timestamp start_time
+        integer duration_minutes
+        integer capacity
+        integer enrolled_count
+        string stream_url
+        string recording_url
+        string category
+        string timezone
+        timestamp created_at
+    }
+
+    EVENT_RSVPS {
+        string id PK
+        string event_id FK
+        uuid user_id FK
+        timestamp registered_at
+    }
+
+    LIVE_QUESTIONS {
+        string id PK
+        string event_id FK
+        string author_name
+        text question_text
+        integer upvotes
+        boolean is_answered
+        timestamp created_at
+    }
 ```

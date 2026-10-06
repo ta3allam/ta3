@@ -30,7 +30,12 @@ Combining modular course delivery (LMS), Skool-style community feeds with XP gam
    - Regional payment methods: ShamCash, Syriatel Cash, MTN Cash, Al-Haram/Al-Fouad Hawala, ZainCash, Wise, and USDT (TRC-20).
    - Semi-automated receipt uploader with 1-click SuperAdmin/Teacher verification and instant student enrollment.
    - Creator payout balance dashboards with transparent 15% platform split accounting.
-5. **🔌 Levant Low-Bandwidth Resiliency**:
+5. **📅 Interactive Cohort Calendar & Live Event Sync**:
+   - Skool-style live events schedule with interactive Month & Day calendar grid views.
+   - 1-click calendar synchronization for **Google Calendar** and **Apple / Outlook iCal (.ics)** files.
+   - Multi-regional Middle Eastern timezone picker (`دمشق / مكة المكرمة`, `القاهرة / بيروت`, `دبي / مسقط`, `الدار البيضاء`, `UTC`).
+   - Virtual live stage modal with low-bandwidth audio-only toggle (97% bandwidth reduction) and interactive student Q&A upvote engine.
+6. **🔌 Levant Low-Bandwidth Resiliency**:
    - Offline-first PWA with IndexedDB draft caching, TUS 512KB resumable chunked uploads on 3G, and zero layout shift (CLS).
 
 ---

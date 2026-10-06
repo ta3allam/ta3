@@ -93,6 +93,46 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 
 ---
 
+## 📅 Cohort Live Events & Interactive Calendar (Day 5)
+
+### `CohortEvents` (`src/pages/cohorts/CohortEvents.tsx`)
+* **Description**: The master schedule and live events hub for community workshops, webinars, and masterclasses.
+* **Features**:
+  - **Dual View Mode**: Seamless toggle between *عرض البطاقات (Grid View)* and *عرض التقويم الشهري (Calendar View)*.
+  - **Regional Timezone Selector**: Quick conversion across Middle Eastern timezones (`دمشق / مكة المكرمة / بغداد`, `القاهرة / بيروت / القدس`, `دبي / مسقط`, `الدار البيضاء / تونس`, `UTC`).
+  - **Category Filters**: `#كافة_الجلسات`, `🔴 مباشر الآن`, `جلساتي المسجلة`, `ورش عمل برمجية`, `ماستر كلاس`, `ساعات مكتبية`, `أسئلة وأجوبة`.
+  - **Instructor Event Scheduler**: 1-click modal launcher for verified instructors to create new live workshops.
+
+### `EventCalendarView` (`src/components/cohorts/EventCalendarView.tsx`)
+* **Description**: Interactive monthly calendar grid component displaying scheduled live sessions with Arabic weekday headers and day cell event badges.
+* **Features**:
+  - **Month Navigation**: 1-click next/prev month and "اليوم (Today)" fast jump.
+  - **Day Filtering**: Clicking any calendar cell filters sessions occurring on that specific date.
+  - **Category Color Badges**: Visual coding for workshops (Teal), masterclasses (Damask Red), office hours (Wheat), and Q&A (Emerald).
+
+### `WebinarRoomCard` (`src/components/cohorts/WebinarRoomCard.tsx`)
+* **Description**: High-fidelity live event card with countdown ticker, seat capacity meter, and calendar sync buttons.
+* **Features**:
+  - **Real-Time Countdown Ticker**: Live ticking countdown calculating remaining days, hours, and minutes with `🔴 بث مباشر الآن` status badge.
+  - **Seat Availability Progress Bar**: Visual meter warning when event capacity is reached.
+  - **One-Click Calendar Sync**: Direct **Google Calendar** URL builder and **Apple / Outlook iCal (`.ics`)** file downloader.
+  - **Instant RSVP**: Toggle button with local storage persistence and automated attendee count updates.
+
+### `CreateEventModal` (`src/components/cohorts/CreateEventModal.tsx`)
+* **Description**: Instructor scheduling modal for creating new live streams and interactive coding sessions.
+* **Features**:
+  - Form validation for session title, category, instructor name, date/time, duration, capacity, stream URL, and timezone.
+  - Instant dispatch to `EventStore.addEvent` with Sonner toast feedback.
+
+### `LiveSessionStageModal` (`src/components/cohorts/LiveSessionStageModal.tsx`)
+* **Description**: Virtual broadcast room and interactive student stage.
+* **Features**:
+  - **Low-Bandwidth Audio-Only Mode**: Instant toggle saving ~97% bandwidth (32 kbps Opus) during poor connectivity.
+  - **Live Stream Embed**: Embedded responsive player supporting Jitsi Meet, YouTube Live, and recorded replays.
+  - **Live Q&A Upvote Engine**: Real-time student question submission drawer with community upvoting.
+
+---
+
 ## 🛡️ Authentication & Authorization Components
 
 ### `RequireAuth` (`src/components/layout/RequireAuth.tsx`)
