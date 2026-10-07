@@ -35,7 +35,12 @@ Combining modular course delivery (LMS), Skool-style community feeds with XP gam
    - 1-click calendar synchronization for **Google Calendar** and **Apple / Outlook iCal (.ics)** files.
    - Multi-regional Middle Eastern timezone picker (`دمشق / مكة المكرمة`, `القاهرة / بيروت`, `دبي / مسقط`, `الدار البيضاء`, `UTC`).
    - Virtual live stage modal with low-bandwidth audio-only toggle (97% bandwidth reduction) and interactive student Q&A upvote engine.
-6. **🔌 Levant Low-Bandwidth Resiliency**:
+6. **📱 Cross-Platform Mobile Layout & Touch Gestures**:
+   - One-thumb **Mobile Bottom Navigation Bar** for fast switching between Community, Marketplace, Dashboard, and Live Events.
+   - Sliding **Mobile Navigation Drawer** with role-aware destination routing and quick profile settings.
+   - Native touch **Pull-to-Refresh** gesture container with elastic spring resistance.
+   - Real-time **Mobile Offline Banner** with automatic connectivity detection and re-sync triggers.
+7. **🔌 Levant Low-Bandwidth Resiliency**:
    - Offline-first PWA with IndexedDB draft caching, TUS 512KB resumable chunked uploads on 3G, and zero layout shift (CLS).
 
 ---

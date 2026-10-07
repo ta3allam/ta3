@@ -133,6 +133,38 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 
 ---
 
+## 📱 Cross-Platform Mobile Layout & Touch Gestures (Day 6)
+
+### `MobileBottomNav` (`src/components/navigation/MobileBottomNav.tsx`)
+* **Description**: One-thumb floating bottom navigation bar displayed on screens $< 768\text{px}$.
+* **Features**:
+  - Direct 1-tap switching between **المجتمع (Community)**, **السوق (Marketplace)**, **مقرراتي / الاستوديو (My Courses / Studio)**, **الفعاليات (Live)**, and **المزيد (Menu Drawer)**.
+  - Live session active badge (`🔴 لايف`) and active route indicator bar.
+  - Safe area inset padding for modern mobile devices.
+
+### `MobileNavigationDrawer` (`src/components/navigation/MobileNavigationDrawer.tsx`)
+* **Description**: Full-height sliding sheet drawer for mobile users.
+* **Features**:
+  - User avatar, role badge, and level indicator header with quick profile access.
+  - Role-segregated sections: Instructor management, Creator wallet & payouts, Admin governance console, and Student learning spaces.
+  - One-click account logout button.
+
+### `PullToRefreshContainer` (`src/components/common/PullToRefreshContainer.tsx`)
+* **Description**: Touch gesture wrapper providing iOS/Android-style pull-to-refresh interactions.
+* **Features**:
+  - Elastic damping resistance formula ($0.45\times$) with pull threshold detection ($\ge 65\text{px}$).
+  - Animated spinner and rotation indicator for pull feedback.
+  - Non-blocking asynchronous refresh handler execution.
+
+### `MobileOfflineBanner` (`src/components/common/MobileOfflineBanner.tsx`)
+* **Description**: Interactive network status banner providing real-time offline feedback.
+* **Features**:
+  - Listens to browser `online` / `offline` events and navigator status.
+  - Informs students when working in local offline mode (IndexedDB auto-save).
+  - One-click network re-check button and success recovery toast.
+
+---
+
 ## 🛡️ Authentication & Authorization Components
 
 ### `RequireAuth` (`src/components/layout/RequireAuth.tsx`)
