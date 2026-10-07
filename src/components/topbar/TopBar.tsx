@@ -34,9 +34,10 @@ import { toast } from "sonner";
 interface TopBarProps {
   title?: string;
   hideSidebarTrigger?: boolean;
+  onOpenMobileMenu?: () => void;
 }
 
-export default function TopBar({ title, hideSidebarTrigger }: TopBarProps) {
+export default function TopBar({ title, hideSidebarTrigger, onOpenMobileMenu }: TopBarProps) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, logout } = useAuth();
