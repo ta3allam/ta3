@@ -264,4 +264,21 @@ All colors MUST be HSL.
   .tabs-wrapper {
     @apply bg-secondary rounded-lg p-2 mb-6;
   }
+
+  /* Mobile Cross-Platform & Touch Ergonomics */
+  @media (max-width: 768px) {
+    button, a, input, select, textarea {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(66, 129, 119, 0.15);
+    }
+
+    .touch-target-min {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  .safe-bottom-pad {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
 }

@@ -245,6 +245,35 @@ graph TD
 
 ---
 
+### 6. Cross-Platform Mobile Layout & Touch Gestures Subsystem
+
+```mermaid
+graph TD
+    subgraph MobileShell [" 📱 Mobile Shell & Responsive Viewport "]
+        DashLayout["🖥️ DashboardLayout.tsx (Safe Area Insets & Responsive Inset)"]
+        TopBar["🔝 TopBar.tsx (Brand, Profile & Hamburger Trigger)"]
+        BottomNav["👇 MobileBottomNav.tsx (One-Thumb Community, Market, Courses, Live, More)"]
+        NavDrawer["📑 MobileNavigationDrawer.tsx (Role-Aware Sheet Navigation & Wallet)"]
+        OfflineBanner["📡 MobileOfflineBanner.tsx (Network Drop Detection & IndexedDB Auto-Save)"]
+    end
+
+    subgraph GestureEngine [" 👆 Touch Gesture Handlers "]
+        PullRefresh["🔄 PullToRefreshContainer.tsx (Elastic Damping 0.45 & Threshold Trigger)"]
+        FeedView["💬 CommunityFeed.tsx (Swipe Refresh & Mobile Optimized Cards)"]
+    end
+
+    DashLayout --> OfflineBanner
+    DashLayout --> TopBar
+    DashLayout --> BottomNav
+    DashLayout --> NavDrawer
+    TopBar -->|Open Drawer| NavDrawer
+    BottomNav -->|Open Drawer| NavDrawer
+    DashLayout --> GestureEngine
+    PullRefresh --> FeedView
+```
+
+---
+
 ## 🎨 Brand Design Tokens (Strictly Preserved)
 - **Primary**:
   - `Mountain Teal`: `#428177`

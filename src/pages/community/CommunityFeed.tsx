@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { CommunityPostCard, CommunityPost } from "@/components/community/CommunityPostCard";
+import { PullToRefreshContainer } from "@/components/common/PullToRefreshContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -203,9 +204,16 @@ export default function CommunityFeed() {
       });
   }, [posts, activeChannel, activeSort, searchQuery]);
 
+  const handleRefresh = async () => {
+    // Simulate re-fetching latest posts
+    await new Promise(resolve => setTimeout(resolve, 600));
+    toast.success("تم تحديث منشورات المجتمع بنجاح!");
+  };
+
   return (
     <DashboardLayout title="مجتمع تعلّم التفاعلي">
-      <div className="space-y-6" dir="rtl">
+      <PullToRefreshContainer onRefresh={handleRefresh}>
+        <div className="space-y-6" dir="rtl">
         {/* Header Hero Banner */}
         <div
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
@@ -466,6 +474,7 @@ export default function CommunityFeed() {
           </div>
         </div>
       </div>
+      </PullToRefreshContainer>
     </DashboardLayout>
   );
 }

@@ -240,4 +240,12 @@ erDiagram
         boolean is_answered
         timestamp created_at
     }
+
+    MOBILE_OFFLINE_CACHE {
+        string cache_key PK
+        string store_type
+        json payload
+        boolean is_dirty
+        timestamp last_cached_at
+    }
 ```
