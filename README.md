@@ -9,7 +9,7 @@
 
 **Ta3 (تعلّم)** is an enterprise-grade, Arabic-native learning marketplace and creator community platform designed specifically for the MENA region, starting with Syria and the Levant. 
 
-Combining modular course delivery (LMS), Skool-style community feeds with XP gamification, an open marketplace for creators and educators, affiliate course discovery, low-bandwidth audio-only streaming modes, and localized Levant payment gateways (ShamCash, Syriatel Cash, ZainCash, Hawala, USDT), Ta3 empowers educators to monetize knowledge and learners to thrive in an active community.
+Combining modular course delivery (LMS), Skool-style community feeds with XP gamification, an open marketplace for creators and educators, affiliate course discovery, low-bandwidth audio-only streaming modes, localized Levant payment gateways (ShamCash, Syriatel Cash, ZainCash, Hawala, USDT), cross-platform mobile drawers & gestures, and comprehensive creator analytics with cohort retention heatmaps, Ta3 empowers educators to monetize knowledge and learners to thrive in an active community.
 
 ---
 
@@ -25,11 +25,11 @@ Combining modular course delivery (LMS), Skool-style community feeds with XP gam
    - **Downloadable Resource Vault (خزنة الموارد المفتوحة)**: Category-filtered repository of course PDF slides, exercise code ZIPs, cheat sheets, and templates with batch download support.
 3. **🛒 Open Marketplace & Affiliate Course Hub**:
    - Open creator onboarding with free, paid one-time, subscription, and cohort pricing models.
-   - Curated global affiliate courses (Coursera, Udemy, bootcamps) for comprehensive Day 1 catalog breadth.
+   - Curated global affiliate courses (Coursera, Udemy, bootcamps) for comprehensive Day 1 catalog breadth with up to 85% discount coupons.
 4. **💵 Levant High-Volume Financial Infrastructure**:
    - Regional payment methods: ShamCash, Syriatel Cash, MTN Cash, Al-Haram/Al-Fouad Hawala, ZainCash, Wise, and USDT (TRC-20).
    - Semi-automated receipt uploader with 1-click SuperAdmin/Teacher verification and instant student enrollment.
-   - Creator payout balance dashboards with transparent 15% platform split accounting.
+   - Creator payout balance dashboards with transparent 85/15 revenue split accounting.
 5. **📅 Interactive Cohort Calendar & Live Event Sync**:
    - Skool-style live events schedule with interactive Month & Day calendar grid views.
    - 1-click calendar synchronization for **Google Calendar** and **Apple / Outlook iCal (.ics)** files.
@@ -40,7 +40,12 @@ Combining modular course delivery (LMS), Skool-style community feeds with XP gam
    - Sliding **Mobile Navigation Drawer** with role-aware destination routing and quick profile settings.
    - Native touch **Pull-to-Refresh** gesture container with elastic spring resistance.
    - Real-time **Mobile Offline Banner** with automatic connectivity detection and re-sync triggers.
-7. **🔌 Levant Low-Bandwidth Resiliency**:
+7. **📊 Creator Analytics & Student Cohort Retention Engine**:
+   - Transparent **85/15 Revenue Split Ledger** tracking Gross Volume (GMV), 85% Creator Net Payouts, and 15% Platform Maintenance Fee.
+   - **8-Week Cohort Retention Heatmap Matrix** calculating registration drop-off, active weekly engagement, and at-risk student intervention alerts.
+   - **Low-Bandwidth Telemetry**: Tracking 3G audio-only vs video consumption percentages across individual course modules.
+   - **1-Click Excel Export with Arabic UTF-8 BOM**: Instant generation and browser download of CSV & JSON analytics reports compatible with Microsoft Excel.
+8. **🔌 Levant Low-Bandwidth Resiliency**:
    - Offline-first PWA with IndexedDB draft caching, TUS 512KB resumable chunked uploads on 3G, and zero layout shift (CLS).
 
 ---
@@ -69,9 +74,9 @@ Combining modular course delivery (LMS), Skool-style community feeds with XP gam
 | | **Day 2 (Tue)** | **Modular Classroom, Video/Audio Player & Resource Vault** | ✅ **Completed** |
 | | **Day 3 (Wed)** | **Open Marketplace, Affiliate Discovery Hub & Creator Studio** | ✅ **Completed** |
 | | **Day 4 (Thu)** | **Levant Multi-Channel Payment & Manual Receipt Verification** | ✅ **Completed** |
-| **Week 2** | **Day 5 (Mon)** | **Interactive Cohort Calendar & Live Event Sync** | ⏳ Scheduled |
-| | **Day 6 (Tue)** | **3-Tier Authentic Profiles & Gamified XP Levels** | ⏳ Scheduled |
-| | **Day 7 (Wed)** | **Mobile PWA Optimization & Low-Bandwidth Caching** | ⏳ Scheduled |
+| **Week 2** | **Day 5 (Mon)** | **Interactive Cohort Calendar & Live Event Sync** | ✅ **Completed** |
+| | **Day 6 (Tue)** | **Cross-Platform Mobile Drawer, Bottom Nav & Touch Gestures** | ✅ **Completed** |
+| | **Day 7 (Wed)** | **Creator Analytics Studio, 85/15 Split & Cohort Retention Heatmaps** | ✅ **Completed** |
 | | **Day 8 (Thu)** | **Multi-Role E2E Test Suite, Complete Docs & Golden Release** | ⏳ Scheduled |
 
 ---
