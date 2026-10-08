@@ -1,16 +1,19 @@
 import { useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { CreatorProfileCard } from "@/components/creator/CreatorProfileCard";
+import { RevenueLedgerBreakdownCard } from "@/components/analytics/RevenueLedgerBreakdownCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
-import { BookOpen, Users, DollarSign, Sparkles, Plus, Eye, Share2, Award } from "lucide-react";
+import { BookOpen, Users, DollarSign, Sparkles, Plus, Eye, Share2, Award, LineChart, ArrowUpRight, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { CreatorCourseBuilderModal } from "@/components/creator/CreatorCourseBuilderModal";
 import { Link } from "react-router-dom";
+import { getAssetUrl } from "@/lib/assetUtils";
+import { MOCK_FINANCIAL_SUMMARY } from "@/lib/analytics/creatorMetricsEngine";
 
 export default function CreatorDashboard() {
   const { user } = useAuth();
@@ -20,10 +23,10 @@ export default function CreatorDashboard() {
   const creatorCourses = Object.values(courseData).filter(c => c.teacher === user?.name || true);
 
   const totalStudents = 1420;
-  const totalRevenue = 4850; // $4,850 USD
   const activeCommunities = 3;
 
   const handleShareStorefront = () => {
+    navigator.clipboard?.writeText(window.location.href);
     toast.success("تم نسخ رابط متجر صانع المحتوى الخاص بك إلى الحافظة!");
   };
 
@@ -47,7 +50,7 @@ export default function CreatorDashboard() {
               </div>
               <h1 className="text-3xl font-extrabold tracking-tight text-[#002623]">لوحة التحكم واقتصاد صناع المحتوى 🚀</h1>
               <p className="text-[#3D3A3B] mt-2 text-sm max-w-xl font-medium">
-                إدارة الدورات، بناء المجتمعات الدراسية، متابعة أرباح المبيعات، ونشر المعرفة للجمهور العربي.
+                إدارة الدورات، بناء المجتمعات الدراسية، متابعة أرباح المبيعات بنسبة 85%، ونشر المعرفة للجمهور العربي.
               </p>
             </div>
 
@@ -59,6 +62,16 @@ export default function CreatorDashboard() {
                 <Plus className="h-4 w-4 text-[#988561]" />
                 <span>إنشاء دورة جديدة 🚀</span>
               </Button>
+
+              <Link to="/teacher/analytics">
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-auto border-[#428177] text-[#054239] hover:bg-[#EDEBE0] font-bold text-xs gap-2 rounded-xl"
+                >
+                  <LineChart className="h-4 w-4 text-[#428177]" />
+                  <span>التحليلات المتقدمة</span>
+                </Button>
+              </Link>
 
               <Button
                 onClick={handleShareStorefront}
@@ -106,12 +119,15 @@ export default function CreatorDashboard() {
 
           <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl p-5 text-right">
             <div className="flex justify-between items-center">
-              <span className="text-2xl font-extrabold text-[#054239]">${totalRevenue}</span>
+              <span className="text-2xl font-extrabold text-[#054239]">${MOCK_FINANCIAL_SUMMARY.creatorNet.toLocaleString()}</span>
               <div className="p-2.5 bg-[#428177]/10 rounded-xl text-[#428177]">
                 <DollarSign className="h-5 w-5" />
               </div>
             </div>
-            <p className="text-xs font-bold text-[#3D3A3B] mt-2">إجمالي الأرباح الصافية ($)</p>
+            <div className="flex items-center justify-between mt-2">
+              <p className="text-xs font-bold text-[#3D3A3B]">صافي أرباحك (85%)</p>
+              <Badge className="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">+18%</Badge>
+            </div>
           </Card>
 
           <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl p-5 text-right">
@@ -127,14 +143,18 @@ export default function CreatorDashboard() {
 
         {/* Tabs for Creator Operations */}
         <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden">
-          <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10">
-            <CardTitle className="text-lg font-bold text-[#002623]">إدارة الدورات والمحتوى التجاري</CardTitle>
+          <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10 flex flex-row items-center justify-between">
+            <CardTitle className="text-lg font-bold text-[#002623]">إدارة الدورات والنشاط المالي</CardTitle>
+            <Link to="/teacher/analytics" className="text-xs font-bold text-[#428177] hover:underline flex items-center gap-1">
+              <span>عرض تفاصيل التحليلات والاحتفاظ</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </CardHeader>
           <CardContent className="p-6">
             <Tabs defaultValue="courses" dir="rtl">
               <TabsList className="mb-6 bg-[#EDEBE0] p-1 rounded-xl">
                 <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">دوراتي التعليمية ({creatorCourses.length})</TabsTrigger>
-                <TabsTrigger value="analytics" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">التحليلات والمبيعات</TabsTrigger>
+                <TabsTrigger value="financial" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">السجل المالي وقنوات الشام</TabsTrigger>
               </TabsList>
 
               <TabsContent value="courses" className="space-y-4">
@@ -168,11 +188,8 @@ export default function CreatorDashboard() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="analytics">
-                <div className="p-8 text-center border border-dashed border-[#428177]/30 rounded-2xl text-xs text-[#3D3A3B]">
-                  <p className="font-bold text-sm text-[#002623] mb-1">لوحة تحليلات المبيعات ونسب المبالغ</p>
-                  <p>يتم احتساب عمولة المنصة (10-15%) وإيداع صافي أرباح الدورات تلقائياً في رصيد محفظتك.</p>
-                </div>
+              <TabsContent value="financial" className="space-y-4">
+                <RevenueLedgerBreakdownCard />
               </TabsContent>
             </Tabs>
           </CardContent>

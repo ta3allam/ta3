@@ -99,37 +99,20 @@ erDiagram
         bigint id PK
         bigint course_id FK
         string title
-        string description
         string video_url
         string audio_url
-        string duration
-        integer order_num
-    }
-
-    CHAPTER_TIMESTAMPS {
-        bigint id PK
-        bigint lecture_id FK
-        string time_code
-        integer seconds
-        string title
+        integer duration_minutes
+        boolean has_audio_stream
     }
 
     VAULT_RESOURCES {
-        string id PK
+        uuid id PK
         bigint course_id FK
         string title
+        string file_type
+        string download_url
+        string size_mb
         string category
-        string file_url
-        string file_size
-        integer downloads_count
-    }
-
-    LECTURE_COMPLETIONS {
-        uuid id PK
-        uuid user_id FK
-        bigint lecture_id FK
-        boolean is_completed
-        timestamp completed_at
     }
 
     LECTURE_NOTES {
@@ -139,65 +122,38 @@ erDiagram
         text content
         timestamp updated_at
     }
+
+    LECTURE_COMPLETIONS {
+        uuid id PK
+        uuid user_id FK
+        bigint lecture_id FK
+        boolean is_completed
+        timestamp completed_at
+    }
 ```
 
 ---
 
-### Level 4: Open Marketplace, Affiliate Hub & Creator Course Studio
+### 4. Levant Payment & Receipt Verification Flow
 
 ```mermaid
 graph TD
-    subgraph MarketplaceBoundary [" 🛒 Ta3 Marketplace & Discovery Engine "]
-        MarketplacePage["🛍️ Marketplace Central View (`Marketplace.tsx`)"]
-        
-        subgraph NativeStream [" Local Creator Courses "]
-            NativeGrid["🏫 Native Course Catalog Grid"]
-            PricingTier["🏷️ PricingBadges (Free / One-Time / Subscription)"]
-            CreatorStudio["🚀 CreatorCourseBuilderModal<br/>(Publishing directly into CourseContext)"]
-            CheckoutModal["💳 CheckoutDialog (Levant Multi-Channel Gateways)"]
-        end
-
-        subgraph AffiliateStream [" Global Certified Affiliates "]
-            AffiliateGrid["🌐 Affiliate Discovery Grid (`AffiliateCourseCard`)"]
-            CouponEngine["🏷️ Coupon & Discount Calculator (Up to 85% Off)"]
-            ProviderRouting["🔗 Provider Redirect Router (Coursera, Udemy, edX, CS50)"]
-            AffiliateModal["📑 Full Syllabus & Trust Overview (`AffiliateCourseModal`)"]
-        end
+    subgraph StudentFlow [" 🎓 Student Checkout & Manual Uploader "]
+        CheckoutDialog["💳 CheckoutDialog.tsx<br/>ShamCash, Syriatel, ZainCash, Hawala, USDT"]
+        ReceiptUpload["📤 Receipt Image / PDF Uploader<br/>Reference number, Payer Name, Phone"]
+        OptimisticNotice["⏳ Optimistic Pending Verification Notice"]
     end
 
-    MarketplacePage --> NativeGrid
-    MarketplacePage --> AffiliateGrid
-    NativeGrid --> CheckoutModal
-    CreatorStudio -->|Dynamic Dispatch| NativeGrid
-    AffiliateGrid --> CouponEngine
-    CouponEngine --> AffiliateModal
-    AffiliateModal --> ProviderRouting
-```
-
----
-
-### Level 5: Levant Multi-Channel Payment & Manual Verification Pipeline
-
-```mermaid
-graph TD
-    subgraph StudentCheckout [" 💳 Student Checkout & Receipt Submission "]
-        CheckoutDialog["📱 CheckoutDialog<br/>(ShamCash, Syriatel, Hawala, ZainCash, USDT)"]
-        ReceiptUpload["📤 Receipt & Transaction Reference (TxID) Uploader"]
-        OptimisticNotice["⏳ Optimistic Status: `pending_verification`"]
+    subgraph StoreLayer [" 💾 Reactive Receipt Store "]
+        ReceiptStore["📦 receiptStore.ts<br/>Persisted local/hybrid payment receipts"]
     end
 
-    subgraph CoreStore [" 🗄️ Persistence & State Sync "]
-        ReceiptStore["💾 ReceiptStore & Reactive Listeners<br/>(LocalStorage + Memory Fallback)"]
-    end
-
-    subgraph AdminQueue [" 🛡️ SuperAdmin / Teacher Verification Console "]
-        QueueUI["📋 PaymentVerificationQueue Component<br/>(`AdminDashboard.tsx` & `TeacherDashboard.tsx`)"]
-        Inspector["🔍 High-Res Receipt Image Inspector"]
-        
-        subgraph Decision [" Verification Decision "]
-            ApproveAction["✅ 1-Click Approve<br/>• Student Instant Course Enrollment<br/>• 85% Creator Earnings Allocation<br/>• 15% Platform Fee Deduction"]
-            RejectAction["❌ Reject with Specific Reason Prompt"]
-        end
+    subgraph AdminTeacherFlow [" 🛡️ Admin / Teacher Verification Queue "]
+        QueueUI["📋 PaymentVerificationQueue.tsx<br/>Filter by Status: PENDING / APPROVED / REJECTED"]
+        Inspector["🔍 Fullscreen Receipt Inspector Modal"]
+        Decision["⚖️ Instant Action Gate"]
+        ApproveAction["✅ Approve Payment<br/>Auto-enroll student & notify"]
+        RejectAction["❌ Reject Payment<br/>Provide reason to student"]
     end
 
     CheckoutDialog --> ReceiptUpload
@@ -270,6 +226,37 @@ graph TD
     BottomNav -->|Open Drawer| NavDrawer
     DashLayout --> GestureEngine
     PullRefresh --> FeedView
+```
+
+---
+
+### 7. Creator Analytics & Student Cohort Retention Engine
+
+```mermaid
+graph TD
+    subgraph AnalyticsEngine [" 📊 creatorMetricsEngine.ts "]
+        SplitCalc["💰 85/15 Financial Split Processor<br/>GMV, 85% Creator Net, 15% Platform Maintenance"]
+        CohortMatrix["👥 8-Week Cohort Retention Engine<br/>Registration decay & at-risk dropoff alerts"]
+        HeatmapCalc["🔥 7x24 Weekly Activity Heatmap<br/>MENA prime-time & weekend study peak detection"]
+        CsvExporter["📑 UTF-8 BOM CSV & JSON Generator<br/>Arabic Excel compatible byte-stream"]
+    end
+
+    subgraph CreatorUI [" 🖥️ Creator Analytics Studio "]
+        AnalyticsPage["📈 CreatorAnalytics.tsx (Tabbed Multi-View)"]
+        RevenueCard["💳 RevenueLedgerBreakdownCard.tsx<br/>Levant channels: ShamCash 42%, Hawala 26%, USDT 16%"]
+        HeatmapCard["📅 CohortRetentionHeatmap.tsx<br/>Weekly heatmap grid & at-risk intervention drawer"]
+        FunnelCard["🎯 ModuleMasteryFunnel.tsx<br/>Completion rates & 3G Audio-only telemetry"]
+        ExportDialog["📥 AnalyticsExportModal.tsx<br/>1-Click CSV & JSON download launcher"]
+    end
+
+    SplitCalc --> RevenueCard
+    CohortMatrix --> HeatmapCard
+    HeatmapCalc --> HeatmapCard
+    CsvExporter --> ExportDialog
+    AnalyticsPage --> RevenueCard
+    AnalyticsPage --> HeatmapCard
+    AnalyticsPage --> FunnelCard
+    AnalyticsPage --> ExportDialog
 ```
 
 ---

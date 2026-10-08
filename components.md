@@ -48,7 +48,7 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 
 ---
 
-## 🛒 Marketplace, Affiliate Discovery & Creator Studio (Day 3)
+## 🛒 Marketplace, Affiliate Discovery & Creator Studio (Day 3 & Day 4)
 
 ### `Marketplace` (`src/pages/marketplace/Marketplace.tsx`)
 * **Description**: Central marketplace featuring a master tab switcher between local creator courses and curated global affiliate tracks.
@@ -64,9 +64,6 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
   - **Exclusive Coupon Copy**: 1-click clipboard coupon copying with interactive toast alerts and discounts up to 85%.
   - **Price Comparison**: Strikethrough original USD price vs discounted student price.
   - **Arabic Subtitles Indicator**: Visual badges indicating whether full Arabic translation is provided.
-
-### `AffiliateCourseModal` (`src/components/marketplace/AffiliateCourseModal.tsx`)
-* **Description**: Comprehensive overview modal for affiliate tracks displaying curriculum scope, key technologies/skills, provider accreditation details, and referral links.
 
 ### `CreatorCourseBuilderModal` (`src/components/creator/CreatorCourseBuilderModal.tsx`)
 * **Description**: Interactive course authoring and studio modal empowering educators to launch new courses.
@@ -89,7 +86,6 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
   - **Interactive Filtering & Metrics**: Real-time counters for pending, approved, and total USD sales volume.
   - **High-Res Inspector Modal**: Deep modal view for inspecting full-size receipt screenshots and transaction details.
   - **1-Click Approval**: Validates receipt, updates status to `approved`, auto-enrolls student in `user.enrolledCourses`, and calculates 85% creator / 15% platform split.
-  - **Rejection Reason Modal**: Captures specific rejection reasoning and sends immediate status updates.
 
 ---
 
@@ -99,37 +95,21 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 * **Description**: The master schedule and live events hub for community workshops, webinars, and masterclasses.
 * **Features**:
   - **Dual View Mode**: Seamless toggle between *عرض البطاقات (Grid View)* and *عرض التقويم الشهري (Calendar View)*.
-  - **Regional Timezone Selector**: Quick conversion across Middle Eastern timezones (`دمشق / مكة المكرمة / بغداد`, `القاهرة / بيروت / القدس`, `دبي / مسقط`, `الدار البيضاء / تونس`, `UTC`).
+  - **Regional Timezone Selector**: Quick conversion across Middle Eastern timezones (`دمشق / مكة المكرمة`, `القاهرة / بيروت`, `دبي / مسقط`, `الدار البيضاء`, `UTC`).
   - **Category Filters**: `#كافة_الجلسات`, `🔴 مباشر الآن`, `جلساتي المسجلة`, `ورش عمل برمجية`, `ماستر كلاس`, `ساعات مكتبية`, `أسئلة وأجوبة`.
-  - **Instructor Event Scheduler**: 1-click modal launcher for verified instructors to create new live workshops.
 
 ### `EventCalendarView` (`src/components/cohorts/EventCalendarView.tsx`)
 * **Description**: Interactive monthly calendar grid component displaying scheduled live sessions with Arabic weekday headers and day cell event badges.
-* **Features**:
-  - **Month Navigation**: 1-click next/prev month and "اليوم (Today)" fast jump.
-  - **Day Filtering**: Clicking any calendar cell filters sessions occurring on that specific date.
-  - **Category Color Badges**: Visual coding for workshops (Teal), masterclasses (Damask Red), office hours (Wheat), and Q&A (Emerald).
 
 ### `WebinarRoomCard` (`src/components/cohorts/WebinarRoomCard.tsx`)
 * **Description**: High-fidelity live event card with countdown ticker, seat capacity meter, and calendar sync buttons.
 * **Features**:
   - **Real-Time Countdown Ticker**: Live ticking countdown calculating remaining days, hours, and minutes with `🔴 بث مباشر الآن` status badge.
-  - **Seat Availability Progress Bar**: Visual meter warning when event capacity is reached.
   - **One-Click Calendar Sync**: Direct **Google Calendar** URL builder and **Apple / Outlook iCal (`.ics`)** file downloader.
   - **Instant RSVP**: Toggle button with local storage persistence and automated attendee count updates.
 
-### `CreateEventModal` (`src/components/cohorts/CreateEventModal.tsx`)
-* **Description**: Instructor scheduling modal for creating new live streams and interactive coding sessions.
-* **Features**:
-  - Form validation for session title, category, instructor name, date/time, duration, capacity, stream URL, and timezone.
-  - Instant dispatch to `EventStore.addEvent` with Sonner toast feedback.
-
 ### `LiveSessionStageModal` (`src/components/cohorts/LiveSessionStageModal.tsx`)
-* **Description**: Virtual broadcast room and interactive student stage.
-* **Features**:
-  - **Low-Bandwidth Audio-Only Mode**: Instant toggle saving ~97% bandwidth (32 kbps Opus) during poor connectivity.
-  - **Live Stream Embed**: Embedded responsive player supporting Jitsi Meet, YouTube Live, and recorded replays.
-  - **Live Q&A Upvote Engine**: Real-time student question submission drawer with community upvoting.
+* **Description**: Virtual broadcast room and interactive student stage with 32kbps audio-only mode and live Q&A upvote drawer.
 
 ---
 
@@ -139,29 +119,55 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 * **Description**: One-thumb floating bottom navigation bar displayed on screens $< 768\text{px}$.
 * **Features**:
   - Direct 1-tap switching between **المجتمع (Community)**, **السوق (Marketplace)**, **مقرراتي / الاستوديو (My Courses / Studio)**, **الفعاليات (Live)**, and **المزيد (Menu Drawer)**.
-  - Live session active badge (`🔴 لايف`) and active route indicator bar.
   - Safe area inset padding for modern mobile devices.
 
 ### `MobileNavigationDrawer` (`src/components/navigation/MobileNavigationDrawer.tsx`)
-* **Description**: Full-height sliding sheet drawer for mobile users.
-* **Features**:
-  - User avatar, role badge, and level indicator header with quick profile access.
-  - Role-segregated sections: Instructor management, Creator wallet & payouts, Admin governance console, and Student learning spaces.
-  - One-click account logout button.
+* **Description**: Full-height sliding sheet drawer with role-segregated navigation links and user profile access.
 
 ### `PullToRefreshContainer` (`src/components/common/PullToRefreshContainer.tsx`)
-* **Description**: Touch gesture wrapper providing iOS/Android-style pull-to-refresh interactions.
-* **Features**:
-  - Elastic damping resistance formula ($0.45\times$) with pull threshold detection ($\ge 65\text{px}$).
-  - Animated spinner and rotation indicator for pull feedback.
-  - Non-blocking asynchronous refresh handler execution.
+* **Description**: Touch gesture wrapper providing iOS/Android-style pull-to-refresh interactions with $0.45\times$ elastic damping.
 
 ### `MobileOfflineBanner` (`src/components/common/MobileOfflineBanner.tsx`)
-* **Description**: Interactive network status banner providing real-time offline feedback.
+* **Description**: Interactive network status banner providing real-time offline feedback and re-sync triggers.
+
+---
+
+## 📊 Creator Analytics & Student Cohort Retention Engine (Day 7)
+
+### `CreatorAnalytics` (`src/pages/analytics/CreatorAnalytics.tsx`)
+* **Description**: Complete creator analytics console featuring multi-tab segmentation, filter controls, and report export trigger.
 * **Features**:
-  - Listens to browser `online` / `offline` events and navigator status.
-  - Informs students when working in local offline mode (IndexedDB auto-save).
-  - One-click network re-check button and success recovery toast.
+  - **Multi-Tab Layout**: *النظرة الشاملة (Overview)*, *السجل المالي وقنوات الشام (Financial & Levant Gateways)*, *مصفوفة الاحتفاظ وتفاعل الطلاب (Retention Matrix)*, *إتقان الوحدات ونمط الصوت فقط (Module Funnel)*.
+  - **Course & Time-Range Selectors**: Filter by individual course or across all published curriculum (7d, 30d, 90d, 1y).
+  - **1-Click Export Modal Trigger**: Launches `AnalyticsExportModal`.
+
+### `RevenueLedgerBreakdownCard` (`src/components/analytics/RevenueLedgerBreakdownCard.tsx`)
+* **Description**: Transparent financial breakdown card calculating GMV, 85% creator net earnings, and 15% platform maintenance fee.
+* **Features**:
+  - Payout status tracker (Pending vs Completed).
+  - Regional Levant payment channels breakdown (ShamCash 42%, Syriatel 26%, Hawala 16%, ZainCash 10%, USDT 6%).
+  - Financial safety notice guaranteeing no hidden fees.
+
+### `CohortRetentionHeatmap` (`src/components/analytics/CohortRetentionHeatmap.tsx`)
+* **Description**: 8-week student retention cohort progression and 7x24 weekly activity intensity matrix.
+* **Features**:
+  - Color-coded retention percentage matrix from Week 1 (100%) through Week 8.
+  - Weekly activity heatmap highlighting prime-time evening study patterns in Syria and the Arab world.
+  - At-risk student alert drawer identifying stalled students with 1-click intervention message triggers.
+
+### `ModuleMasteryFunnel` (`src/components/analytics/ModuleMasteryFunnel.tsx`)
+* **Description**: Detailed module-by-module completion funnel with low-bandwidth telemetry.
+* **Features**:
+  - Module completion progress bars and drop-off rate calculation.
+  - 3G Audio-Only mode consumption percentage tracker per module.
+  - Average quiz mastery scores and watch time diagnostics.
+
+### `AnalyticsExportModal` (`src/components/analytics/AnalyticsExportModal.tsx`)
+* **Description**: High-fidelity export modal generating comprehensive data files for educators.
+* **Features**:
+  - **Arabic UTF-8 BOM CSV Export**: Formats CSV with `\uFEFF` prefix to prevent character corruption when opening in Microsoft Excel.
+  - **Structured JSON Export**: Complete hierarchical telemetry payload.
+  - Customizable export scope selection (Financial, Retention, Module Funnels).
 
 ---
 
@@ -181,7 +187,7 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 | **`Badge`** | Semantic status chips and gamified XP level badges. |
 | **`Button`** | Styled interactive buttons with variant styling (`default`, `outline`, `ghost`). |
 | **`Card`** | Base elevation container for posts, courses, and metrics. |
-| **`Dialog` & `AlertDialog`** | Modal overlays for post creation, payment verification, and checkout. |
+| **`Dialog` & `AlertDialog`** | Modal overlays for post creation, payment verification, checkout, and data export. |
 | **`Input` & `Textarea`** | RTL-styled form elements with active teal borders. |
 | **`Sonner` / `Toast`** | Lightweight interactive notifications. |
 | **`Tabs`** | Channel and view switchers. |

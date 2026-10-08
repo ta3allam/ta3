@@ -21,6 +21,10 @@ erDiagram
     PROFILES ||--o{ ORDERS : "places"
     COURSES ||--o{ ORDERS : "sold_in"
 
+    COURSES ||--o{ COHORT_RETENTION_METRICS : "tracks"
+    COURSES ||--o{ MODULE_TELEMETRY_LOGS : "monitors"
+    PROFILES ||--o{ ANALYTICS_REVENUE_LEDGER : "earns"
+
     PROFILES {
         uuid id PK
         string name
@@ -247,5 +251,47 @@ erDiagram
         json payload
         boolean is_dirty
         timestamp last_cached_at
+    }
+
+    ANALYTICS_REVENUE_LEDGER {
+        uuid id PK
+        uuid creator_id FK
+        decimal total_gmv
+        decimal creator_net_85
+        decimal platform_fee_15
+        decimal pending_payouts
+        decimal completed_payouts
+        json payment_gateways_breakdown
+        timestamp period_start
+        timestamp period_end
+    }
+
+    COHORT_RETENTION_METRICS {
+        uuid id PK
+        bigint course_id FK
+        string cohort_name
+        integer initial_size
+        numeric week1_rate
+        numeric week2_rate
+        numeric week3_rate
+        numeric week4_rate
+        numeric week5_rate
+        numeric week6_rate
+        numeric week7_rate
+        numeric week8_rate
+        timestamp tracked_at
+    }
+
+    MODULE_TELEMETRY_LOGS {
+        uuid id PK
+        bigint course_id FK
+        string module_id
+        integer enrolled_students
+        integer completed_students
+        numeric completion_rate
+        numeric avg_quiz_score
+        numeric audio_only_3g_percent
+        integer avg_watch_minutes
+        timestamp updated_at
     }
 ```
