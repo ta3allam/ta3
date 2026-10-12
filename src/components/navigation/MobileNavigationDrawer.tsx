@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { evaluateSwipeGesture } from "@/lib/motion";
 import {
   Sheet,
   SheetContent,
@@ -43,6 +44,36 @@ export function MobileNavigationDrawer({
 }: MobileNavigationDrawerProps) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!touchStartRef.current) return;
+    const touch = e.changedTouches[0];
+    if (!touch) return;
+
+    const result = evaluateSwipeGesture({
+      startX: touchStartRef.current.x,
+      startY: touchStartRef.current.y,
+      endX: touch.clientX,
+      endY: touch.clientY,
+      durationMs: Date.now() - touchStartRef.current.time,
+    });
+
+    touchStartRef.current = null;
+    if (result.shouldDismissRightDrawer) {
+      onOpenChange(false);
+    }
+  };
 
   const handleLogout = () => {
     onOpenChange(false);
@@ -104,6 +135,8 @@ export function MobileNavigationDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         className="w-[85vw] max-w-sm bg-[#002623]/95 backdrop-blur-xl text-[#EDEBE0] p-0 border-l border-[#428177]/40 shadow-2xl flex flex-col justify-between overflow-y-auto"
         dir="rtl"
       >
