@@ -14,11 +14,15 @@ import { getAssetUrl } from '@/lib/assetUtils';
 import { supabase } from '@/lib/supabase';
 
 import { PaymentVerificationQueue } from '@/components/admin/PaymentVerificationQueue';
+import { GoldenReleaseAuditModal } from '@/components/admin/GoldenReleaseAuditModal';
+import { Button } from '@/components/ui/button';
+import { ShieldCheck } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { courseData, addCourse } = useCourseData();
   const [users, setUsers] = useState<UserItem[]>([]);
   const [requests, setRequests] = useState<RequestItem[]>([]);
+  const [isAuditOpen, setIsAuditOpen] = useState(false);
 
   useEffect(() => {
     const savedUsers = localStorage.getItem('ta3_admin_users');
@@ -164,6 +168,14 @@ export default function AdminDashboard() {
                 إدارة الحسابات، ترقية صناع المحتوى، تعليق الحسابات، ومراقبة سجل العمليات الأمني.
               </p>
             </div>
+
+            <Button
+              onClick={() => setIsAuditOpen(true)}
+              className="bg-[#002623] hover:bg-[#054239] text-[#EDEBE0] font-bold text-xs gap-1.5 rounded-xl shadow-sm self-start md:self-auto"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>فحص الجاهزية الذهبية 🏆</span>
+            </Button>
           </div>
         </div>
 
@@ -223,6 +235,11 @@ export default function AdminDashboard() {
             <PlatformAuditLog />
           </div>
         </div>
+
+        <GoldenReleaseAuditModal
+          open={isAuditOpen}
+          onOpenChange={setIsAuditOpen}
+        />
       </div>
     </DashboardLayout>
   );
