@@ -1,5 +1,6 @@
 import React, { useState, useRef, TouchEvent } from "react";
-import { RefreshCw, ArrowDown } from "lucide-react";
+import { RefreshCw, ArrowDown, Sparkles } from "lucide-react";
+import { calculatePullResistance, SPRING_PRESETS } from "@/lib/motion";
 
 interface PullToRefreshContainerProps {
   onRefresh: () => Promise<void> | void;
@@ -36,9 +37,8 @@ export function PullToRefreshContainer({
     const distance = currentY - touchStartY.current;
 
     if (distance > 0) {
-      // Apply elastic resistance formula
-      const damping = 0.45;
-      const resistedDistance = Math.min(distance * damping, 100);
+      // Apply asymptotic elastic resistance formula
+      const resistedDistance = calculatePullResistance(distance, 110, 0.5);
       setPullDistance(resistedDistance);
     }
   };
@@ -62,6 +62,7 @@ export function PullToRefreshContainer({
   };
 
   const isTriggerReady = pullDistance >= pullThreshold;
+  const pullProgress = Math.min(1, pullDistance / pullThreshold);
 
   return (
     <div
@@ -71,14 +72,26 @@ export function PullToRefreshContainer({
       onTouchEnd={handleTouchEnd}
       className="relative w-full"
     >
-      {/* Pull Indicator */}
+      {/* Tactile Elastic Pull Indicator */}
       {(pullDistance > 0 || isRefreshing) && (
         <div
-          className="flex items-center justify-center w-full overflow-hidden transition-all duration-150"
-          style={{ height: `${pullDistance}px` }}
+          className="flex items-center justify-center w-full overflow-hidden"
+          style={{
+            height: `${pullDistance}px`,
+            transition: isRefreshing || pullDistance === 0 ? SPRING_PRESETS.bouncy.cssTransition : "none",
+          }}
           aria-live="polite"
         >
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EDEBE0] border border-[#428177]/30 shadow-xs text-xs font-bold text-[#002623]">
+          <div
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full backdrop-blur-md border shadow-sm text-xs font-bold transition-colors ${
+              isTriggerReady || isRefreshing
+                ? "bg-[#002623] text-[#EDEBE0] border-[#428177]"
+                : "bg-[#EDEBE0]/90 text-[#002623] border-[#428177]/30"
+            }`}
+            style={{
+              transform: `scale(${0.85 + pullProgress * 0.15})`,
+            }}
+          >
             {isRefreshing ? (
               <>
                 <RefreshCw className="w-3.5 h-3.5 text-[#428177] animate-spin" />
@@ -86,14 +99,14 @@ export function PullToRefreshContainer({
               </>
             ) : isTriggerReady ? (
               <>
-                <RefreshCw className="w-3.5 h-3.5 text-[#428177]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#988561] animate-pulse" />
                 <span>اترك للتحديث الآن</span>
               </>
             ) : (
               <>
                 <ArrowDown
                   className="w-3.5 h-3.5 text-[#428177] transition-transform duration-150"
-                  style={{ transform: `rotate(${Math.min((pullDistance / pullThreshold) * 180, 180)}deg)` }}
+                  style={{ transform: `rotate(${Math.min(pullProgress * 180, 180)}deg)` }}
                 />
                 <span>اسحب للأسفل للتحديث</span>
               </>

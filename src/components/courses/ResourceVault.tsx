@@ -14,7 +14,9 @@ import {
   Filter,
   PackageCheck,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  Loader2,
+  CheckCircle2
 } from "lucide-react";
 import MaterialViewerModal, { MaterialItem } from "@/components/courses/MaterialViewerModal";
 import { toast } from "sonner";
@@ -88,6 +90,8 @@ export function ResourceVault({
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [viewingMaterial, setViewingMaterial] = useState<MaterialItem | null>(null);
+  const [downloadStatus, setDownloadStatus] = useState<Record<string, 'downloading' | 'completed'>>({});
+  const [extraDownloads, setExtraDownloads] = useState<Record<string, number>>({});
 
   const filtered = resources.filter(res => {
     if (activeCategory !== "all" && res.category !== activeCategory) return false;
@@ -105,7 +109,14 @@ export function ResourceVault({
   };
 
   const handleDownloadSingle = (res: VaultResource) => {
+    if (downloadStatus[res.id] === 'downloading') return;
+    setDownloadStatus((prev) => ({ ...prev, [res.id]: 'downloading' }));
     toast.success(`جاري تحميل الملف: ${res.title}`);
+
+    setTimeout(() => {
+      setDownloadStatus((prev) => ({ ...prev, [res.id]: 'completed' }));
+      setExtraDownloads((prev) => ({ ...prev, [res.id]: (prev[res.id] || 0) + 1 }));
+    }, 550);
   };
 
   const handlePreview = (res: VaultResource) => {
@@ -217,7 +228,7 @@ export function ResourceVault({
                     <Badge variant="outline" className="border-[#988561]/40 text-[#002623] text-[10px] font-bold">
                       {res.fileSize}
                     </Badge>
-                    <span>{res.downloadsCount} تنزيل</span>
+                    <span className="tabular-nums">{res.downloadsCount + (extraDownloads[res.id] || 0)} تنزيل</span>
                   </div>
 
                   <div className="flex items-center gap-1.5">
@@ -234,10 +245,29 @@ export function ResourceVault({
                     <Button
                       size="sm"
                       onClick={() => handleDownloadSingle(res)}
-                      className="h-7 text-xs font-bold bg-[#428177] hover:bg-[#054239] text-white gap-1 rounded-xl"
+                      disabled={downloadStatus[res.id] === 'downloading'}
+                      className={`h-7 text-xs font-bold gap-1 rounded-xl transition-all ${
+                        downloadStatus[res.id] === 'completed'
+                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                          : 'bg-[#428177] hover:bg-[#054239] text-white'
+                      }`}
                     >
-                      <Download className="h-3.5 w-3.5" />
-                      تحميل
+                      {downloadStatus[res.id] === 'downloading' ? (
+                        <>
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          <span>جاري التنزيل...</span>
+                        </>
+                      ) : downloadStatus[res.id] === 'completed' ? (
+                        <>
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          <span>تم التنزيل</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download className="h-3.5 w-3.5" />
+                          <span>تحميل</span>
+                        </>
+                      )}
                     </Button>
                   </div>
                 </div>

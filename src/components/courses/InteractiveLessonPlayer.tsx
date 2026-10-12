@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,9 +15,11 @@ import {
   CheckCircle2,
   Maximize2,
   Zap,
-  Bookmark
+  Bookmark,
+  Keyboard
 } from "lucide-react";
 import { toast } from "sonner";
+import { parsePlayerShortcut, generateAudioWaveformBars } from "@/lib/motion";
 
 interface ChapterMarker {
   time: string;
@@ -56,8 +58,19 @@ export function InteractiveLessonPlayer({
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [isMuted, setIsMuted] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(35); // simulated percent
+  const [hoverProgress, setHoverProgress] = useState<number | null>(null);
   const [activeChapterIndex, setActiveChapterIndex] = useState(0);
+  const [waveTick, setWaveTick] = useState(0);
 
+  useEffect(() => {
+    if (!isPlaying || !isAudioOnly) return;
+    const interval = setInterval(() => {
+      setWaveTick((prev) => prev + 1);
+    }, 180);
+    return () => clearInterval(interval);
+  }, [isPlaying, isAudioOnly]);
+
+  const waveformBars = generateAudioWaveformBars(28, isPlaying, waveTick);
   const speedOptions = [0.75, 1, 1.25, 1.5, 2];
 
   const handleTogglePlay = () => {
@@ -95,8 +108,52 @@ export function InteractiveLessonPlayer({
     toast.success("تهانينا! تم إكمال الدرس وحساب نقاط الخبرة 🌟");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const targetTag = (e.target as HTMLElement)?.tagName?.toLowerCase();
+    const isInput = targetTag === "input" || targetTag === "textarea";
+    const command = parsePlayerShortcut(e.key, isInput);
+    if (command === "none") return;
+
+    e.preventDefault();
+    switch (command) {
+      case "toggle_play":
+        handleTogglePlay();
+        break;
+      case "seek_forward":
+        setCurrentProgress((prev) => Math.min(100, prev + 5));
+        break;
+      case "seek_backward":
+        setCurrentProgress((prev) => Math.max(0, prev - 5));
+        break;
+      case "toggle_mute":
+        setIsMuted((prev) => !prev);
+        break;
+      case "toggle_audio_mode":
+        handleToggleAudioMode();
+        break;
+      case "speed_up": {
+        const nextIdx = (speedOptions.indexOf(playbackSpeed) + 1) % speedOptions.length;
+        handleSpeedChange(speedOptions[nextIdx]);
+        break;
+      }
+    }
+  };
+
+  const formatPercentToTime = (pct: number) => {
+    const totalSec = Math.round((pct / 100) * 1300);
+    const mins = Math.floor(totalSec / 60).toString().padStart(2, "0");
+    const secs = (totalSec % 60).toString().padStart(2, "0");
+    return `${mins}:${secs}`;
+  };
+
   return (
-    <Card className="border border-[#428177]/40 bg-[#002623] text-white shadow-lg rounded-3xl overflow-hidden text-right" dir="rtl">
+    <Card
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      aria-label={`مشغل المحاضرة التفاعلي: ${title}`}
+      className="border border-[#428177]/40 bg-[#002623] text-white shadow-lg rounded-3xl overflow-hidden text-right focus:outline-none focus:ring-2 focus:ring-[#428177]"
+      dir="rtl"
+    >
       <CardContent className="p-0">
         {/* Top Control Bar: Audio Mode Banner & Speed Badges */}
         <div className="bg-[#054239] px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 border-b border-[#428177]/30 text-xs">
@@ -145,14 +202,35 @@ export function InteractiveLessonPlayer({
         {/* Video / Audio Canvas Display */}
         <div className="relative aspect-video w-full bg-[#161616] flex flex-col items-center justify-center p-6 text-center overflow-hidden">
           {isAudioOnly ? (
-            /* Low-Bandwidth Audio Mode Screen */
-            <div className="space-y-4 max-w-md animate-fadeIn">
-              <div className="w-20 h-20 rounded-full bg-[#428177]/20 border-2 border-[#428177] flex items-center justify-center mx-auto shadow-inner">
-                <Radio className={`w-10 h-10 text-[#EDEBE0] ${isPlaying ? 'animate-bounce' : ''}`} />
+            /* Low-Bandwidth Audio Mode Screen with 64kbps Reactive Waveform */
+            <div className="space-y-4 max-w-md w-full animate-fadeIn z-10">
+              <div className="w-16 h-16 rounded-full bg-[#428177]/20 border-2 border-[#428177] flex items-center justify-center mx-auto shadow-inner">
+                <Radio className={`w-8 h-8 text-[#EDEBE0] ${isPlaying ? 'animate-pulse' : ''}`} />
               </div>
+
+              {/* 28-Bar Audio-Reactive Pulse Visualizer */}
+              <div
+                aria-label="مخطط الموجات الصوتية التفاعلي 64kbps"
+                className="flex items-end justify-center gap-1 h-12 px-4 py-1 bg-[#002623]/70 rounded-2xl border border-[#428177]/30 mx-auto max-w-xs"
+              >
+                {waveformBars.map((heightPct, idx) => (
+                  <span
+                    key={idx}
+                    className={`w-1.5 rounded-full transition-all duration-150 ${
+                      isPlaying
+                        ? idx % 3 === 0
+                          ? "bg-[#988561]"
+                          : "bg-[#428177]"
+                        : "bg-[#428177]/40"
+                    }`}
+                    style={{ height: `${heightPct}%` }}
+                  />
+                ))}
+              </div>
+
               <div className="space-y-1">
                 <Badge className="bg-[#988561] text-[#002623] font-black text-xs">
-                  بث صوتي مخفف (Low-Bandwidth AAC)
+                  بث صوتي مخفف 64kbps (Low-Bandwidth AAC)
                 </Badge>
                 <h3 className="text-base font-extrabold text-white">{title}</h3>
                 <p className="text-xs text-[#EDEBE0]/70 font-medium">
@@ -182,16 +260,48 @@ export function InteractiveLessonPlayer({
 
         {/* Player Bottom Scrubber & Timers */}
         <div className="p-4 bg-[#054239]/80 space-y-3 border-t border-[#428177]/30">
-          {/* Progress Bar */}
-          <div className="space-y-1">
-            <div className="w-full bg-[#002623] h-2 rounded-full overflow-hidden cursor-pointer">
+          {/* Progress Bar with Visual Scrubber Tooltip */}
+          <div className="space-y-1.5">
+            <div
+              role="slider"
+              aria-label="شريط تقدم المحاضرة"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(currentProgress)}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const pct = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                setHoverProgress(pct);
+              }}
+              onMouseLeave={() => setHoverProgress(null)}
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const pct = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                setCurrentProgress(Math.round(pct));
+              }}
+              className="relative w-full bg-[#002623] h-2.5 rounded-full cursor-pointer group"
+            >
+              {hoverProgress !== null && (
+                <div
+                  className="absolute -top-8 -translate-x-1/2 px-2 py-0.5 rounded-md bg-[#161616] border border-[#428177]/50 text-[#EDEBE0] text-[10px] font-mono shadow-lg pointer-events-none z-20"
+                  style={{ left: `${hoverProgress}%` }}
+                >
+                  {formatPercentToTime(hoverProgress)} ({Math.round(hoverProgress)}%)
+                </div>
+              )}
               <div
-                className="bg-gradient-to-r from-[#428177] to-[#988561] h-full transition-all duration-300"
+                className="bg-gradient-to-r from-[#428177] to-[#988561] h-full rounded-full transition-all duration-200 relative"
                 style={{ width: `${currentProgress}%` }}
-              />
+              >
+                <span className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-[#428177] shadow opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
             </div>
             <div className="flex justify-between items-center text-[11px] text-[#EDEBE0]/70 font-mono" dir="ltr">
-              <span>07:35</span>
+              <span>{formatPercentToTime(currentProgress)}</span>
+              <span className="hidden sm:inline-flex items-center gap-1 text-[10px] text-[#EDEBE0]/60 font-sans" dir="rtl">
+                <Keyboard className="h-3 w-3 text-[#988561]" />
+                اختصارات: Space للتشغيل • الأسهم للتقديم • M للكتم • A للصوت
+              </span>
               <span>{duration}</span>
             </div>
           </div>

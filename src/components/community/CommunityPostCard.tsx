@@ -72,6 +72,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
   ]);
   const [newComment, setNewComment] = useState("");
   const [copiedCode, setCopiedCode] = useState(false);
+  const [isBursting, setIsBursting] = useState(false);
 
   const handleUpvoteToggle = () => {
     let nextCount = upvotes;
@@ -79,10 +80,13 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
       nextCount = Math.max(0, upvotes - 1);
       setUpvotes(nextCount);
       setHasUpvoted(false);
+      setIsBursting(false);
     } else {
       nextCount = upvotes + 1;
       setUpvotes(nextCount);
       setHasUpvoted(true);
+      setIsBursting(true);
+      setTimeout(() => setIsBursting(false), 950);
       toast.success("تم تأييد المنشور! حصل الكاتب على +5 XP وحصلت أنت على +1 XP 🌟");
     }
     onUpvote?.(post.id, nextCount);
@@ -211,20 +215,34 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
 
         {/* Action Buttons: Upvote / Comments / Share */}
         <div className="flex items-center justify-between pt-3 border-t border-[#428177]/15 text-xs text-[#3D3A3B] font-bold">
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant={hasUpvoted ? "default" : "outline"}
-              onClick={handleUpvoteToggle}
-              className={`gap-1.5 text-xs h-8 ${
-                hasUpvoted
-                  ? "bg-[#428177] text-white hover:bg-[#054239]"
-                  : "border-[#428177]/30 text-[#002623] hover:bg-[#EDEBE0]/40"
-              }`}
-            >
-              <ThumbsUp className={`h-3.5 w-3.5 ${hasUpvoted ? "fill-white" : ""}`} />
-              <span>{upvotes} تأييد (+5 XP)</span>
-            </Button>
+          <div className="flex items-center gap-2 relative">
+            <div className="relative">
+              {isBursting && (
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#988561] text-white text-[10px] font-black shadow-md animate-bounce pointer-events-none whitespace-nowrap z-10"
+                >
+                  +5 XP ✨
+                </span>
+              )}
+              <Button
+                size="sm"
+                variant={hasUpvoted ? "default" : "outline"}
+                onClick={handleUpvoteToggle}
+                className={`gap-1.5 text-xs h-8 transition-all duration-200 ${
+                  hasUpvoted
+                    ? "bg-[#428177] text-white hover:bg-[#054239] shadow-sm scale-[1.03]"
+                    : "border-[#428177]/30 text-[#002623] hover:bg-[#EDEBE0]/40"
+                }`}
+              >
+                <ThumbsUp
+                  className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                    hasUpvoted ? "fill-white scale-110 -rotate-6" : ""
+                  }`}
+                />
+                <span className="tabular-nums">{upvotes} تأييد (+5 XP)</span>
+              </Button>
+            </div>
 
             <Button
               size="sm"

@@ -68,6 +68,7 @@ export function LectureDetail({
   const [viewingMaterial, setViewingMaterial] = useState<MaterialItem | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
   const [notes, setNotes] = useState("");
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('saved');
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'player' | 'content' | 'notes'>('player');
 
@@ -79,8 +80,23 @@ export function LectureDetail({
 
       const storedNotes = localStorage.getItem(`lecture_notes_${lecture.id}`);
       setNotes(storedNotes || "");
+      setSaveStatus('saved');
     }
   }, [lecture]);
+
+  const handleNotesChange = (value: string) => {
+    setNotes(value);
+    setSaveStatus('saving');
+  };
+
+  useEffect(() => {
+    if (!lecture || saveStatus !== 'saving') return;
+    const timer = setTimeout(() => {
+      localStorage.setItem(`lecture_notes_${lecture.id}`, notes);
+      setSaveStatus('saved');
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [notes, saveStatus, lecture]);
 
   if (!lecture) {
     return (
@@ -330,16 +346,35 @@ export function LectureDetail({
             </div>
           </>
         ) : (
-          /* Notes Notepad Tab with Export Action */
+          /* Notes Notepad Tab with Auto-Save Pulse & Export Action */
           <div className="space-y-4">
             <div className="flex justify-between items-center text-xs">
               <span className="font-bold text-[#002623]">دفتر ملاحظات الطالب الذكي:</span>
-              <span className="text-muted-foreground text-[11px]">محفوظ تلقائياً في التخزين المحلي</span>
+              <span
+                aria-live="polite"
+                className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold transition-colors ${
+                  saveStatus === 'saving'
+                    ? 'bg-[#988561]/15 text-[#988561]'
+                    : 'bg-emerald-500/10 text-emerald-700'
+                }`}
+              >
+                {saveStatus === 'saving' ? (
+                  <>
+                    <Sparkles className="h-3 w-3 animate-spin text-[#988561]" />
+                    <span>جاري الحفظ التلقائي...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                    <span>محفوظ تلقائياً في التخزين المحلي</span>
+                  </>
+                )}
+              </span>
             </div>
 
             <Textarea
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={(e) => handleNotesChange(e.target.value)}
               placeholder="اكتب أفكارك وملاحظاتك ونقاط التركيز أثناء مشاهدة المحاضرة..."
               className="text-right text-xs bg-white border-[#428177]/30 rounded-2xl min-h-[140px] leading-relaxed"
             />
