@@ -19,7 +19,7 @@ import {
   Keyboard
 } from "lucide-react";
 import { toast } from "sonner";
-import { parsePlayerShortcut } from "@/lib/motion";
+import { parsePlayerShortcut, generateAudioWaveformBars } from "@/lib/motion";
 
 interface ChapterMarker {
   time: string;
@@ -60,7 +60,17 @@ export function InteractiveLessonPlayer({
   const [currentProgress, setCurrentProgress] = useState(35); // simulated percent
   const [hoverProgress, setHoverProgress] = useState<number | null>(null);
   const [activeChapterIndex, setActiveChapterIndex] = useState(0);
+  const [waveTick, setWaveTick] = useState(0);
 
+  useEffect(() => {
+    if (!isPlaying || !isAudioOnly) return;
+    const interval = setInterval(() => {
+      setWaveTick((prev) => prev + 1);
+    }, 180);
+    return () => clearInterval(interval);
+  }, [isPlaying, isAudioOnly]);
+
+  const waveformBars = generateAudioWaveformBars(28, isPlaying, waveTick);
   const speedOptions = [0.75, 1, 1.25, 1.5, 2];
 
   const handleTogglePlay = () => {
@@ -192,14 +202,35 @@ export function InteractiveLessonPlayer({
         {/* Video / Audio Canvas Display */}
         <div className="relative aspect-video w-full bg-[#161616] flex flex-col items-center justify-center p-6 text-center overflow-hidden">
           {isAudioOnly ? (
-            /* Low-Bandwidth Audio Mode Screen */
-            <div className="space-y-4 max-w-md animate-fadeIn">
-              <div className="w-20 h-20 rounded-full bg-[#428177]/20 border-2 border-[#428177] flex items-center justify-center mx-auto shadow-inner">
-                <Radio className={`w-10 h-10 text-[#EDEBE0] ${isPlaying ? 'animate-bounce' : ''}`} />
+            /* Low-Bandwidth Audio Mode Screen with 64kbps Reactive Waveform */
+            <div className="space-y-4 max-w-md w-full animate-fadeIn z-10">
+              <div className="w-16 h-16 rounded-full bg-[#428177]/20 border-2 border-[#428177] flex items-center justify-center mx-auto shadow-inner">
+                <Radio className={`w-8 h-8 text-[#EDEBE0] ${isPlaying ? 'animate-pulse' : ''}`} />
               </div>
+
+              {/* 28-Bar Audio-Reactive Pulse Visualizer */}
+              <div
+                aria-label="مخطط الموجات الصوتية التفاعلي 64kbps"
+                className="flex items-end justify-center gap-1 h-12 px-4 py-1 bg-[#002623]/70 rounded-2xl border border-[#428177]/30 mx-auto max-w-xs"
+              >
+                {waveformBars.map((heightPct, idx) => (
+                  <span
+                    key={idx}
+                    className={`w-1.5 rounded-full transition-all duration-150 ${
+                      isPlaying
+                        ? idx % 3 === 0
+                          ? "bg-[#988561]"
+                          : "bg-[#428177]"
+                        : "bg-[#428177]/40"
+                    }`}
+                    style={{ height: `${heightPct}%` }}
+                  />
+                ))}
+              </div>
+
               <div className="space-y-1">
                 <Badge className="bg-[#988561] text-[#002623] font-black text-xs">
-                  بث صوتي مخفف (Low-Bandwidth AAC)
+                  بث صوتي مخفف 64kbps (Low-Bandwidth AAC)
                 </Badge>
                 <h3 className="text-base font-extrabold text-white">{title}</h3>
                 <p className="text-xs text-[#EDEBE0]/70 font-medium">
