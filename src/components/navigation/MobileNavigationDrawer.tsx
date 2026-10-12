@@ -104,12 +104,17 @@ export function MobileNavigationDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[85vw] max-w-sm bg-[#002623] text-[#EDEBE0] p-0 border-l border-[#428177]/30 flex flex-col justify-between overflow-y-auto"
+        className="w-[85vw] max-w-sm bg-[#002623]/95 backdrop-blur-xl text-[#EDEBE0] p-0 border-l border-[#428177]/40 shadow-2xl flex flex-col justify-between overflow-y-auto"
         dir="rtl"
       >
+        {/* Drawer Pull Indicator for Mobile */}
+        <div className="pt-2 pb-1 flex justify-center">
+          <div className="w-10 h-1 bg-[#428177]/40 rounded-full" />
+        </div>
+
         {/* Profile Header */}
         <div>
-          <div className="p-5 border-b border-[#428177]/25 bg-[#054239]/90">
+          <div className="p-5 border-b border-[#428177]/25 bg-[#054239]/80 backdrop-blur-md">
             <div className="flex items-center gap-3">
               <Avatar className="w-12 h-12 border-2 border-[#428177] shadow-sm">
                 <AvatarImage src={user?.avatar} alt={user?.name || "المستخدم"} />
