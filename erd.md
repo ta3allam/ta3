@@ -294,4 +294,16 @@ erDiagram
         integer avg_watch_minutes
         timestamp updated_at
     }
+
+    SYSTEM_HEALTH_LOGS {
+        uuid id PK
+        string release_version
+        string overall_status
+        integer health_score
+        integer passed_checks_count
+        integer total_checks_count
+        boolean zero_ai_operational_cost
+        json checks_breakdown
+        timestamp executed_at
+    }
 ```

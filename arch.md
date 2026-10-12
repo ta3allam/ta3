@@ -261,6 +261,44 @@ graph TD
 
 ---
 
+### 8. System Health Diagnostics & Golden Release Pre-Flight Architecture
+
+```mermaid
+graph TD
+    subgraph HealthEngine [" 🛡️ systemHealthEngine.ts "]
+        RoleChk["1. 3-Tier Defensive Role Isolation Check"]
+        CommChk["2. Skool Feed & XP Gamification Engine Check"]
+        StreamChk["3. 64kbps Low-Bandwidth Audio & Vault Check"]
+        MarketChk["4. Marketplace & Affiliate Coupon Engine Check"]
+        LevantChk["5. Levant Cashflow (ShamCash, Hawala) 85/15 Split Check"]
+        CalChk["6. RFC 5545 iCal & Google Calendar Sync Check"]
+        MobileChk["7. Mobile Drawer & Elastic Touch Gestures Check"]
+        ExportChk["8. Arabic UTF-8 BOM CSV Export Check"]
+        AiZeroChk["9. Zero AI Cloud Token Cost Architecture Check ($0.00)"]
+    end
+
+    subgraph AuditUI [" 🖥️ Administrative Audit UI "]
+        AuditModal["🛡️ GoldenReleaseAuditModal.tsx<br/>• Real-time latency benchmark<br/>• 100% Health score verification<br/>• Instant pre-flight diagnostic trigger"]
+        AdminDash["⚙️ AdminDashboard.tsx"]
+        TeacherDash["👨‍🏫 TeacherDashboard.tsx"]
+    end
+
+    RoleChk --> AuditModal
+    CommChk --> AuditModal
+    StreamChk --> AuditModal
+    MarketChk --> AuditModal
+    LevantChk --> AuditModal
+    CalChk --> AuditModal
+    MobileChk --> AuditModal
+    ExportChk --> AuditModal
+    AiZeroChk --> AuditModal
+
+    AdminDash -->|Launch Pre-Flight Audit| AuditModal
+    TeacherDash -->|Launch Pre-Flight Audit| AuditModal
+```
+
+---
+
 ## 🎨 Brand Design Tokens (Strictly Preserved)
 - **Primary**:
   - `Mountain Teal`: `#428177`
@@ -273,3 +311,4 @@ graph TD
   - `Golden Wheat`: `#988561`
   - `Antique Sand`: `#B9A779`
 - **Typography**: Native Arabic RTL, Standard Arabic Numerals (1, 2, 3, 4, 5, 6, 7, 8, 9, 0).
+
