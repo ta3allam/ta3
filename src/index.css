@@ -55,10 +55,23 @@ All colors MUST be HSL.
     --sidebar-border: 44 20% 85%;
     --sidebar-ring: 177 100% 20%;
 
-    /* Extras */
+    /* Extras & Elevated Surface Tokens */
     --gradient-primary: linear-gradient(135deg, hsl(177 100% 20%), hsl(172 80% 32%));
     --shadow-elev: 0 10px 30px -12px hsl(var(--primary) / 0.35);
+    --shadow-glass: 0 8px 32px 0 rgba(0, 38, 35, 0.08);
     --transition-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --spring-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Glassmorphic Compositor Tokens */
+    --surface-glass: 0 0% 100% / 0.75;
+    --surface-glass-border: 44 20% 85% / 0.65;
+    --surface-elevated: 0 0% 100%;
+
+    /* Luxury & Creator Accents */
+    --luxury-gold: 41 23% 49%;
+    --luxury-gold-foreground: 40 20% 98%;
+    --luxury-gold-glow: 41 40% 60% / 0.25;
   }
 
   .dark {
@@ -104,6 +117,17 @@ All colors MUST be HSL.
     --sidebar-ring: 177 80% 30%;
 
     --gradient-primary: linear-gradient(135deg, hsl(177 80% 30%), hsl(172 60% 40%));
+    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+
+    /* Glassmorphic Compositor Tokens - Dark */
+    --surface-glass: 170 33% 10% / 0.75;
+    --surface-glass-border: 170 33% 25% / 0.55;
+    --surface-elevated: 170 33% 12%;
+
+    /* Luxury & Creator Accents - Dark */
+    --luxury-gold: 41 28% 58%;
+    --luxury-gold-foreground: 170 33% 7%;
+    --luxury-gold-glow: 41 40% 60% / 0.35;
   }
 
   * {
@@ -111,7 +135,15 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-arabic antialiased;
+    @apply bg-background text-foreground font-arabic antialiased selection:bg-primary/20 selection:text-primary;
+    font-feature-settings: "tnum" 1, "cv01" 1, "cv02" 1;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.35;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -122,6 +154,29 @@ All colors MUST be HSL.
 
   .shadow-elev {
     box-shadow: var(--shadow-elev);
+  }
+
+  .shadow-glass {
+    box-shadow: var(--shadow-glass);
+  }
+
+  .bg-surface-glass {
+    background-color: hsl(var(--surface-glass));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .border-surface-glass {
+    border-color: hsl(var(--surface-glass-border));
+  }
+
+  .text-luxury-gold {
+    color: hsl(var(--luxury-gold));
+  }
+
+  .bg-luxury-gold {
+    background-color: hsl(var(--luxury-gold));
+    color: hsl(var(--luxury-gold-foreground));
   }
 }
 
