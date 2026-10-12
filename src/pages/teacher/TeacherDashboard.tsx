@@ -1,15 +1,16 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { CourseCard } from "@/components/student/CourseCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Clock, BookOpen, FileCheck, Users, AlertCircle, ArrowLeft } from "lucide-react";
+import { Sparkles, Clock, BookOpen, FileCheck, Users, AlertCircle, ArrowLeft, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourseData } from "@/contexts/CourseContext";
 import { getAssetUrl } from "@/lib/assetUtils";
 import { Link } from "react-router-dom";
 import { PaymentVerificationQueue } from "@/components/admin/PaymentVerificationQueue";
+import { GoldenReleaseAuditModal } from "@/components/admin/GoldenReleaseAuditModal";
 
 const officialCourseColors = [
   "bg-[#428177]", // Mountain Teal
@@ -30,6 +31,7 @@ function formatStandardDate(date: Date): string {
 export default function TeacherDashboard() {
   const { user } = useAuth();
   const { courseData } = useCourseData();
+  const [isAuditOpen, setIsAuditOpen] = useState(false);
 
   const myCourses = useMemo(() => {
     if (!user || user.role !== 'teacher') return [];
@@ -103,8 +105,16 @@ export default function TeacherDashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-3 rounded-xl border border-[#428177]/30 text-xs font-bold text-[#002623] shadow-sm">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Button
+              onClick={() => setIsAuditOpen(true)}
+              className="bg-[#002623] hover:bg-[#054239] text-[#EDEBE0] font-bold text-xs gap-1.5 rounded-xl shadow-sm"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>فحص الجاهزية الذهبية 🏆</span>
+            </Button>
+
+            <div className="hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-xl border border-[#428177]/30 text-xs font-bold text-[#002623] shadow-sm">
               <Clock className="w-4 h-4 text-[#428177]" />
               <span>اليوم: {formatStandardDate(new Date())}</span>
             </div>
@@ -242,6 +252,11 @@ export default function TeacherDashboard() {
             <PaymentVerificationQueue verifierRole="teacher" />
           </CardContent>
         </Card>
+
+        <GoldenReleaseAuditModal
+          open={isAuditOpen}
+          onOpenChange={setIsAuditOpen}
+        />
       </div>
     </DashboardLayout>
   );
