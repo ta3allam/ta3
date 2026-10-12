@@ -59,11 +59,11 @@ export function MobileBottomNav({ onOpenDrawer, hasLiveSession = false }: Mobile
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#002623]/95 backdrop-blur-lg border-t border-[#428177]/30 pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-4px_20px_rgba(0,0,0,0.25)]"
+      className="md:hidden fixed bottom-3 left-3 right-3 z-40 bg-[#002623]/92 backdrop-blur-xl border border-[#428177]/40 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.35)] pb-[env(safe-area-inset-bottom,0px)] transition-all"
       dir="rtl"
       aria-label="التنقل السريع للهاتف المحمول"
     >
-      <div className="grid grid-cols-5 items-center h-16 px-1">
+      <div className="grid grid-cols-5 items-center h-15 px-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.exact
