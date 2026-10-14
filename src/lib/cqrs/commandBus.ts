@@ -149,3 +149,28 @@ export function createDomainEvent<TType extends string, TPayload>(
     correlationId,
   };
 }
+
+/**
+ * Convenience singletons for fluent command dispatching and event publishing.
+ */
+export const commandBus = {
+  register: <TResult = any>(type: string, handler: (payload: any) => Promise<TResult> | TResult) => {
+    return CommandBus.register(type, (cmd) => handler(cmd.payload));
+  },
+  dispatch: async <TResult = any>(type: string, payload: any): Promise<TResult> => {
+    return CommandBus.execute(createCommand(type, payload));
+  },
+  execute: CommandBus.execute.bind(CommandBus),
+  clear: CommandBus.clear.bind(CommandBus),
+};
+
+export const eventBus = {
+  subscribe: (type: string, handler: (payload: any) => Promise<void> | void) => {
+    return EventBus.subscribe(type, (evt) => handler(evt.payload));
+  },
+  publish: async (type: string, payload: any, correlationId?: string): Promise<void> => {
+    return EventBus.publish(createDomainEvent(type, payload, correlationId));
+  },
+  getHistory: EventBus.getHistory.bind(EventBus),
+  clear: EventBus.clear.bind(EventBus),
+};
