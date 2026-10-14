@@ -3,6 +3,13 @@ import { CourseData, Announcement, Lecture, CourseEvent, Assignment, Submission 
 import { MockDataEngine } from '@/lib/MockDataEngine';
 import { PricingType } from '@/types/pricing';
 
+export interface OptimisticMutationOptions<T> {
+  optimisticUpdate: (prev: CourseData) => CourseData;
+  remoteMutation: () => Promise<T>;
+  onSuccess?: (result: T) => void;
+  onError?: (error: unknown, rollbackSnapshot: CourseData) => void;
+}
+
 interface CourseContextType {
   courseData: CourseData;
   addAnnouncement: (courseId: number, announcement: Omit<Announcement, 'id'>) => void;
@@ -30,6 +37,7 @@ interface CourseContextType {
   addSubmission: (courseId: number, submission: Omit<Submission, 'id'>) => void;
   gradeSubmission: (courseId: number, submissionId: number, grade: number, feedback?: string) => void;
   updateCoursePricing: (courseId: number, config: { pricingType: PricingType; priceCents: number; currency: string }) => void;
+  executeOptimisticMutation: <T>(options: OptimisticMutationOptions<T>) => Promise<T>;
 }
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
@@ -316,6 +324,26 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const executeOptimisticMutation = useCallback(async <T,>(options: OptimisticMutationOptions<T>): Promise<T> => {
+    let rollbackSnapshot: CourseData = {};
+    setCourseData((prev) => {
+      // Capture shallow-cloned course dictionary for zero-jank rollback
+      rollbackSnapshot = { ...prev };
+      return options.optimisticUpdate(prev);
+    });
+
+    try {
+      const result = await options.remoteMutation();
+      options.onSuccess?.(result);
+      return result;
+    } catch (error) {
+      // Immediate automatic rollback to captured snapshot
+      setCourseData(rollbackSnapshot);
+      options.onError?.(error, rollbackSnapshot);
+      throw error;
+    }
+  }, []);
+
   const value = useMemo(
     () => ({
       courseData,
@@ -335,6 +363,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
       addSubmission,
       gradeSubmission,
       updateCoursePricing,
+      executeOptimisticMutation,
     }),
     [
       courseData,
@@ -354,6 +383,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
       addSubmission,
       gradeSubmission,
       updateCoursePricing,
+      executeOptimisticMutation,
     ]
   );
 
@@ -366,4 +396,32 @@ export function useCourseData() {
     throw new Error('useCourseData must be used within a CourseProvider');
   }
   return context;
+}
+
+/**
+ * Pure optimistic rollback executor for CQRS state transitions.
+ * Automatically captures snapshot, applies optimistic state, and rolls back atomically on failure.
+ */
+export async function applyOptimisticUpdateWithRollback<TState, TResult>(
+  getState: () => TState,
+  setState: (updater: (prev: TState) => TState) => void,
+  cloneState: (state: TState) => TState,
+  options: {
+    optimisticUpdate: (prev: TState) => TState;
+    remoteMutation: () => Promise<TResult>;
+    onSuccess?: (result: TResult) => void;
+    onError?: (error: unknown, snapshot: TState) => void;
+  }
+): Promise<TResult> {
+  const snapshot = cloneState(getState());
+  setState(options.optimisticUpdate);
+  try {
+    const result = await options.remoteMutation();
+    options.onSuccess?.(result);
+    return result;
+  } catch (error) {
+    setState(() => snapshot);
+    options.onError?.(error, snapshot);
+    throw error;
+  }
 }

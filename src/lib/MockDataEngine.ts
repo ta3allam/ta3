@@ -1,16 +1,57 @@
 import coursesJson from '@/pages/courses/courses.json';
-import { CourseData, Announcement, Lecture, CourseEvent, Assignment, Submission } from '@/pages/courses/types';
+import { CourseData, Announcement, Lecture, CourseEvent, Assignment, Submission, Course } from '@/pages/courses/types';
+import { CommandBus, EventBus, createDomainEvent } from '@/lib/cqrs/commandBus';
 
 const STORAGE_KEY = 'ta3_courses';
 
 type DataChangeListener = (data: CourseData) => void;
 
+export const COURSE_COMMANDS = {
+  ADD_LECTURE: 'course:add_lecture',
+  ADD_ANNOUNCEMENT: 'course:add_announcement',
+  ADD_ASSIGNMENT: 'course:add_assignment',
+  ADD_SUBMISSION: 'course:add_submission',
+} as const;
+
+export const COURSE_EVENTS = {
+  LECTURE_ADDED: 'course:lecture_added',
+  ANNOUNCEMENT_ADDED: 'course:announcement_added',
+  ASSIGNMENT_ADDED: 'course:assignment_added',
+  SUBMISSION_ADDED: 'course:submission_added',
+  STATE_PERSISTED: 'course:state_persisted',
+} as const;
+
 /**
  * MockDataEngine encapsulates local persistence, reactive event dispatching,
- * and CRUD logic for courses, lectures, announcements, assignments, and submissions.
+ * and CQRS command/query logic for courses, lectures, announcements, assignments, and submissions.
  */
 export class MockDataEngine {
   private static listeners: Set<DataChangeListener> = new Set();
+  private static initialized = false;
+
+  public static initialize(): void {
+    if (this.initialized) return;
+
+    CommandBus.register(COURSE_COMMANDS.ADD_LECTURE, async (cmd) => {
+      const { courseId, lecture } = cmd.payload;
+      const current = this.loadCourses();
+      return this.addLecture(current, courseId, lecture);
+    });
+
+    CommandBus.register(COURSE_COMMANDS.ADD_ANNOUNCEMENT, async (cmd) => {
+      const { courseId, announcement } = cmd.payload;
+      const current = this.loadCourses();
+      return this.addAnnouncement(current, courseId, announcement);
+    });
+
+    CommandBus.register(COURSE_COMMANDS.ADD_ASSIGNMENT, async (cmd) => {
+      const { courseId, assignment } = cmd.payload;
+      const current = this.loadCourses();
+      return this.addAssignment(current, courseId, assignment);
+    });
+
+    this.initialized = true;
+  }
 
   public static loadCourses(): CourseData {
     try {
@@ -35,6 +76,7 @@ export class MockDataEngine {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       this.notify(data);
+      EventBus.publish(createDomainEvent(COURSE_EVENTS.STATE_PERSISTED, { timestamp: new Date().toISOString() }));
     } catch (e) {
       console.error('MockDataEngine: Failed to save courses to localStorage', e);
     }
