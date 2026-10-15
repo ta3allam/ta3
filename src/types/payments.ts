@@ -34,6 +34,7 @@ export interface PaymentReceipt {
   verifiedBy?: string;
   creatorEarnings: number;
   platformFee: number;
+  checksum?: string;
 }
 
 export interface PaymentMethodConfig {
