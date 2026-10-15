@@ -189,27 +189,34 @@ export const MOCK_USERS: Record<string, User> = {
   },
 };
 
+// In-memory fallback for headless/SSR test runners
+let memoryUser: User | null = null;
+
 /**
  * MockAuthEngine provides persistent, safe local storage authentication logic.
  */
 export class MockAuthEngine {
   public static getSavedUser(): User | null {
     try {
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return memoryUser;
+      }
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
+      if (!raw) return memoryUser;
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object' && parsed.role && parsed.name) {
         return parsed as User;
       }
-      return null;
-    } catch (e) {
-      console.error('MockAuthEngine: Error loading user session from localStorage', e);
-      return null;
+      return memoryUser;
+    } catch {
+      return memoryUser;
     }
   }
 
   public static saveUser(user: User | null): void {
+    memoryUser = user;
     try {
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
       if (!user) {
         localStorage.removeItem(STORAGE_KEY);
       } else {
