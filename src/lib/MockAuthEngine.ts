@@ -1,4 +1,6 @@
 import { User } from '@/contexts/AuthContext';
+import { rateLimiter } from './security/rateLimiter';
+import { auditLogger } from './security/auditLogger';
 
 const STORAGE_KEY = 'ta3_user';
 
@@ -187,27 +189,34 @@ export const MOCK_USERS: Record<string, User> = {
   },
 };
 
+// In-memory fallback for headless/SSR test runners
+let memoryUser: User | null = null;
+
 /**
  * MockAuthEngine provides persistent, safe local storage authentication logic.
  */
 export class MockAuthEngine {
   public static getSavedUser(): User | null {
     try {
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+        return memoryUser;
+      }
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
+      if (!raw) return memoryUser;
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object' && parsed.role && parsed.name) {
         return parsed as User;
       }
-      return null;
-    } catch (e) {
-      console.error('MockAuthEngine: Error loading user session from localStorage', e);
-      return null;
+      return memoryUser;
+    } catch {
+      return memoryUser;
     }
   }
 
   public static saveUser(user: User | null): void {
+    memoryUser = user;
     try {
+      if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
       if (!user) {
         localStorage.removeItem(STORAGE_KEY);
       } else {
@@ -219,13 +228,57 @@ export class MockAuthEngine {
   }
 
   public static authenticateMock(username: string, password?: string): User | null {
-    if (password && password !== '123') return null;
     const userKey = username.toLowerCase().trim();
+
+    // 1. Check brute-force lockout status
+    const status = rateLimiter.check('auth:login', userKey);
+    if (status.locked) {
+      auditLogger.log('SECURITY_LOCKOUT_ENFORCED', 'warn', {
+        username: userKey,
+        lockoutRemainingMs: status.lockoutRemainingMs,
+      });
+      throw new Error(
+        `تم قفل الحساب مؤقتاً لحمايته من محاولات التخمين. يرجى الانتظار ${Math.ceil(status.lockoutRemainingMs / 1000)} ثانية.`
+      );
+    }
+
+    // 2. Consume rate limit token
+    const isAllowed = rateLimiter.consume('auth:login', userKey);
+    if (!isAllowed) {
+      auditLogger.log('RATE_LIMIT_TRIGGERED', 'warn', { username: userKey, action: 'auth:login' });
+      throw new Error('تجاوزت الحد الأقصى لمحاولات تسجيل الدخول. يرجى الانتظار دقيقة قبل المحاولة.');
+    }
+
+    // 3. Password credential verification
+    if (password && password !== '123') {
+      const failStatus = rateLimiter.recordFailure('auth:login', userKey);
+      auditLogger.log('AUTH_LOGIN_FAILURE', 'warn', {
+        username: userKey,
+        reason: 'incorrect_password',
+        locked: failStatus.locked,
+      });
+      return null;
+    }
+
     const user = MOCK_USERS[userKey];
     if (user) {
+      rateLimiter.reset('auth:login', userKey);
       this.saveUser(user);
+      auditLogger.log(
+        'AUTH_LOGIN_SUCCESS',
+        'info',
+        { userId: user.id, username: user.username, role: user.role },
+        { userId: user.id, role: user.role }
+      );
       return user;
     }
+
+    const failStatus = rateLimiter.recordFailure('auth:login', userKey);
+    auditLogger.log('AUTH_LOGIN_FAILURE', 'warn', {
+      username: userKey,
+      reason: 'user_not_found',
+      locked: failStatus.locked,
+    });
     return null;
   }
 
@@ -247,11 +300,26 @@ export class MockAuthEngine {
   public static terminateSession(sessionId: string): User | null {
     const currentUser = this.getSavedUser();
     if (!currentUser || !currentUser.activeSessions) return null;
+    auditLogger.log(
+      'SESSION_TERMINATED',
+      'info',
+      { sessionId, userId: currentUser.id },
+      { userId: currentUser.id, role: currentUser.role }
+    );
     const filtered = currentUser.activeSessions.filter((s) => s.id !== sessionId);
     return this.updateUserProfile({ activeSessions: filtered });
   }
 
   public static clearSession(): void {
+    const currentUser = this.getSavedUser();
+    if (currentUser) {
+      auditLogger.log(
+        'AUTH_LOGOUT',
+        'info',
+        { userId: currentUser.id },
+        { userId: currentUser.id, role: currentUser.role }
+      );
+    }
     this.saveUser(null);
   }
 }

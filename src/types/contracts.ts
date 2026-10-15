@@ -49,6 +49,7 @@ export const PaymentReceiptContractSchema = z.object({
   verifiedBy: z.string().optional(),
   creatorEarnings: z.number().nonnegative('أرباح المنشئ يجب ألا تكون سالبة'),
   platformFee: z.number().nonnegative('عمولة المنصة يجب ألا تكون سالبة'),
+  checksum: z.string().optional(),
 });
 
 export type ValidatedPaymentReceipt = z.infer<typeof PaymentReceiptContractSchema>;
