@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 import { UserProfile, UserRole, Certificate, UserSession, UserStats } from '../types/user';
 import { MockAuthEngine } from '../lib/MockAuthEngine';
 
