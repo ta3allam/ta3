@@ -9,7 +9,6 @@ import RequireAuth from "@/components/layout/RequireAuth";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CourseProvider } from "./contexts/CourseContext";
 import BackgroundDecor from "@/components/layout/BackgroundDecor";
-import { OfflineBanner } from "@/components/layout/OfflineBanner";
 
 // Lazy load pages for better performance
 const Login = lazy(() => import("./pages/Login"));
@@ -45,7 +44,6 @@ const App = () => (
       <AuthProvider>
         <CourseProvider>
           <TooltipProvider>
-            <OfflineBanner />
             <BackgroundDecor />
             <div className="relative z-10 bg-transparent">
               <Toaster />
