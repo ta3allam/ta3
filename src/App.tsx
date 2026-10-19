@@ -1,4 +1,3 @@
-import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -46,7 +45,6 @@ const App = () => (
           <TooltipProvider>
             <BackgroundDecor />
             <div className="relative z-10 bg-transparent">
-              <Toaster />
               <Sonner />
               <BrowserRouter basename={import.meta.env.BASE_URL}>
                 <Suspense fallback={<LoadingScreen />}>
