@@ -143,7 +143,8 @@ export function CheckoutDialog({
           }
         }
         toast.success(`تم التسجيل بنجاح في الدورة المجانية: ${course.name}`);
-        navigate(`/student/courses/${course.id}`);
+        const targetRoute = user?.role === 'teacher' ? `/teacher/courses/${course.id}` : `/student/courses/${course.id}`;
+        navigate(targetRoute);
       } else {
         // Paid manual receipt submission
         ReceiptStore.submitReceipt({

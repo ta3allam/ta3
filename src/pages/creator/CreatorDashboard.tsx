@@ -63,7 +63,7 @@ export default function CreatorDashboard() {
                 <span>إنشاء دورة جديدة 🚀</span>
               </Button>
 
-              <Link to="/teacher/analytics">
+              <Link to="/analytics">
                 <Button
                   variant="outline"
                   className="w-full sm:w-auto border-[#428177] text-[#054239] hover:bg-[#EDEBE0] font-bold text-xs gap-2 rounded-xl"
@@ -145,7 +145,7 @@ export default function CreatorDashboard() {
         <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden">
           <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10 flex flex-row items-center justify-between">
             <CardTitle className="text-lg font-bold text-[#002623]">إدارة الدورات والنشاط المالي</CardTitle>
-            <Link to="/teacher/analytics" className="text-xs font-bold text-[#428177] hover:underline flex items-center gap-1">
+            <Link to="/analytics" className="text-xs font-bold text-[#428177] hover:underline flex items-center gap-1">
               <span>عرض تفاصيل التحليلات والاحتفاظ</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
@@ -176,7 +176,7 @@ export default function CreatorDashboard() {
                           <span className="text-[#054239] font-extrabold">مجاني / مدفوع</span>
                         </div>
 
-                        <Link to={`/teacher/courses/${c.id}`}>
+                        <Link to={`/courses/${c.id}`}>
                           <Button size="sm" className="w-full bg-[#428177] hover:bg-[#054239] text-white font-bold gap-1 text-xs mt-2">
                             <Eye className="h-3.5 w-3.5" />
                             إدارة محتوى ومجتمع الدورة

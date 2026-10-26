@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { User, Shield, GraduationCap } from "lucide-react";
+import { User, Shield, GraduationCap, Sparkles } from "lucide-react";
 
 interface RoleQuickSelectorProps {
   onSelect: (username: string) => void;
@@ -25,6 +25,12 @@ export default function RoleQuickSelector({ onSelect }: RoleQuickSelectorProps) 
       icon: Shield,
       color: "hover:bg-neutral-500/10 hover:text-neutral-500 hover:border-neutral-500/30",
     },
+    {
+      id: "creator",
+      label: "صانع (Creator)",
+      icon: Sparkles,
+      color: "hover:bg-[#428177]/10 hover:text-[#428177] hover:border-[#428177]/30",
+    },
   ];
 
   return (
@@ -32,7 +38,7 @@ export default function RoleQuickSelector({ onSelect }: RoleQuickSelectorProps) 
       <p className="text-xs text-center text-muted-foreground font-medium">
         تسجيل دخول سريع للتجربة (المطورين):
       </p>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {roles.map((role) => {
           const Icon = role.icon;
           return (

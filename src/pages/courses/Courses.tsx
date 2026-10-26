@@ -482,7 +482,7 @@ export default function CourseDetail() {
                     <Download className="h-4 w-4" />
                     تحميل الخطة الدراسية (PDF)
                   </Button>
-                  <Button onClick={() => navigate('/contact')} size="sm" variant="outline" className="border-[#428177]/30 text-[#002623] font-bold gap-1.5 text-xs">
+                  <Button onClick={() => navigate(user?.role === 'teacher' ? `/teacher/courses/${course.id}/contact` : `/student/courses/${course.id}/contact`)} size="sm" variant="outline" className="border-[#428177]/30 text-[#002623] font-bold gap-1.5 text-xs">
                     <Mail className="h-4 w-4 text-[#428177]" />
                     تواصل مع أستاذ المادة
                   </Button>
