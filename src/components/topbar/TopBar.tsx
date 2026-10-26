@@ -58,7 +58,7 @@ export default function TopBar({ title, hideSidebarTrigger, onOpenMobileMenu }: 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    const targetRoute = user?.role === 'teacher' ? '/teacher' : user?.role === 'admin' ? '/admin' : '/student';
+    const targetRoute = user?.role === 'teacher' ? '/teacher' : user?.role === 'creator' ? '/creator' : user?.role === 'admin' ? '/admin' : '/student';
     navigate(`${targetRoute}?q=${encodeURIComponent(searchQuery)}`);
   };
 
@@ -223,7 +223,7 @@ export default function TopBar({ title, hideSidebarTrigger, onOpenMobileMenu }: 
             <SidebarTrigger className="order-2 text-[#EDEBE0] hover:bg-[#053833] hover:text-white rounded-xl h-9 w-9" />
           )}
           <NavLink
-            to={user?.role === 'admin' ? '/admin' : user?.role === 'teacher' ? '/teacher' : '/student'}
+            to={user?.role === 'admin' ? '/admin' : user?.role === 'creator' ? '/creator' : user?.role === 'teacher' ? '/teacher' : '/student'}
             className="text-lg font-extrabold flex items-center gap-2.5 transition-transform hover:scale-105"
           >
             <img

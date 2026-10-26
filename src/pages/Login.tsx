@@ -33,6 +33,7 @@ export default function Login() {
         if (user) {
             if (user.role === 'student') navigate('/student', { replace: true });
             else if (user.role === 'teacher') navigate('/teacher', { replace: true });
+            else if (user.role === 'creator') navigate('/creator', { replace: true });
             else if (user.role === 'admin') navigate('/admin', { replace: true });
         }
     }, [user, navigate]);
@@ -210,6 +211,7 @@ export default function Login() {
                                             <SelectContent dir="rtl">
                                                 <SelectItem value="student">🎓 طالب علم</SelectItem>
                                                 <SelectItem value="teacher">👨‍🏫 معلم مادة</SelectItem>
+                                                <SelectItem value="creator">✨ صانع محتوى / مدرب</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
