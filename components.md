@@ -190,6 +190,40 @@ This document catalogs all reusable UI primitives (`src/components/ui`), domain 
 
 ---
 
+## 🧭 Navigation Shells & Contextual Routing (Day 1 Overhaul)
+
+### `AppSidebar` (`src/components/topbar/AppSidebar.tsx`)
+* **Description**: Consolidated, dark forest green (`#002623`) sidebar featuring contextual course isolation and authentic role workspaces.
+* **Features**:
+  - **Pinned User Profile Header**: Prominently displays avatar with initials fallback, user name in crisp white, role badge, level indicator, and 1-click shortcut to `/profile`.
+  - **Contextual Course Isolation (Principle 1)**: Automatically detects when a user navigates into a course (`/courses/:id/*`), swapping global feeds for localized course sub-navigation (Home, Timeline, Groups, Discussion, Contact) and a quick return button to the user's role dashboard.
+  - **Role-Dedicated Menus**: Clean separation between Student, Teacher, Creator Studio, and Administrator workspaces.
+  - **Clean Aesthetic**: Completely removes redundant `"منصة تعلّـم"` text from the header.
+
+### `MobileBottomNav` (`src/components/navigation/MobileBottomNav.tsx`)
+* **Description**: One-thumb mobile bottom navigation bar ensuring high contrast and seamless accessibility on smartphones.
+* **Features**:
+  - **High-Contrast Theme**: Solid forest green background (`#002623`) with pure white icons and labels (eliminating low-contrast teal-on-green issues).
+  - **Role-Aware Dashboard Tab**: Center action dynamically resolves to `/student`, `/teacher`, `/creator`, or `/admin` with matching role icon.
+  - **Active State Indicator**: Glowing top indicator bar with smooth transitions.
+  - **Drawer Trigger**: "المزيد" button triggers the consolidated sliding navigation drawer.
+
+### `MobileNavigationDrawer` (`src/components/navigation/MobileNavigationDrawer.tsx`)
+* **Description**: Mobile sliding sheet drawer styled in matching deep forest green with touch gesture dismiss support.
+* **Features**:
+  - **Profile at Top**: Pinned profile header with role badge, level, and settings navigation.
+  - **Contextual Course Sub-Navigation**: Dynamically injects localized course navigation when browsing course materials on mobile.
+  - **Uncluttered Labeling**: Plain Arabic labels without English parenthetical clutter.
+
+### `TopBar` (`src/components/topbar/TopBar.tsx`)
+* **Description**: Global desktop and tablet header bar.
+* **Features**:
+  - **Prominent Role Icon**: Replaces verbose over-explaining text badges (e.g., `"طالب مسجل"`) with a bold, distinct role indicator icon.
+  - **Uncluttered Brand**: Clean brand logo presentation without redundant `"تعلّـم"` text duplicates.
+  - **Role-Aware Search & Routing**: Global search submission and logo click routing gracefully handle Creator, Teacher, Admin, and Student roles without 403 authorization bounces.
+
+---
+
 ## 🧩 Headless UI Primitives (`src/components/ui/`)
 
 | Component | Description |
