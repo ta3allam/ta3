@@ -62,13 +62,17 @@ const App = () => (
                       <Route path="/creator/payouts" element={<CreatorPayouts />} />
                     </Route>
 
-                    {/* Shared Community, Marketplace, Analytics, Cohorts & Profile Routes */}
+                    {/* Shared Community, Marketplace, Cohorts & Profile Routes */}
                     <Route element={<RequireAuth allowedRoles={['student', 'teacher', 'creator', 'admin']} />}>
-                      <Route path="/analytics" element={<CreatorAnalytics />} />
                       <Route path="/cohorts" element={<CohortEvents />} />
                       <Route path="/marketplace" element={<Marketplace />} />
                       <Route path="/community" element={<CommunityFeed />} />
                       <Route path="/profile" element={<UserProfilePage />} />
+                    </Route>
+
+                    {/* Analytics Route (Restricted from Students to Prevent Margin Leaks) */}
+                    <Route element={<RequireAuth allowedRoles={['teacher', 'creator', 'admin']} />}>
+                      <Route path="/analytics" element={<CreatorAnalytics />} />
                     </Route>
 
                     {/* Teacher Routes */}
@@ -78,6 +82,7 @@ const App = () => (
                       <Route path="/teacher/courses/:courseId/timeline" element={<CourseTimeline />} />
                       <Route path="/teacher/courses/:courseId/groups" element={<CourseGroups />} />
                       <Route path="/teacher/courses/:courseId/discussion" element={<CourseDiscussion />} />
+                      <Route path="/teacher/courses/:courseId/contact" element={<CourseContact />} />
                     </Route>
 
                     {/* Student Routes */}
