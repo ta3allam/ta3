@@ -7,8 +7,10 @@ import {
   BookOpen,
   Calendar,
   Menu,
+  Radio,
+  GraduationCap,
   Sparkles,
-  Radio
+  ShieldAlert,
 } from "lucide-react";
 
 interface MobileBottomNavProps {
@@ -27,7 +29,23 @@ export function MobileBottomNav({ onOpenDrawer, hasLiveSession = false }: Mobile
     return "/student";
   };
 
-  const dashboardLabel = user?.role === "admin" ? "الإشراف" : user?.role === "teacher" ? "تدريسي" : user?.role === "creator" ? "الاستوديو" : "مقرراتي";
+  const getDashboardIcon = () => {
+    if (user?.role === "admin") return ShieldAlert;
+    if (user?.role === "teacher") return GraduationCap;
+    if (user?.role === "creator") return Sparkles;
+    return BookOpen;
+  };
+
+  const dashboardLabel =
+    user?.role === "admin"
+      ? "الإشراف"
+      : user?.role === "teacher"
+      ? "تدريسي"
+      : user?.role === "creator"
+      ? "الاستوديو"
+      : "مقرراتي";
+
+  const DashboardIcon = getDashboardIcon();
 
   const navItems = [
     {
@@ -45,25 +63,25 @@ export function MobileBottomNav({ onOpenDrawer, hasLiveSession = false }: Mobile
     {
       to: getDashboardPath(),
       label: dashboardLabel,
-      icon: BookOpen,
+      icon: DashboardIcon,
       exact: true,
     },
     {
       to: "/cohorts",
       label: "الفعاليات",
       icon: hasLiveSession ? Radio : Calendar,
-      badge: hasLiveSession ? "لايف" : undefined,
+      badge: hasLiveSession ? "مباشر" : undefined,
       exact: false,
     },
   ];
 
   return (
     <nav
-      className="md:hidden fixed bottom-3 left-3 right-3 z-40 bg-[#002623]/92 backdrop-blur-xl border border-[#428177]/40 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.35)] pb-[env(safe-area-inset-bottom,0px)] transition-all"
+      className="md:hidden fixed bottom-3 left-3 right-3 z-50 bg-[#002623] border border-[#428177]/60 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] pb-[env(safe-area-inset-bottom,0px)]"
       dir="rtl"
-      aria-label="التنقل السريع للهاتف المحمول"
+      aria-label="شريط التنقل السفلي"
     >
-      <div className="grid grid-cols-5 items-center h-15 px-2">
+      <div className="grid grid-cols-5 items-center h-16 px-1">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = item.exact
@@ -74,21 +92,21 @@ export function MobileBottomNav({ onOpenDrawer, hasLiveSession = false }: Mobile
             <NavLink
               key={item.to}
               to={item.to}
-              className={`flex flex-col items-center justify-center h-full relative transition-all duration-150 ${
+              className={`flex flex-col items-center justify-center h-full relative transition-all duration-200 ${
                 isActive
-                  ? "text-[#EDEBE0]"
-                  : "text-[#EDEBE0]/55 hover:text-[#EDEBE0]/80"
+                  ? "text-white font-extrabold"
+                  : "text-white/70 hover:text-white font-semibold"
               }`}
             >
               {/* Active Indicator Bar */}
               {isActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-[#428177] rounded-b-full shadow-[0_0_8px_#428177]" />
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-white rounded-b-full shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
               )}
 
               <div className="relative">
                 <Icon
-                  className={`w-5 h-5 transition-transform duration-150 ${
-                    isActive ? "scale-110 text-[#428177]" : ""
+                  className={`w-5 h-5 transition-transform duration-200 ${
+                    isActive ? "scale-110 text-white" : "text-white/80"
                   }`}
                 />
                 {item.badge && (
@@ -99,8 +117,8 @@ export function MobileBottomNav({ onOpenDrawer, hasLiveSession = false }: Mobile
               </div>
 
               <span
-                className={`text-[11px] mt-1 font-bold truncate max-w-[64px] ${
-                  isActive ? "text-[#EDEBE0]" : ""
+                className={`text-[11px] mt-1 truncate max-w-[64px] ${
+                  isActive ? "text-white font-black" : "text-white/75"
                 }`}
               >
                 {item.label}
@@ -109,15 +127,15 @@ export function MobileBottomNav({ onOpenDrawer, hasLiveSession = false }: Mobile
           );
         })}
 
-        {/* 5th Action: Open Full Drawer Menu */}
+        {/* 5th Action: Open Consolidated Green Menu */}
         <button
           type="button"
           onClick={onOpenDrawer}
-          className="flex flex-col items-center justify-center h-full text-[#EDEBE0]/55 hover:text-[#EDEBE0] transition-colors"
-          aria-label="فتح القائمة الرئيسية"
+          className="flex flex-col items-center justify-center h-full text-white/70 hover:text-white transition-colors"
+          aria-label="فتح القائمة الكاملة"
         >
-          <Menu className="w-5 h-5" />
-          <span className="text-[11px] mt-1 font-bold">المزيد</span>
+          <Menu className="w-5 h-5 text-white/80" />
+          <span className="text-[11px] mt-1 font-bold text-white/75">المزيد</span>
         </button>
       </div>
     </nav>
