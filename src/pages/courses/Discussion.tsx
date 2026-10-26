@@ -168,7 +168,7 @@ export default function CourseDiscussion() {
         );
     }
 
-    const backPath = user?.role === 'teacher' ? `/teacher/courses/${courseId}` : `/student/courses/${courseId}`;
+    const backPath = user?.role === 'teacher' ? `/teacher/courses/${courseId}` : user?.role === 'admin' ? '/admin' : user?.role === 'creator' ? '/creator' : `/student/courses/${courseId}`;
 
     return (
         <DashboardLayout title={`منتدى النقاش - ${course.name}`}>

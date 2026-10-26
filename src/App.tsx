@@ -96,7 +96,7 @@ const App = () => (
                     </Route>
 
                     {/* Shared Courses Routes */}
-                    <Route element={<RequireAuth allowedRoles={['student', 'teacher', 'admin']} />}>
+                    <Route element={<RequireAuth allowedRoles={['student', 'teacher', 'creator', 'admin']} />}>
                       <Route path="/courses" element={<Navigate to="/" replace />} />
                       <Route path="/courses/:courseId/*" element={<CoursesPage />} />
                     </Route>

@@ -226,7 +226,7 @@ export default function CourseTimeline() {
     );
   }
 
-  const backPath = user?.role === 'teacher' ? `/teacher/courses/${courseId}` : `/student/courses/${courseId}`;
+  const backPath = user?.role === 'teacher' ? `/teacher/courses/${courseId}` : user?.role === 'admin' ? '/admin' : user?.role === 'creator' ? '/creator' : `/student/courses/${courseId}`;
 
   const getTypeBadge = (type: string) => {
     switch (type) {

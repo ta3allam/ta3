@@ -132,7 +132,7 @@ export default function CourseContact() {
     );
   }
 
-  const backPath = user?.role === 'teacher' ? `/teacher/courses/${courseId}` : `/student/courses/${courseId}`;
+  const backPath = user?.role === 'teacher' ? `/teacher/courses/${courseId}` : user?.role === 'admin' ? '/admin' : user?.role === 'creator' ? '/creator' : `/student/courses/${courseId}`;
   const activeStudent = studentList.find(s => s.id === selectedStudentId);
 
   return (
