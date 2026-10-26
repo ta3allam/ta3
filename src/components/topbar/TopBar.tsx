@@ -110,9 +110,9 @@ export default function TopBar({ title, hideSidebarTrigger, onOpenMobileMenu }: 
           </form>
 
           {/* Role Status Tag (Non-interactive authentic indicator) */}
-          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#053833] border border-[#428177]/30 text-xs font-bold text-[#EDEBE0]">
-            <RoleIcon className="h-3.5 w-3.5 text-[#988561]" />
-            <span>{roleInfo.label}</span>
+          <div title={roleInfo.label} className="flex items-center justify-center p-2 rounded-xl bg-[#053833] border border-[#428177]/40 shadow-inner">
+            <RoleIcon className="h-5 w-5 text-[#EDEBE0]" />
+
           </div>
 
           {/* Notifications Dropdown */}
@@ -135,6 +135,7 @@ export default function TopBar({ title, hideSidebarTrigger, onOpenMobileMenu }: 
                   <Bell className="h-3.5 w-3.5 text-[#988561]" />
                   مركز الإشعارات ({unreadCount})
                 </span>
+    
                 {unreadCount > 0 && (
                   <Button
                     variant="ghost"
@@ -231,9 +232,9 @@ export default function TopBar({ title, hideSidebarTrigger, onOpenMobileMenu }: 
               alt="تعلّم"
               className="h-8 w-auto inline-block align-middle brightness-110"
             />
-            <span className="hidden sm:inline-block text-sm font-black tracking-wide text-[#EDEBE0]">
-              تعلّـم
-            </span>
+
+
+
           </NavLink>
         </div>
       </div>
