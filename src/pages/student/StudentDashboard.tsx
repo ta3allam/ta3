@@ -222,7 +222,7 @@ export default function StudentDashboard() {
                   name={course.name}
                   code={course.code}
                   category={course.category}
-                  rating={course.rating}
+                  period={course.period}
                   difficulty={course.difficulty}
                   teacher={course.teacher}
                   language={course.language}
