@@ -108,11 +108,11 @@ export function MobileNavigationDrawer({
   const RoleIcon = roleInfo.icon;
 
   const mainLinks = [
-    { to: "/community", label: "مجتمع تعلّم (Community)", icon: MessageSquare },
-    { to: "/marketplace", label: "السوق والدورات (Marketplace)", icon: ShoppingBag },
-    { to: "/cohorts", label: "الفعاليات والجلسات الحية (Live)", icon: Calendar },
-    { to: "/timeline", label: "الجدول الزمني والمهام (Timeline)", icon: Clock },
-    { to: "/groups", label: "مجموعات الدراسة (Study Groups)", icon: Users },
+    { to: "/community", label: "مجتمع تعلّم", icon: MessageSquare },
+    { to: "/marketplace", label: "السوق والدورات", icon: ShoppingBag },
+    { to: "/cohorts", label: "الفعاليات وورش العمل", icon: Calendar },
+
+
   ];
 
   const roleLinks =
@@ -121,13 +121,13 @@ export function MobileNavigationDrawer({
       : user?.role === "teacher"
       ? [
           { to: "/teacher", label: "إدارة المقررات والطلاب", icon: GraduationCap },
-          { to: "/teacher/analytics", label: "تحليلات الأداء الأكاديمي", icon: BarChart3 },
+          { to: "/analytics", label: "تحليلات الأداء الأكاديمي", icon: BarChart3 },
         ]
       : user?.role === "creator"
       ? [
           { to: "/creator", label: "استوديو صانع المحتوى", icon: Sparkles },
           { to: "/creator/payouts", label: "محفظة الأرباح والسحوبات", icon: Wallet },
-          { to: "/creator/analytics", label: "إحصائيات المبيعات", icon: BarChart3 },
+          { to: "/analytics", label: "إحصائيات المبيعات", icon: BarChart3 },
         ]
       : [{ to: "/student", label: "لوحة المقررات والتقدم", icon: BookOpen }];
 
