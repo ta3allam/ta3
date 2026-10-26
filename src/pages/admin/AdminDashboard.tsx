@@ -146,7 +146,7 @@ export default function AdminDashboard() {
   const totalTeachers = users.filter((u) => u.role === 'معلم').length;
 
   return (
-    <DashboardLayout role="admin">
+    <DashboardLayout title="لوحة التحكم والرقابة - الإدارة">
       <div className="space-y-6" dir="rtl">
         {/* Admin Header Banner */}
         <div 

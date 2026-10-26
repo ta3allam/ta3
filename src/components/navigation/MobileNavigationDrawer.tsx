@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { evaluateSwipeGesture } from "@/lib/motion";
 import {
@@ -13,6 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   MessageSquare,
+  Home,
+  Mail,
+  ArrowRight,
   ShoppingBag,
   BookOpen,
   Calendar,
@@ -45,6 +48,22 @@ export function MobileNavigationDrawer({
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const location = useLocation();
+  const isCoursePath = location.pathname.includes("/courses/");
+  const roleBase = user?.role === 'teacher' ? "/teacher" : user?.role === 'admin' ? "/admin" : user?.role === 'creator' ? "/creator" : "/student";
+  const courseMatch = location.pathname.match(/(?:student|teacher|admin)?\/courses\/(\d+)/);
+  const courseId = courseMatch ? courseMatch[1] : "1";
+  const courseBase = (user?.role === 'admin' || user?.role === 'creator')
+    ? `/courses/${courseId}`
+    : `${roleBase}/courses/${courseId}`;
+
+  const courseLinks = [
+    { to: courseBase, label: "الرئيسية والإعلانات", icon: Home },
+    { to: `${courseBase}/timeline`, label: "التقويم الأكاديمي", icon: Calendar },
+    { to: `${courseBase}/groups`, label: "المجموعات الدراسية", icon: Users },
+    { to: `${courseBase}/discussion`, label: "ساحة النقاش والاستفسارات", icon: MessageSquare },
+    { to: `${courseBase}/contact`, label: "التواصل والدعم الأكاديمي", icon: Mail },
+  ];
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     const touch = e.touches[0];
@@ -188,6 +207,44 @@ export function MobileNavigationDrawer({
 
           {/* Navigation Sections */}
           <div className="p-4 space-y-5">
+            {/* Contextual Course Links (when on a course route) */}
+            {isCoursePath && (
+              <div className="space-y-1 mb-4 pb-3 border-b border-[#428177]/25">
+                <Button
+                  onClick={() => { onOpenChange(false); navigate(roleBase); }}
+                  variant="outline"
+                  size="sm"
+                  className="w-full mb-3 text-xs font-bold border-[#428177]/40 bg-[#054239] text-white hover:bg-[#428177] rounded-xl flex items-center justify-between"
+                >
+                  <span>العودة للوحة الرئيسية</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+                <p className="text-[10px] font-extrabold uppercase text-[#EDEBE0]/50 px-3 mb-1">
+                  قائمة المقرر الدراسي
+                </p>
+                {courseLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <NavLink
+                      key={link.to}
+                      to={link.to}
+                      onClick={() => onOpenChange(false)}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                          isActive
+                            ? "bg-[#428177] text-white shadow-sm"
+                            : "text-[#EDEBE0]/80 hover:bg-[#054239] hover:text-white"
+                        }`
+                      }
+                    >
+                      <Icon className="w-4 h-4 text-[#EDEBE0]" />
+                      <span>{link.label}</span>
+                    </NavLink>
+                  );
+                })}
+              </div>
+            )}
+
             {/* Main Sections */}
             <div className="space-y-1">
               <p className="text-[10px] font-extrabold uppercase text-[#EDEBE0]/50 px-3 mb-1">
