@@ -132,7 +132,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
     <Card className={`border bg-white shadow-sm rounded-2xl overflow-hidden text-right transition-all hover:shadow-md ${
       post.isPinned ? "border-[#988561] bg-[#EDEBE0]/20" : "border-[#428177]/30"
     }`} dir="rtl">
-      <CardContent className="p-5 space-y-4">
+      <CardContent className="p-6 sm:p-7 space-y-5">
         {/* Top Header: Channel + Pinned badge + Date */}
         <div className="flex justify-between items-center text-xs">
           <div className="flex items-center gap-2">
