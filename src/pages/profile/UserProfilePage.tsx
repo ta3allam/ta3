@@ -226,7 +226,7 @@ export default function UserProfilePage() {
 
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-2xl sm:text-3xl font-black text-[#002623]">{user.name}</h1>
+                  <h1 className="text-2xl sm:text-3xl font-black text-white bg-[#002623] px-3.5 py-1 rounded-xl shadow-sm inline-flex items-center">{user.name}</h1>
                   <span className="text-[11px] text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 font-bold flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                     حساب موثق
