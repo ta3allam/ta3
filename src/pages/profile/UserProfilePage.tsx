@@ -257,36 +257,38 @@ export default function UserProfilePage() {
           {/* Tab Navigation Content */}
           <div className="p-6 sm:p-10">
             <Tabs defaultValue="identity" className="space-y-6">
-              <TabsList className="grid grid-cols-4 bg-[#EDEBE0]/60 p-1.5 rounded-2xl border border-[#428177]/20">
+              <div className="bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20">
+                <TabsList className="w-full justify-start bg-transparent gap-1 grid grid-cols-2 md:grid-cols-4 h-auto p-0">
                 <TabsTrigger
                   value="identity"
-                  className="rounded-xl font-bold text-xs sm:text-sm data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] gap-2 py-2.5"
+                  className="rounded-xl font-bold text-xs sm:text-sm justify-center items-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-all gap-2 py-2.5"
                 >
                   <User className="h-4 w-4 text-[#988561]" />
                   البيانات الشخصية
                 </TabsTrigger>
                 <TabsTrigger
                   value="stats"
-                  className="rounded-xl font-bold text-xs sm:text-sm data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] gap-2 py-2.5"
+                  className="rounded-xl font-bold text-xs sm:text-sm justify-center items-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-all gap-2 py-2.5"
                 >
                   <BarChart3 className="h-4 w-4 text-[#428177]" />
                   الأداء والإحصائيات
                 </TabsTrigger>
                 <TabsTrigger
                   value="certificates"
-                  className="rounded-xl font-bold text-xs sm:text-sm data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] gap-2 py-2.5"
+                  className="rounded-xl font-bold text-xs sm:text-sm justify-center items-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-all gap-2 py-2.5"
                 >
                   <Award className="h-4 w-4 text-[#988561]" />
                   الشهادات المعتمدة ({user.certificatesEarned?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger
                   value="security"
-                  className="rounded-xl font-bold text-xs sm:text-sm data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] gap-2 py-2.5"
+                  className="rounded-xl font-bold text-xs sm:text-sm justify-center items-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-all gap-2 py-2.5"
                 >
                   <Shield className="h-4 w-4 text-[#6B1F2A]" />
                   الأمان والتوثيق
                 </TabsTrigger>
-              </TabsList>
+                </TabsList>
+              </div>
 
               {/* TAB 1: IDENTITY */}
               <TabsContent value="identity" className="space-y-6">
