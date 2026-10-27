@@ -166,7 +166,7 @@ export default function CommunityFeed() {
     setNewCodeSnippet("");
     setShowCodeField(false);
     setIsComposerOpen(false);
-    toast.success("تم نشر مساهمتك في المجتمع وحصلت على +10 XP!");
+    toast.success("تم نشر مساهمتك في المجتمع بنجاح!");
   };
 
   const filteredPosts = useMemo(() => {
@@ -449,7 +449,7 @@ export default function CommunityFeed() {
                   <div className="flex gap-2 justify-end pt-1">
                     <Button type="submit" size="sm" className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs gap-1.5">
                       <Send className="h-3.5 w-3.5" />
-                      نشر في المجتمع (+10 XP)
+                      نشر في المجتمع
                     </Button>
                     <Button type="button" variant="outline" size="sm" onClick={() => setIsComposerOpen(false)} className="border-[#428177]/30 text-xs">
                       إلغاء
