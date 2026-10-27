@@ -98,6 +98,11 @@ const App = () => (
                     {/* Shared Courses Routes */}
                     <Route element={<RequireAuth allowedRoles={['student', 'teacher', 'creator', 'admin']} />}>
                       <Route path="/courses" element={<Navigate to="/" replace />} />
+                      <Route path="/courses/:courseId" element={<CoursesPage />} />
+                      <Route path="/courses/:courseId/timeline" element={<CourseTimeline />} />
+                      <Route path="/courses/:courseId/groups" element={<CourseGroups />} />
+                      <Route path="/courses/:courseId/discussion" element={<CourseDiscussion />} />
+                      <Route path="/courses/:courseId/contact" element={<CourseContact />} />
                       <Route path="/courses/:courseId/*" element={<CoursesPage />} />
                     </Route>
 
