@@ -44,6 +44,7 @@ export default function CourseDiscussion() {
                     authorName: "أحمد علي",
                     authorRole: "student",
                     createdAt: new Date(Date.now() - 3 * 3600000).toISOString(),
+                    status: 'solved',
                     comments: [
                         {
                             id: 1,
@@ -61,6 +62,7 @@ export default function CourseDiscussion() {
                     authorName: "د. خالد",
                     authorRole: "teacher",
                     createdAt: new Date(Date.now() - 24 * 3600000).toISOString(),
+                    status: 'question',
                     comments: []
                 }
             ];
@@ -84,6 +86,7 @@ export default function CourseDiscussion() {
             content: newContent.trim(),
             authorName: user.name,
             authorRole: user.role,
+            status: 'question',
             createdAt: new Date().toISOString(),
             comments: []
         };
@@ -156,6 +159,18 @@ export default function CourseDiscussion() {
                 toast.error(`فشل في إضافة التعليق: ${err}`);
             }
         });
+    };
+
+    const handleToggleStatus = (postId: number) => {
+        const updated = posts.map(p => {
+            if (p.id === postId) {
+                const nextStatus: 'question' | 'solved' = p.status === 'solved' ? 'question' : 'solved';
+                return { ...p, status: nextStatus };
+            }
+            return p;
+        });
+        savePostsToLocalStorage(updated);
+        toast.success("تم تحديث حالة الموضوع بنجاح");
     };
 
     if (!course) {
@@ -239,6 +254,7 @@ export default function CourseDiscussion() {
                                 post={post}
                                 onAddComment={handleAddComment}
                                 currentUser={user}
+                                onToggleStatus={handleToggleStatus}
                             />
                         ))
                     ) : (

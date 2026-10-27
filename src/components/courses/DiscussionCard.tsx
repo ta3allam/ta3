@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Send, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { MessageSquare, Send, User, CheckCircle2, HelpCircle } from "lucide-react";
 
 export interface DiscussionComment {
   id: number;
@@ -19,12 +20,14 @@ export interface DiscussionPost {
   authorName: string;
   authorRole: 'student' | 'teacher' | 'admin';
   createdAt: string;
+  status?: 'question' | 'solved';
   comments: DiscussionComment[];
 }
 
 interface DiscussionCardProps {
   post: DiscussionPost;
   onAddComment: (postId: number, commentText: string) => void;
+  onToggleStatus?: (postId: number) => void;
   currentUser: { name: string; role: 'student' | 'teacher' | 'admin' } | null;
 }
 
@@ -36,7 +39,7 @@ function formatStandardDate(dateStr: string): string {
   return `${year}/${month}/${day}`;
 }
 
-export default function DiscussionCard({ post, onAddComment, currentUser }: DiscussionCardProps) {
+export default function DiscussionCard({ post, onAddComment, onToggleStatus, currentUser }: DiscussionCardProps) {
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(true);
 
@@ -74,9 +77,36 @@ export default function DiscussionCard({ post, onAddComment, currentUser }: Disc
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 mt-2 justify-start">
-          {getRoleBadge(post.authorRole)}
-          <CardTitle className="text-lg font-bold text-[#002623]">{post.title}</CardTitle>
+        <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
+            {getRoleBadge(post.authorRole)}
+            <CardTitle className="text-lg font-bold text-[#002623]">{post.title}</CardTitle>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {post.status === 'solved' ? (
+              <Badge className="bg-emerald-600 text-white font-bold text-[10px] gap-1 px-2.5 py-0.5 rounded-full">
+                <CheckCircle2 className="w-3 h-3" />
+                تم الحل
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="border-amber-500/50 text-amber-800 bg-amber-50 text-[10px] font-bold gap-1 px-2.5 py-0.5 rounded-full">
+                <HelpCircle className="w-3 h-3 text-amber-600" />
+                سؤال
+              </Badge>
+            )}
+
+            {currentUser?.role === 'teacher' && onToggleStatus && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onToggleStatus(post.id)}
+                className="h-6 px-2 text-[10px] font-bold text-[#428177] hover:bg-[#428177]/10 rounded-lg"
+              >
+                {post.status === 'solved' ? "تغيير إلى سؤال" : "تحديد كـ تم الحل"}
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4 pt-4">

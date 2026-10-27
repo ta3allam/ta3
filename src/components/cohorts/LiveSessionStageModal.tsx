@@ -72,7 +72,7 @@ export function LiveSessionStageModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[92vh] overflow-y-auto p-0 bg-[#002623] text-white border border-[#428177]/40 rounded-2xl" dir="rtl">
+      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] p-0 bg-[#002623] text-white border border-[#428177]/40 rounded-2xl flex flex-col overflow-hidden shadow-2xl" dir="rtl">
         {/* Header Bar */}
         <div className="p-4 sm:p-5 border-b border-[#428177]/25 flex flex-wrap items-center justify-between gap-3 bg-[#054239]/80 backdrop-blur-md">
           <div className="flex items-center gap-3">
@@ -110,7 +110,7 @@ export function LiveSessionStageModal({
         </div>
 
         {/* Main Stage Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 min-h-[450px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 flex-1 overflow-y-auto min-h-0">
           {/* Main Video / Audio Player Stage */}
           <div className="lg:col-span-2 p-4 sm:p-6 flex flex-col justify-between bg-black/40 border-b lg:border-b-0 lg:border-l border-[#428177]/20">
             {isAudioOnly ? (
@@ -128,7 +128,7 @@ export function LiveSessionStageModal({
                 </div>
               </div>
             ) : event.streamUrl ? (
-              <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black border border-[#428177]/30 shadow-lg flex items-center justify-center">
+              <div className="relative aspect-video w-full max-h-[45vh] rounded-xl overflow-hidden bg-black border border-[#428177]/30 shadow-lg flex items-center justify-center">
                 <iframe
                   src={event.streamUrl}
                   title="Live Stream Room"
@@ -137,7 +137,7 @@ export function LiveSessionStageModal({
                 />
               </div>
             ) : event.recordingUrl ? (
-              <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black border border-[#428177]/30 shadow-lg flex items-center justify-center">
+              <div className="relative aspect-video w-full max-h-[45vh] rounded-xl overflow-hidden bg-black border border-[#428177]/30 shadow-lg flex items-center justify-center">
                 <div className="text-center p-6">
                   <Video className="w-12 h-12 text-[#428177] mx-auto mb-3" />
                   <h4 className="font-bold text-white mb-1">تسجيل الورشة متاح للمشاهدة</h4>
@@ -152,7 +152,7 @@ export function LiveSessionStageModal({
                 </div>
               </div>
             ) : (
-              <div className="aspect-video w-full rounded-xl bg-[#054239]/40 border border-[#428177]/30 flex flex-col items-center justify-center text-center p-6">
+              <div className="aspect-video w-full max-h-[45vh] rounded-xl bg-[#054239]/40 border border-[#428177]/30 flex flex-col items-center justify-center text-center p-6">
                 <Video className="w-12 h-12 text-[#988561] mb-3" />
                 <h4 className="text-base font-bold text-white mb-1">تبدأ الجلسة في الموعد المحدد</h4>
                 <p className="text-xs text-[#EDEBE0]/70 mb-3">{formatArabicEventTime(event.startTime, event.timezone)}</p>
@@ -183,7 +183,7 @@ export function LiveSessionStageModal({
           </div>
 
           {/* Interactive Q&A Panel */}
-          <div className="p-4 sm:p-5 flex flex-col justify-between bg-[#002623]/90">
+          <div className="p-3.5 sm:p-5 flex flex-col justify-between bg-[#002623]/90">
             <div>
               <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#428177]/20">
                 <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export function LiveSessionStageModal({
               </div>
 
               {/* Questions List */}
-              <div className="space-y-2.5 max-h-[280px] overflow-y-auto pr-1">
+              <div className="space-y-2.5 max-h-[220px] sm:max-h-[280px] overflow-y-auto pr-1">
                 {questions.length === 0 ? (
                   <div className="text-center py-10 text-xs text-[#EDEBE0]/60">
                     لا توجد أسئلة حتى الآن. كن أول من يطرح سؤالاً على المحاضر!

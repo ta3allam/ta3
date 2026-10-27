@@ -265,10 +265,28 @@ export default function CourseDiscussions() {
                     <div>
                       <div className="flex items-center gap-2">
                         <h4 className="font-bold text-lg text-[#002623]">{post.title}</h4>
-                        {post.isSolved && (
-                          <Badge className="bg-[#428177] text-white font-bold text-[10px]">
-                            مُجاب عليه ✅
+                        {post.isSolved ? (
+                          <Badge className="bg-emerald-600 text-white font-bold text-[10px] gap-1 px-2.5 py-0.5 rounded-full">
+                            <CheckCircle2 className="w-3 h-3" />
+                            تم الحل
                           </Badge>
+                        ) : (
+                          <Badge variant="outline" className="border-amber-500/50 text-amber-800 bg-amber-50 text-[10px] font-bold gap-1 px-2.5 py-0.5 rounded-full">
+                            سؤال
+                          </Badge>
+                        )}
+                        {isTeacher && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              setPosts(posts.map(p => p.id === post.id ? { ...p, isSolved: !p.isSolved } : p));
+                              toast.success("تم تحديث حالة الموضوع بنجاح");
+                            }}
+                            className="text-[10px] h-6 px-2 text-[#428177] hover:bg-[#428177]/10 font-bold rounded-lg"
+                          >
+                            {post.isSolved ? "إعادة تعيين كسؤال" : "تحديد كـ تم الحل"}
+                          </Button>
                         )}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-[#3D3A3B] mt-1">

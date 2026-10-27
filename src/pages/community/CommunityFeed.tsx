@@ -166,7 +166,7 @@ export default function CommunityFeed() {
     setNewCodeSnippet("");
     setShowCodeField(false);
     setIsComposerOpen(false);
-    toast.success("تم نشر مساهمتك في المجتمع وحصلت على +10 XP!");
+    toast.success("تم نشر مساهمتك في المجتمع بنجاح!");
   };
 
   const filteredPosts = useMemo(() => {
@@ -227,11 +227,11 @@ export default function CommunityFeed() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#428177]/10 text-[#428177] text-xs font-bold mb-3 border border-[#428177]/30">
                 <Users className="w-3.5 h-3.5 text-[#428177]" />
-                <span>مجتمع تعلّم العربي • نموذج Skool للشرق الأوسط</span>
+                <span>مجتمع المعرفة والتطوير المهني المستمر</span>
               </div>
               <h1 className="text-3xl font-extrabold tracking-tight text-[#002623]">مجتمع المعرفة والنقاشات التفاعلية 💬</h1>
               <p className="text-[#3D3A3B] mt-2 text-sm max-w-xl font-medium">
-                تفاعل مع زملائك وصناع المحتوى، شارك تجاربك العملية، واكسب نقاط XP لرفع مستواك وفتح ميزات حصرية.
+                تفاعل مع زملائك وصناع المحتوى، شارك تجاربك العملية، وناقش التحديات التقنية مع نخبة المتعلمين.
               </p>
             </div>
 
@@ -449,7 +449,7 @@ export default function CommunityFeed() {
                   <div className="flex gap-2 justify-end pt-1">
                     <Button type="submit" size="sm" className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs gap-1.5">
                       <Send className="h-3.5 w-3.5" />
-                      نشر في المجتمع (+10 XP)
+                      نشر في المجتمع
                     </Button>
                     <Button type="button" variant="outline" size="sm" onClick={() => setIsComposerOpen(false)} className="border-[#428177]/30 text-xs">
                       إلغاء
@@ -465,7 +465,7 @@ export default function CommunityFeed() {
                 <p className="text-sm font-bold text-muted-foreground">لا توجد منشورات مطابقة للبحث أو القناة المحددة.</p>
               </Card>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {filteredPosts.map(post => (
                   <CommunityPostCard key={post.id} post={post} />
                 ))}

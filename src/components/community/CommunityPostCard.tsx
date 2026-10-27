@@ -87,7 +87,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
       setHasUpvoted(true);
       setIsBursting(true);
       setTimeout(() => setIsBursting(false), 950);
-      toast.success("تم تأييد المنشور! حصل الكاتب على +5 XP وحصلت أنت على +1 XP 🌟");
+      toast.success("تم تأييد المنشور بنجاح! 🌟");
     }
     onUpvote?.(post.id, nextCount);
   };
@@ -123,7 +123,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
     setCommentsList(prev => [...prev, added]);
     setNewComment("");
     onAddComment?.(post.id, newComment.trim());
-    toast.success("تمت إضافة تعليقك وحصلت على +2 XP للمشاركة!");
+    toast.success("تمت إضافة تعليقك بنجاح!");
   };
 
   const authorLevel = post.authorLevel || Math.min(9, Math.max(1, Math.floor((post.upvotesCount + 10) / 10)));
@@ -132,7 +132,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
     <Card className={`border bg-white shadow-sm rounded-2xl overflow-hidden text-right transition-all hover:shadow-md ${
       post.isPinned ? "border-[#988561] bg-[#EDEBE0]/20" : "border-[#428177]/30"
     }`} dir="rtl">
-      <CardContent className="p-5 space-y-4">
+      <CardContent className="p-6 sm:p-7 space-y-5">
         {/* Top Header: Channel + Pinned badge + Date */}
         <div className="flex justify-between items-center text-xs">
           <div className="flex items-center gap-2">
@@ -222,7 +222,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
                   aria-hidden="true"
                   className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#988561] text-white text-[10px] font-black shadow-md animate-bounce pointer-events-none whitespace-nowrap z-10"
                 >
-                  +5 XP ✨
+                  تم التأييد ✨
                 </span>
               )}
               <Button
@@ -240,7 +240,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
                     hasUpvoted ? "fill-white scale-110 -rotate-6" : ""
                   }`}
                 />
-                <span className="tabular-nums">{upvotes} تأييد (+5 XP)</span>
+                <span className="tabular-nums">{upvotes} تأييد</span>
               </Button>
             </div>
 

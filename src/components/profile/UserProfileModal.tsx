@@ -225,7 +225,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
 
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl sm:text-2xl font-black text-[#002623]">{user.name}</h2>
+                  <h2 className="text-xl sm:text-2xl font-black text-white bg-[#002623] px-3 py-0.5 rounded-xl shadow-sm inline-flex items-center">{user.name}</h2>
                   <span className="text-[11px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-bold flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                     موثق
@@ -263,36 +263,38 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
           {/* Tab Navigation Content */}
           <div className="p-6 sm:p-8">
             <Tabs defaultValue="identity" className="space-y-6">
-              <TabsList className="grid grid-cols-4 bg-[#EDEBE0]/60 p-1 rounded-2xl border border-[#428177]/20">
+              <div className="bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20">
+                <TabsList className="w-full justify-start bg-transparent gap-1 grid grid-cols-2 md:grid-cols-4 h-auto p-0">
                 <TabsTrigger
                   value="identity"
-                  className="rounded-xl font-bold text-xs data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] gap-1.5 py-2.5"
+                  className="rounded-xl font-bold text-xs justify-center items-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-all gap-1.5 py-2.5"
                 >
                   <User className="h-3.5 w-3.5 text-[#988561]" />
                   <span className="hidden sm:inline">البيانات</span> الشخصية
                 </TabsTrigger>
                 <TabsTrigger
                   value="stats"
-                  className="rounded-xl font-bold text-xs data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] gap-1.5 py-2.5"
+                  className="rounded-xl font-bold text-xs justify-center items-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-all gap-1.5 py-2.5"
                 >
                   <BarChart3 className="h-3.5 w-3.5 text-[#428177]" />
                   <span className="hidden sm:inline">الأداء</span> والإحصائيات
                 </TabsTrigger>
                 <TabsTrigger
                   value="certificates"
-                  className="rounded-xl font-bold text-xs data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] gap-1.5 py-2.5"
+                  className="rounded-xl font-bold text-xs justify-center items-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-all gap-1.5 py-2.5"
                 >
                   <Award className="h-3.5 w-3.5 text-[#988561]" />
                   الشهادات ({user.certificatesEarned?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger
                   value="security"
-                  className="rounded-xl font-bold text-xs data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] gap-1.5 py-2.5"
+                  className="rounded-xl font-bold text-xs justify-center items-center text-center data-[state=active]:bg-black data-[state=active]:text-white transition-all gap-1.5 py-2.5"
                 >
                   <Shield className="h-3.5 w-3.5 text-[#6B1F2A]" />
                   الأمان والتوثيق
                 </TabsTrigger>
-              </TabsList>
+                </TabsList>
+              </div>
 
               {/* ========================================== */}
               {/* TAB 1: IDENTITY & EDIT FORM */}
