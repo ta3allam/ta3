@@ -6,6 +6,7 @@ import { CreateEventModal } from "@/components/cohorts/CreateEventModal";
 import { LiveSessionStageModal } from "@/components/cohorts/LiveSessionStageModal";
 import { CohortEvent, MENA_TIMEZONES } from "@/lib/cohorts/cohortTime";
 import { EventStore } from "@/lib/cohorts/eventStore";
+import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +35,7 @@ import {
 import { toast } from "sonner";
 
 export default function CohortEvents() {
+  const { user } = useAuth();
   const [events, setEvents] = useState<CohortEvent[]>([]);
   const [userRsvps, setUserRsvps] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -131,16 +133,18 @@ export default function CohortEvents() {
               انضم إلى البثوث المباشرة، وحلقات النقاش الأكاديمية، وساعات المساعدة المكتبية المباشرة مع نخبة المدرسين والخبراء في الشرق الأوسط.
             </p>
 
-            {/* Quick Actions */}
-            <div className="pt-2 flex items-center gap-3 flex-wrap">
-              <Button
-                onClick={() => setCreateModalOpen(true)}
-                className="bg-[#EDEBE0] text-[#002623] hover:bg-white font-bold text-xs gap-2 shadow-sm rounded-xl px-4 py-2.5"
-              >
-                <PlusCircle className="w-4 h-4 text-[#428177]" />
-                جدولة جلسة جديدة للمدربين
-              </Button>
-            </div>
+            {/* Quick Actions - Strictly restricted to teachers, creators, and admins */}
+            {(user?.role === 'teacher' || user?.role === 'creator' || user?.role === 'admin') && (
+              <div className="pt-2 flex items-center gap-3 flex-wrap">
+                <Button
+                  onClick={() => setCreateModalOpen(true)}
+                  className="bg-[#EDEBE0] text-[#002623] hover:bg-white font-bold text-xs gap-2 shadow-sm rounded-xl px-4 py-2.5"
+                >
+                  <PlusCircle className="w-4 h-4 text-[#428177]" />
+                  جدولة جلسة جديدة للمدربين
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -203,8 +207,8 @@ export default function CohortEvents() {
           </div>
 
           {/* Quick Category Filters */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-            <Filter className="w-3.5 h-3.5 text-[#428177] shrink-0 ml-1" />
+          <div className="flex items-center gap-2.5 sm:gap-3 overflow-x-auto py-2 px-1 text-xs no-scrollbar">
+            <Filter className="w-4 h-4 text-[#428177] shrink-0 ml-1" />
             {[
               { id: "all", label: "كافة الجلسات" },
               { id: "live", label: "🔴 مباشر الآن", highlight: true },
@@ -219,7 +223,7 @@ export default function CohortEvents() {
                 variant={selectedFilter === tab.id ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedFilter(tab.id)}
-                className={`rounded-xl text-xs font-bold whitespace-nowrap transition-all h-8 ${
+                className={`rounded-xl text-xs font-bold whitespace-nowrap transition-all h-9 px-4 shrink-0 ${
                   selectedFilter === tab.id
                     ? tab.highlight
                       ? "bg-rose-600 text-white hover:bg-rose-700"
