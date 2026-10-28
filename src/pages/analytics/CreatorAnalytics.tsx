@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { EnrollmentFunnelCard } from "@/components/analytics/EnrollmentFunnelCard";
 import { LectureDropoffChart } from "@/components/analytics/LectureDropoffChart";
@@ -29,9 +30,11 @@ import { getAssetUrl } from "@/lib/assetUtils";
 import { MOCK_FINANCIAL_SUMMARY } from "@/lib/analytics/creatorMetricsEngine";
 
 export default function CreatorAnalytics() {
+  const { user } = useAuth();
+  const isTeacher = user?.role === "teacher";
   const [selectedCourse, setSelectedCourse] = useState("all");
   const [timeRange, setTimeRange] = useState("30d");
-  const [activeTab, setActiveTab] = useState<"overview" | "financial" | "retention" | "modules">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "financial" | "retention">("overview");
   const [isExportOpen, setIsExportOpen] = useState(false);
 
   return (
@@ -121,29 +124,19 @@ export default function CreatorAnalytics() {
             <span>السجل المالي وقنوات بلاد الشام</span>
           </button>
 
-          <button
-            onClick={() => setActiveTab("retention")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
-              activeTab === "retention"
-                ? "bg-[#428177] text-white shadow-sm"
-                : "bg-white text-[#002623] hover:bg-[#EDEBE0]/60 border border-[#428177]/20"
-            }`}
-          >
-            <Flame className="w-4 h-4 text-amber-500" />
-            <span>مصفوفة الاحتفاظ وتفاعل الطلاب</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("modules")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
-              activeTab === "modules"
-                ? "bg-[#428177] text-white shadow-sm"
-                : "bg-white text-[#002623] hover:bg-[#EDEBE0]/60 border border-[#428177]/20"
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            <span>إتقان الوحدات ونمط الصوت فقط</span>
-          </button>
+          {!isTeacher && (
+            <button
+              onClick={() => setActiveTab("retention")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+                activeTab === "retention"
+                  ? "bg-[#428177] text-white shadow-sm"
+                  : "bg-white text-[#002623] hover:bg-[#EDEBE0]/60 border border-[#428177]/20"
+              }`}
+            >
+              <Flame className="w-4 h-4 text-amber-500" />
+              <span>مصفوفة الاحتفاظ وتفاعل الطلاب</span>
+            </button>
+          )}
         </div>
 
         {/* Top KPI Metrics Cards */}
@@ -194,14 +187,14 @@ export default function CreatorAnalytics() {
 
           <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl p-4 text-right">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-muted-foreground">استهلاك نمط الصوت (3G)</span>
-              <div className="p-2 rounded-xl bg-[#6B1F2A]/10 text-[#6B1F2A]">
-                <Volume2 className="h-4 w-4 text-[#6B1F2A]" />
+              <span className="text-xs font-bold text-muted-foreground">متوسط التقييم العام</span>
+              <div className="p-2 rounded-xl bg-[#002623]/10 text-[#002623]">
+                <Award className="h-4 w-4 text-[#428177]" />
               </div>
             </div>
-            <div className="text-2xl font-extrabold text-[#002623]">41.5%</div>
-            <div className="flex items-center gap-1 text-[11px] text-[#428177] font-semibold mt-1">
-              <span>توفير ضخم للباقة للطلاب في الشام</span>
+            <div className="text-2xl font-extrabold text-[#002623]">88.5%</div>
+            <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold mt-1">
+              <span>نسبة النجاح والتحصيل الأكاديمي</span>
             </div>
           </Card>
         </div>
@@ -214,7 +207,7 @@ export default function CreatorAnalytics() {
               <EnrollmentFunnelCard />
               <LectureDropoffChart />
             </div>
-            <CohortRetentionHeatmap />
+            {!isTeacher && <CohortRetentionHeatmap />}
           </div>
         )}
 
@@ -224,19 +217,9 @@ export default function CreatorAnalytics() {
           </div>
         )}
 
-        {activeTab === "retention" && (
+        {!isTeacher && activeTab === "retention" && (
           <div className="space-y-6">
             <CohortRetentionHeatmap />
-          </div>
-        )}
-
-        {activeTab === "modules" && (
-          <div className="space-y-6">
-            <ModuleMasteryFunnel />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <LectureDropoffChart />
-              <EnrollmentFunnelCard />
-            </div>
           </div>
         )}
 
