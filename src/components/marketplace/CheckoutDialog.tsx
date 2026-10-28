@@ -176,10 +176,10 @@ export function CheckoutDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         dir="rtl"
-        className="max-w-xl max-h-[90vh] overflow-y-auto bg-white border border-[#428177]/40 text-right rounded-3xl p-6 shadow-2xl"
+        className="w-[95vw] max-w-xl max-h-[90vh] overflow-y-auto bg-white border border-[#428177]/40 text-right rounded-3xl p-4 sm:p-6 shadow-2xl overflow-x-hidden"
       >
         <DialogHeader className="border-b border-[#EDEBE0] pb-3">
-          <DialogTitle className="text-right text-[#002623] font-black text-lg flex items-center justify-between">
+          <DialogTitle className="text-right text-[#002623] font-black text-sm sm:text-base md:text-lg flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-[#988561]" />
               <span>بوابة الدفع والتحويل لمنطقة بلاد الشام 🇸🇾</span>
@@ -222,7 +222,7 @@ export function CheckoutDialog({
                       <div
                         key={method.id}
                         onClick={() => setSelectedMethodId(method.id)}
-                        className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-2.5 ${
+                        className={`p-2.5 sm:p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-2.5 min-w-0 overflow-hidden ${
                           isSelected
                             ? 'bg-[#002623] text-[#EDEBE0] border-[#002623] shadow-xs'
                             : 'bg-white hover:bg-[#EDEBE0]/30 border-[#428177]/20 text-[#002623]'
@@ -234,7 +234,7 @@ export function CheckoutDialog({
 
                         <div className="space-y-0.5 flex-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-black">{method.name}</span>
+                            <span className="text-xs font-black break-words">{method.name}</span>
                           </div>
                           <div className={`text-[10px] ${isSelected ? 'text-[#EDEBE0]/70' : 'text-muted-foreground'}`}>
                             {method.country} ({method.currency})
@@ -264,10 +264,10 @@ export function CheckoutDialog({
                   {selectedConfig.instructions}
                 </p>
 
-                <div className="flex items-center justify-between bg-white p-2.5 rounded-xl border border-[#428177]/20 gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-2.5 rounded-xl border border-[#428177]/20 gap-2">
                   <div className="space-y-0.5">
                     <div className="text-[10px] text-muted-foreground">رقم الحساب / المحفظة:</div>
-                    <div className="text-xs font-mono font-black text-[#002623] select-all">
+                    <div className="text-xs font-mono font-black text-[#002623] select-all break-all">
                       {selectedConfig.recipientAccount}
                     </div>
                   </div>
@@ -277,7 +277,7 @@ export function CheckoutDialog({
                     size="sm"
                     variant="outline"
                     onClick={handleCopyAccount}
-                    className="border-[#428177]/30 text-[#002623] hover:bg-[#EDEBE0] text-[11px] font-bold h-8 gap-1 rounded-lg shrink-0"
+                    className="border-[#428177]/30 text-[#002623] hover:bg-[#EDEBE0] text-[11px] font-bold h-8 gap-1 rounded-lg shrink-0 self-end sm:self-auto"
                   >
                     {copiedAccount ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5 text-[#428177]" />}
                     <span>{copiedAccount ? 'تم النسخ' : 'نسخ'}</span>
@@ -386,11 +386,11 @@ export function CheckoutDialog({
             <span>معاملة آمنة ومدققة وفق معايير الحماية المالية لمنصة تعلّم</span>
           </div>
 
-          <div className="flex gap-2 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2">
             <Button
               type="submit"
               disabled={isProcessing}
-              className="flex-1 bg-[#428177] hover:bg-[#054239] text-white font-black text-xs rounded-xl shadow-md gap-1.5 py-5"
+              className="w-full sm:flex-1 bg-[#428177] hover:bg-[#054239] text-white font-black text-xs rounded-xl shadow-md gap-1.5 py-3 sm:py-5 min-h-[44px]"
             >
               {isProcessing ? (
                 <span>جاري معالجة الطلب...</span>
@@ -411,7 +411,7 @@ export function CheckoutDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="w-24 font-bold border-[#428177]/30 text-xs rounded-xl"
+              className="w-full sm:w-24 font-bold border-[#428177]/30 text-xs rounded-xl h-10"
             >
               إلغاء
             </Button>
