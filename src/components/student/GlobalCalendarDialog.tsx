@@ -40,13 +40,26 @@ export const GlobalCalendarDialog: React.FC<GlobalCalendarDialogProps> = ({ open
   const [selectedCourseFilter, setSelectedCourseFilter] = useState<number | 'all'>('all');
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
-  // Aggregate events from all enrolled courses
+  const isTeacher = user?.role === 'teacher';
+
+  // Compute relevant courses (strictly courses taught by teacher or enrolled by student)
+  const relevantCourseIds = useMemo(() => {
+    if (!user) return [];
+    if (isTeacher) {
+      return Object.entries(courseData)
+        .filter(([_, c]) => c.teacher === user.name || (user.enrolledCourses || []).includes(Number(_)))
+        .map(([id]) => Number(id));
+    }
+    return user.enrolledCourses || [];
+  }, [user, courseData, isTeacher]);
+
+  // Aggregate events from relevant courses
   const allEvents = useMemo(() => {
-    if (!user || !user.enrolledCourses) return [];
+    if (!user || relevantCourseIds.length === 0) return [];
 
     const list: CombinedEvent[] = [];
 
-    user.enrolledCourses.forEach((cId) => {
+    relevantCourseIds.forEach((cId) => {
       const course = courseData[cId];
       if (!course) return;
 
@@ -98,7 +111,7 @@ export const GlobalCalendarDialog: React.FC<GlobalCalendarDialogProps> = ({ open
     });
 
     return list;
-  }, [user, courseData]);
+  }, [user, courseData, relevantCourseIds]);
 
   const filteredEvents = useMemo(() => {
     if (selectedCourseFilter === 'all') return allEvents;
@@ -186,7 +199,7 @@ export const GlobalCalendarDialog: React.FC<GlobalCalendarDialogProps> = ({ open
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-extrabold text-[#002623] flex items-center gap-2">
               <CalendarIcon className="w-5 h-5 text-[#428177]" />
-              التقويم الأكاديمي الموحد لكافة المقررات المسجلة
+              {isTeacher ? "التقويم الأكاديمي للمقررات المسندة للتدريس" : "التقويم الأكاديمي الموحد لكافة المقررات المسجلة"}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -203,7 +216,7 @@ export const GlobalCalendarDialog: React.FC<GlobalCalendarDialogProps> = ({ open
             >
               جميع المقررات ({allEvents.length})
             </Button>
-            {user?.enrolledCourses?.map((cId) => {
+            {relevantCourseIds.map((cId) => {
               const course = courseData[cId];
               if (!course) return null;
               return (
