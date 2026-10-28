@@ -76,18 +76,6 @@ export const LEVANT_PAYMENT_METHODS: PaymentMethodConfig[] = [
     badge: 'دفع فوري مباشر ⚡'
   },
   {
-    id: 'hawala_haram',
-    name: 'حوالات الهرم والفؤاد (Al-Haram / Al-Fouad)',
-    shortLabel: 'حوالة الهرم',
-    country: 'كافة المحافظات السورية',
-    currency: 'SYP',
-    iconName: 'Building2',
-    instructions: 'أرسل الحوالة باسم المستلم الموضح أدناه إلى فرع دمشق، واكتب رقم إشعار الحوالة الصادر من الشركة.',
-    recipientAccount: 'هاتف: 0944-112-233 — فرع دمشق المركزي',
-    recipientName: 'أحمد المحمد (المعتمد المالي لمنصة تعلّم)',
-    badge: 'كافة المحافظات 🏢'
-  },
-  {
     id: 'zaincash',
     name: 'محفظة زين كاش (ZainCash)',
     shortLabel: 'ZainCash',
@@ -110,17 +98,5 @@ export const LEVANT_PAYMENT_METHODS: PaymentMethodConfig[] = [
     recipientAccount: 'TYj89Wkm2XqR9pL7Zq1vN4mK8tE3bH9sVw',
     recipientName: 'Ta3allam USDT Vault (TRC-20)',
     badge: 'بدون قيود دولية 🌐'
-  },
-  {
-    id: 'card_visa_master',
-    name: 'بطاقة فيزا / ماستركارد / Wise',
-    shortLabel: 'بطاقة دولية',
-    country: 'عالمي',
-    currency: 'USD',
-    iconName: 'CreditCard',
-    instructions: 'الدفع الآمن بالبطاقات الدولية مع معالجة وتفعيل فوري للاشتراك.',
-    recipientAccount: 'checkout@ta3allam.sy (Wise / Stripe Gateway)',
-    recipientName: 'Ta3allam Learning Ltd',
-    badge: 'تفعيل فوري ⚡'
   }
 ];
