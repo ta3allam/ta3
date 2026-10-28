@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Users, Plus, ArrowRight, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2, MessageSquare, Send } from "lucide-react";
+import { Users, Plus, ArrowRight, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2, MessageSquare, Send, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 
 export interface GroupMember {
@@ -55,10 +55,19 @@ export default function CourseGroups() {
   const [groups, setGroups] = useState<StudyGroup[]>([]);
   const [viewLayout, setViewLayout] = useState<'list' | 'grid'>('list');
 
+  const defaultCourseLimit = Number(courseId) === 2 ? 2 : 4;
+
   // Teacher Create Group Modal state
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDesc, setNewGroupDesc] = useState("");
+  const [newGroupMaxMembers, setNewGroupMaxMembers] = useState(defaultCourseLimit);
+
+  // Bulk Generation Modal state
+  const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
+  const [bulkCount, setBulkCount] = useState(3);
+  const [bulkLimit, setBulkLimit] = useState(defaultCourseLimit);
+  const [bulkPrefix, setBulkPrefix] = useState("فريق دراسي");
 
   // Group Chat Modal state
   const [activeChatGroup, setActiveChatGroup] = useState<StudyGroup | null>(null);
@@ -90,7 +99,7 @@ export default function CourseGroups() {
           name: "فريق البرمجة المتقدمة (Alpha)",
           description: "مجموعة دراسية لمراجعة تمارين الواجبات والمشروع النهائي",
           leaderName: "د. خالد",
-          maxMembers: 5,
+          maxMembers: defaultCourseLimit,
           members: [
             { name: "أحمد علي", role: "leader" },
             { name: "محمد العتيبي", role: "member" },
@@ -134,7 +143,7 @@ export default function CourseGroups() {
       name: newGroupName.trim(),
       description: newGroupDesc.trim() || "مجموعة دراسية معتمدة من معلم المقرر",
       leaderName: user.name,
-      maxMembers: 5,
+      maxMembers: Number(newGroupMaxMembers) || defaultCourseLimit,
       members: [],
       applications: [],
       messages: []
@@ -146,6 +155,37 @@ export default function CourseGroups() {
     setNewGroupName("");
     setNewGroupDesc("");
     setDialogOpen(false);
+  };
+
+  // Teacher Bulk Generate Groups
+  const handleBulkGenerateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !isTeacher) return;
+    const count = Math.min(20, Math.max(1, Number(bulkCount) || 1));
+    const limit = Math.min(20, Math.max(1, Number(bulkLimit) || defaultCourseLimit));
+    const prefix = bulkPrefix.trim() || "فريق دراسي";
+
+    let currentMaxId = Math.max(0, ...groups.map(g => g.id));
+    const generated: StudyGroup[] = [];
+
+    for (let i = 1; i <= count; i++) {
+      currentMaxId += 1;
+      generated.push({
+        id: currentMaxId,
+        name: `${prefix} #${groups.length + i}`,
+        description: `مجموعة فرعية مخصصة لمقرر ${course?.name || ""} (الحد الأقصى: ${limit} طلاب)`,
+        leaderName: user.name,
+        maxMembers: limit,
+        members: [],
+        applications: [],
+        messages: []
+      });
+    }
+
+    const updated = [...groups, ...generated];
+    saveGroups(updated);
+    toast.success(`تم توليد ${count} مجموعات دراسية بنجاح (سعة ${limit} طلاب/مجموعة)`);
+    setBulkDialogOpen(false);
   };
 
   // Send Internal Group Chat Message
@@ -281,15 +321,72 @@ export default function CourseGroups() {
               </Button>
             </div>
 
-            {/* Teacher-Only Add Group Trigger */}
+            {/* Teacher-Only Actions: Bulk Generator & Single Creator */}
             {isTeacher && (
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs flex items-center gap-1 shadow-sm">
-                    <Plus className="h-4 w-4 ml-1" />
-                    إنشاء مجموعة (خاص بالمعلم)
-                  </Button>
-                </DialogTrigger>
+              <div className="flex items-center gap-2">
+                {/* Bulk Generate Modal */}
+                <Dialog open={bulkDialogOpen} onOpenChange={setBulkDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="border-[#428177] text-[#002623] hover:bg-[#EDEBE0] font-bold text-xs flex items-center gap-1.5 shadow-sm">
+                      <Wand2 className="h-4 w-4 text-[#428177]" />
+                      توليد مجموعات آلياً (Bulk)
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent dir="rtl" className="bg-white border border-[#428177] text-right">
+                    <DialogHeader>
+                      <DialogTitle className="text-right text-[#002623]">توليد مجموعات دراسية تلقائياً للمقرر</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleBulkGenerateSubmit} className="space-y-4 text-right pt-2">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bulk-count" className="text-xs font-semibold text-[#002623]">عدد المجموعات المراد إنشاؤها</Label>
+                        <Input
+                          id="bulk-count"
+                          type="number"
+                          min={1}
+                          max={20}
+                          value={bulkCount}
+                          onChange={(e) => setBulkCount(Number(e.target.value) || 1)}
+                          className="text-right border-[#428177]/40"
+                          placeholder="مثال: 4"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bulk-limit" className="text-xs font-semibold text-[#002623]">الحد الأقصى لعدد الطلاب في كل مجموعة</Label>
+                        <Input
+                          id="bulk-limit"
+                          type="number"
+                          min={1}
+                          max={10}
+                          value={bulkLimit}
+                          onChange={(e) => setBulkLimit(Number(e.target.value) || defaultCourseLimit)}
+                          className="text-right border-[#428177]/40"
+                        />
+                        <p className="text-[11px] text-[#3D3A3B]">مقرر 1 محدد افتراضياً بـ 4 طلاب، ومقرر 2 بـ طالبين</p>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="bulk-prefix" className="text-xs font-semibold text-[#002623]">بادئة اسم المجموعات</Label>
+                        <Input
+                          id="bulk-prefix"
+                          value={bulkPrefix}
+                          onChange={(e) => setBulkPrefix(e.target.value)}
+                          className="text-right border-[#428177]/40"
+                          placeholder="مثال: فريق عمل"
+                        />
+                      </div>
+                      <Button type="submit" className="w-full bg-[#428177] hover:bg-[#054239] text-white font-bold mt-2">
+                        بدء توليد المجموعات الآن
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs flex items-center gap-1 shadow-sm">
+                      <Plus className="h-4 w-4 ml-1" />
+                      إنشاء مجموعة فردية
+                    </Button>
+                  </DialogTrigger>
                 <DialogContent dir="rtl" className="bg-white border border-[#428177]">
                   <DialogHeader>
                     <DialogTitle className="text-right text-[#002623]">إنشاء مجموعة دراسية معتمدة (خاص بالمعلم)</DialogTitle>
@@ -317,12 +414,26 @@ export default function CourseGroups() {
                         rows={3}
                       />
                     </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="g-limit" className="text-xs font-semibold text-[#002623]">الحد الأقصى لعدد الطلاب في المجموعة</Label>
+                      <Input
+                        id="g-limit"
+                        type="number"
+                        min={1}
+                        max={10}
+                        value={newGroupMaxMembers}
+                        onChange={(e) => setNewGroupMaxMembers(Number(e.target.value) || defaultCourseLimit)}
+                        className="text-right border-[#428177]/40 focus-visible:ring-[#428177]"
+                      />
+                      <p className="text-[11px] text-[#3D3A3B]">الحد النموذجي الموصى به لهذا المقرر: {defaultCourseLimit} طلاب</p>
+                    </div>
                     <Button type="submit" className="w-full bg-[#428177] hover:bg-[#054239] text-white font-bold mt-2">
                       اعتماد وإنشاء المجموعة
                     </Button>
                   </form>
                 </DialogContent>
-              </Dialog>
+                </Dialog>
+              </div>
             )}
           </div>
         </div>
