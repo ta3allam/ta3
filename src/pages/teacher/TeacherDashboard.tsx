@@ -242,7 +242,7 @@ export default function TeacherDashboard() {
               <span>تدقيق إيصالات وحوالات الطلاب لمقرراتي 💵</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="p-3 sm:p-6 overflow-hidden">
             <PaymentVerificationQueue verifierRole="teacher" />
           </CardContent>
         </Card>
