@@ -223,11 +223,11 @@ export function PaymentVerificationQueue({
             return (
               <Card
                 key={rcpt.id}
-                className="border border-[#428177]/25 bg-white shadow-xs rounded-2xl p-4 text-right hover:border-[#428177] transition-all"
+                className="border border-[#428177]/25 bg-white shadow-xs rounded-2xl p-3.5 sm:p-4 text-right hover:border-[#428177] transition-all overflow-hidden w-full"
               >
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                   {/* Left: Student & Transaction Info */}
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-3 w-full md:w-auto min-w-0 flex-1">
                     <img
                       src={rcpt.receiptImageUrl}
                       alt="Receipt"
@@ -236,7 +236,7 @@ export function PaymentVerificationQueue({
                       title="انقر لمعاينة الإيصال بالحجم الكامل"
                     />
 
-                    <div className="space-y-1">
+                    <div className="space-y-1.5 min-w-0 flex-1 overflow-hidden">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-black text-sm text-[#002623]">{rcpt.studentName}</span>
                         <span
@@ -265,10 +265,10 @@ export function PaymentVerificationQueue({
                       <div className="text-xs text-[#3D3A3B] flex flex-wrap items-center gap-2">
                         <span>الدورة: <strong className="text-[#002623]">{rcpt.courseName}</strong></span>
                         <span>•</span>
-                        <span className="font-mono text-[#428177] font-bold">Ref: {rcpt.transactionReference}</span>
+                        <span className="font-mono text-[#428177] font-bold break-all">Ref: {rcpt.transactionReference}</span>
                       </div>
 
-                      <div className="text-[11px] text-muted-foreground flex items-center gap-3">
+                      <div className="text-[11px] text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1">
                         <span>المبلغ: <strong className="text-[#054239]">${rcpt.amount} {rcpt.currency}</strong></span>
                         <span>•</span>
                         <span>حصة الصانع (85%): ${rcpt.creatorEarnings}</span>
@@ -279,7 +279,7 @@ export function PaymentVerificationQueue({
                   </div>
 
                   {/* Right: Action Buttons */}
-                  <div className="flex items-center gap-2 w-full md:w-auto justify-end pt-2 md:pt-0 border-t md:border-t-0 border-[#EDEBE0]">
+                  <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end pt-2 md:pt-0 border-t md:border-t-0 border-[#EDEBE0] shrink-0">
                     <Button
                       size="sm"
                       variant="outline"
@@ -327,7 +327,7 @@ export function PaymentVerificationQueue({
       {/* Modal: High-Res Receipt Inspector */}
       {selectedReceipt && (
         <Dialog open={!!selectedReceipt} onOpenChange={() => setSelectedReceipt(null)}>
-          <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto p-0 rounded-3xl border border-[#428177]/30 bg-white" dir="rtl">
+          <DialogContent className="w-[95vw] max-w-xl max-h-[90vh] overflow-y-auto p-0 rounded-3xl border border-[#428177]/30 bg-white shadow-2xl" dir="rtl">
             <div className="bg-[#002623] text-[#EDEBE0] p-5 rounded-t-3xl flex justify-between items-center">
               <DialogHeader className="text-right">
                 <DialogTitle className="text-lg font-black text-white">

@@ -79,7 +79,7 @@ export function PayoutRequestDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent dir="rtl" className="max-w-md bg-white border border-[#428177]/30 text-right rounded-3xl shadow-2xl p-6">
+      <DialogContent dir="rtl" className="w-[95vw] max-w-md max-h-[90vh] overflow-y-auto bg-white border border-[#428177]/30 text-right rounded-3xl shadow-2xl p-4 sm:p-6 overflow-x-hidden">
         <DialogHeader className="border-b border-[#EDEBE0] pb-3">
           <DialogTitle className="text-right text-[#002623] font-black text-base flex items-center justify-between">
             <span>طلب سحب أرباح صانع المحتوى</span>

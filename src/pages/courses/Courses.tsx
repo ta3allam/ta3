@@ -327,10 +327,10 @@ export default function CourseDetail() {
               <div className="lg:col-span-1 space-y-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold text-[#002623]">الأحداث القادمة</h3>
-                  {isTeacher && (
-                    <Button size="sm" onClick={() => setEventDialogOpen(true)} className="bg-[#428177] text-white font-bold">
+                  {user?.role === 'admin' && (
+                    <Button size="sm" onClick={() => setEventDialogOpen(true)} className="bg-[#428177] text-white font-bold" title="جدولة حدث أو موعد رسمي (حصري لمدير النظام)">
                       <Plus className="h-3 w-3 ml-1" />
-                      حدث
+                      إضافة موعد تقويمي (خاص بالإدارة)
                     </Button>
                   )}
                 </div>
