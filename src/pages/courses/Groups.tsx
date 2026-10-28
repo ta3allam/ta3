@@ -182,47 +182,28 @@ export default function CourseGroups() {
     toast.success("تم حذف المجموعة الدراسية بنجاح");
   };
 
-  // Student Group Application Workflow
-  const handleApplyToGroup = (groupId: number) => {
-    if (!user) return;
+  // Direct Join Group (Students only, immediate join without pending request)
+  const handleJoinGroup = (groupId: number) => {
+    if (!user || isTeacher) return;
     const updated = groups.map(g => {
       if (g.id === groupId) {
         const members = g.members || [];
-        const applications = g.applications || [];
-
         if (members.some(m => m.name === user.name)) {
           toast.info("أنت عضو بالفعل في هذه المجموعة");
           return g;
         }
-
-        // Auto-accept if group is empty (0 members)
-        if (members.length === 0) {
-          toast.success("تم انضمامك للمجموعة تلقائياً (مجموعة جديدة)");
-          return {
-            ...g,
-            members: [{ name: user.name, role: 'leader' as const }],
-            applications
-          };
-        }
-
-        if (applications.some(a => a.studentName === user.name && a.status === 'pending')) {
-          toast.info("طلب انضمامك قيد المراجعة لدى الأعضاء والمعلم");
+        if (members.length >= (g.maxMembers || 4)) {
+          toast.error("عذراً، هذه المجموعة مكتملة العدد");
           return g;
         }
-
-        toast.success("تم تقديم طلب الانضمام للمجموعة وفي انتظار موافقة أعضاء الفريق أو المعلم");
+        const newMembers: GroupMember[] = [
+          ...members,
+          { name: user.name, role: members.length === 0 ? 'leader' : 'member' }
+        ];
+        toast.success(`تم انضمامك إلى ${g.name} بنجاح`);
         return {
           ...g,
-          members,
-          applications: [
-            ...applications,
-            {
-              id: Date.now(),
-              studentName: user.name,
-              appliedAt: new Date().toISOString(),
-              status: 'pending' as const
-            }
-          ]
+          members: newMembers
         };
       }
       return g;
@@ -230,45 +211,16 @@ export default function CourseGroups() {
     saveGroups(updated);
   };
 
-  // Student Withdraw/Cancel Group Application
-  const handleCancelApplication = (groupId: number) => {
-    if (!user) return;
+  // Leave Group (Students only)
+  const handleLeaveGroup = (groupId: number) => {
+    if (!user || isTeacher) return;
     const updated = groups.map(g => {
       if (g.id === groupId) {
-        const applications = (g.applications || []).filter(a => a.studentName !== user.name);
-        toast.info("تم سحب وإلغاء طلب الانضمام بنجاح");
+        const members = (g.members || []).filter(m => m.name !== user.name);
+        toast.info("تمت مغادرة المجموعة بنجاح");
         return {
           ...g,
-          applications
-        };
-      }
-      return g;
-    });
-    saveGroups(updated);
-  };
-
-  // Approve / Reject Application (by Group Members or Teacher)
-  const handleProcessApplication = (groupId: number, appId: number, action: 'accept' | 'reject') => {
-    const updated = groups.map(g => {
-      if (g.id === groupId) {
-        const members = g.members || [];
-        const applications = g.applications || [];
-
-        const app = applications.find(a => a.id === appId);
-        if (!app) return g;
-
-        let updatedMembers = members;
-        if (action === 'accept') {
-          updatedMembers = [...members, { name: app.studentName, role: 'member' as const }];
-          toast.success(`تمت الموافقة على انضمام ${app.studentName}`);
-        } else {
-          toast.error(`تم رفض طلب انضمام ${app.studentName}`);
-        }
-
-        return {
-          ...g,
-          members: updatedMembers,
-          applications: applications.filter(a => a.id !== appId)
+          members
         };
       }
       return g;
@@ -303,7 +255,7 @@ export default function CourseGroups() {
               <span className="font-bold text-[#002623]">المجموعات الدراسية</span>
             </div>
             <h1 className="text-3xl font-extrabold text-[#002623]">دليل المجموعات والفرق الدراسية</h1>
-            <p className="text-xs text-[#3D3A3B] font-medium">إنشاء المجموعات يتم حصرياً بواسطة معلم المقرر • الانضمام يتطلب تقديم طلب موافقة (قبول تلقائي للمجموعات الفارغة)</p>
+            <p className="text-xs text-[#3D3A3B] font-medium">إنشاء المجموعات وتحديد السعة يتم حصرياً بواسطة المعلم • انضمام فوري ومباشر للطلاب حتى اكتمال العدد المحدد</p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -417,27 +369,35 @@ export default function CourseGroups() {
                       </TableCell>
                       <TableCell className="text-center">
                         <div className="flex items-center justify-center gap-2">
-                          {isMember ? (
-                            <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-3">
-                              عضو بالفريق ✅
+                          {isTeacher ? (
+                            <Badge variant="outline" className="border-[#428177]/40 text-[#428177] font-bold py-1 px-2.5 text-xs">
+                              إشراف وإدارة المعلم 👨‍🏫
                             </Badge>
-                          ) : hasPendingApp ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleCancelApplication(group.id)}
-                              className="border-[#6B1F2A]/40 text-[#6B1F2A] hover:bg-[#6B1F2A]/10 font-bold text-xs flex items-center gap-1"
-                            >
-                              <Undo2 className="w-3.5 h-3.5" />
-                              إلغاء طلب الانضمام
-                            </Button>
+                          ) : isMember ? (
+                            <div className="flex items-center gap-1.5">
+                              <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-2.5 text-xs">
+                                عضو بالفريق ✅
+                              </Badge>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleLeaveGroup(group.id)}
+                                className="text-xs text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-7 px-2 font-bold"
+                              >
+                                مغادرة
+                              </Button>
+                            </div>
+                          ) : members.length >= (group.maxMembers || 4) ? (
+                            <Badge variant="secondary" className="text-muted-foreground text-xs py-1 px-2.5 font-bold">
+                              المجموعة مكتملة
+                            </Badge>
                           ) : (
                             <Button
                               size="sm"
-                              onClick={() => handleApplyToGroup(group.id)}
+                              onClick={() => handleJoinGroup(group.id)}
                               className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
                             >
-                              {members.length === 0 ? "انضمام تلقائي" : "تقديم طلب انضمام"}
+                              انضمام للمجموعة
                             </Button>
                           )}
 
@@ -525,27 +485,35 @@ export default function CourseGroups() {
                         محادثة المجموعة
                       </Button>
 
-                      {isMember ? (
-                        <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-3">
-                          أنت عضو بالفريق ✅
+                      {isTeacher ? (
+                        <Badge variant="outline" className="border-[#428177]/40 text-[#428177] font-bold py-1 px-2.5 text-xs">
+                          إشراف وإدارة المعلم 👨‍🏫
                         </Badge>
-                      ) : hasPendingApp ? (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleCancelApplication(group.id)}
-                          className="border-[#6B1F2A]/40 text-[#6B1F2A] hover:bg-[#6B1F2A]/10 font-bold text-xs flex items-center gap-1"
-                        >
-                          <Undo2 className="w-3.5 h-3.5" />
-                          إلغاء طلب الانضمام
-                        </Button>
+                      ) : isMember ? (
+                        <div className="flex items-center gap-1.5">
+                          <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-2.5 text-xs">
+                            عضو بالفريق ✅
+                          </Badge>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleLeaveGroup(group.id)}
+                            className="text-xs text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-7 px-2 font-bold"
+                          >
+                            مغادرة
+                          </Button>
+                        </div>
+                      ) : members.length >= (group.maxMembers || 4) ? (
+                        <Badge variant="secondary" className="text-muted-foreground text-xs py-1 px-2.5 font-bold">
+                          المجموعة مكتملة
+                        </Badge>
                       ) : (
                         <Button
                           size="sm"
-                          onClick={() => handleApplyToGroup(group.id)}
+                          onClick={() => handleJoinGroup(group.id)}
                           className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
                         >
-                          {members.length === 0 ? "انضمام تلقائي" : "تقديم طلب انضمام"}
+                          انضمام للمجموعة
                         </Button>
                       )}
                     </div>
@@ -554,45 +522,6 @@ export default function CourseGroups() {
               );
             })}
           </div>
-        )}
-
-        {/* Pending Group Applications Approval Section */}
-        {groups.some(g => (isTeacher || (g.members || []).some(m => user && m.name === user.name)) && (g.applications || []).some(a => a.status === 'pending')) && (
-          <Card className="border border-[#988561]/40 bg-white shadow-sm rounded-2xl text-right">
-            <CardHeader className="pb-2 bg-[#EDEBE0]/40 border-b border-[#428177]/10">
-              <CardTitle className="text-base font-bold text-[#002623]">طلبات الانضمام المعلقة التي يمكنك اتخاذ قرار بشأنها</CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 space-y-3">
-              {groups.flatMap(g => (g.applications || []).filter(a => a.status === 'pending').map(a => ({ group: g, app: a }))).map(({ group, app }) => (
-                <div key={app.id} className="flex items-center justify-between bg-[#EDEBE0]/20 p-3 rounded-xl border border-[#428177]/20">
-                  <div className="space-y-0.5 text-xs">
-                    <span className="font-bold text-[#002623]">{app.studentName}</span>
-                    <p className="text-[#3D3A3B]">يرغب بالانضمام إلى: <span className="font-bold">{group.name}</span></p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      onClick={() => handleProcessApplication(group.id, app.id, 'accept')}
-                      className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs flex items-center gap-1"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      موافقة
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleProcessApplication(group.id, app.id, 'reject')}
-                      className="border-[#6B1F2A]/40 text-[#6B1F2A] hover:bg-[#6B1F2A]/10 font-bold text-xs flex items-center gap-1"
-                    >
-                      <XCircle className="w-3.5 h-3.5" />
-                      رفض
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
         )}
 
         {/* Group Internal Chat Dialog */}
