@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Users, Plus, ArrowRight, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2, MessageSquare, Send, Wand2 } from "lucide-react";
+import { Users, Plus, ArrowRight, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2, MessageSquare, Send, Wand2, X } from "lucide-react";
 import { toast } from "sonner";
 
 export interface GroupMember {
@@ -188,6 +188,22 @@ export default function CourseGroups() {
     setBulkDialogOpen(false);
   };
 
+  // Teacher Kick Member from Study Group
+  const handleKickMember = (groupId: number, memberName: string) => {
+    if (!isTeacher) return;
+    const updated = groups.map(g => {
+      if (g.id === groupId) {
+        return {
+          ...g,
+          members: (g.members || []).filter(m => m.name !== memberName)
+        };
+      }
+      return g;
+    });
+    saveGroups(updated);
+    toast.success(`تم استبعاد الطالب ${memberName} من المجموعة`);
+  };
+
   // Send Internal Group Chat Message
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,7 +211,7 @@ export default function CourseGroups() {
 
     const newMessage: GroupMessage = {
       id: Date.now(),
-      senderName: user.name,
+      senderName: isTeacher ? `${user.name} (أستاذ المادة 👨‍🏫)` : user.name,
       text: chatMessageText.trim(),
       timestamp: "الآن"
     };
@@ -463,9 +479,30 @@ export default function CourseGroups() {
                       <TableCell className="font-bold text-[#002623]">{group.name}</TableCell>
                       <TableCell className="text-xs text-[#3D3A3B] max-w-xs truncate font-medium">{group.description}</TableCell>
                       <TableCell className="text-center">
-                        <Badge className="bg-[#428177]/15 text-[#054239] border border-[#428177]/30 font-bold">
-                          {members.length} / {group.maxMembers || 5} أعضاء
-                        </Badge>
+                        <div className="flex flex-col items-center gap-1.5">
+                          <Badge className="bg-[#428177]/15 text-[#054239] border border-[#428177]/30 font-bold text-xs">
+                            {members.length} / {group.maxMembers || defaultCourseLimit} أعضاء
+                          </Badge>
+                          {members.length > 0 && (
+                            <div className="flex flex-wrap justify-center gap-1 max-w-[220px]">
+                              {members.map((m, mIdx) => (
+                                <Badge key={mIdx} variant="outline" className="text-[10px] py-0 px-1.5 border-[#428177]/30 text-[#002623] flex items-center gap-1">
+                                  <span>{m.name}</span>
+                                  {isTeacher && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleKickMember(group.id, m.name)}
+                                      className="text-rose-600 hover:text-rose-800 transition-colors ml-0.5"
+                                      title="استبعاد الطالب من المجموعة"
+                                    >
+                                      <X className="w-2.5 h-2.5" />
+                                    </button>
+                                  )}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell className="text-center">
                         <Button
@@ -575,13 +612,23 @@ export default function CourseGroups() {
                       {members.length > 0 ? (
                         <div className="flex flex-wrap gap-1.5">
                           {members.map((m, idx) => (
-                            <Badge key={idx} variant="outline" className="border-[#428177]/30 text-[#002623] text-[11px] font-semibold">
-                              {m.name} {m.role === 'leader' && "(قائد)"}
+                            <Badge key={idx} variant="outline" className="border-[#428177]/30 text-[#002623] text-[11px] font-semibold flex items-center gap-1.5">
+                              <span>{m.name} {m.role === 'leader' && "(قائد)"}</span>
+                              {isTeacher && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleKickMember(group.id, m.name)}
+                                  className="text-rose-600 hover:text-rose-800 transition-colors p-0.5 rounded"
+                                  title="استبعاد الطالب من المجموعة"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              )}
                             </Badge>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-xs text-[#3D3A3B] italic">المجموعة فارغة (الانضمام فوري بدون انتظار موافقة)</p>
+                        <p className="text-xs text-[#3D3A3B] italic">المجموعة فارغة حالياً</p>
                       )}
                     </div>
 
@@ -648,15 +695,30 @@ export default function CourseGroups() {
               <div className="space-y-3 py-2">
                 <div className="h-64 overflow-y-auto space-y-2.5 p-3 border rounded-xl bg-muted/20 text-xs">
                   {activeChatGroup.messages && activeChatGroup.messages.length > 0 ? (
-                    activeChatGroup.messages.map((m) => (
-                      <div key={m.id} className={`p-2.5 rounded-xl max-w-[85%] ${m.senderName === user?.name ? 'mr-auto bg-[#428177] text-white' : 'ml-auto bg-white border text-foreground'}`}>
-                        <div className="flex justify-between items-center mb-1 gap-2">
-                          <span className="font-bold text-[11px]">{m.senderName}</span>
-                          <span className="text-[10px] opacity-75">{m.timestamp}</span>
+                    activeChatGroup.messages.map((m) => {
+                      const isTeacherMsg = m.senderName.includes("أستاذ المادة");
+                      return (
+                        <div
+                          key={m.id}
+                          className={`p-2.5 rounded-xl max-w-[85%] ${
+                            isTeacherMsg
+                              ? 'bg-[#002623] text-white border border-[#428177] mr-auto shadow-sm'
+                              : m.senderName === user?.name
+                              ? 'mr-auto bg-[#428177] text-white'
+                              : 'ml-auto bg-white border text-foreground'
+                          }`}
+                        >
+                          <div className="flex justify-between items-center mb-1 gap-2">
+                            <span className="font-bold text-[11px] flex items-center gap-1">
+                              {m.senderName}
+                              {isTeacherMsg && <span className="bg-[#428177]/40 text-[9px] px-1.5 rounded text-white font-bold">المشرف الأكاديمي</span>}
+                            </span>
+                            <span className="text-[10px] opacity-75">{m.timestamp}</span>
+                          </div>
+                          <p className="leading-relaxed">{m.text}</p>
                         </div>
-                        <p className="leading-relaxed">{m.text}</p>
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
                     <div className="text-center py-12 text-muted-foreground text-xs">
                       لا توجد رسائل في هذه المجموعة بعد. كن أول من يكتب!
