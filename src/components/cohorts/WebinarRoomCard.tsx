@@ -10,6 +10,7 @@ import {
   Clock,
   Users,
   PlayCircle,
+  ShieldCheck,
   CheckCircle2,
   AlertCircle,
   ExternalLink,
@@ -33,13 +34,15 @@ interface WebinarRoomCardProps {
   onRsvp?: (eventId: string | number) => void;
   onJoinSession?: (event: CohortEvent) => void;
   isRegistered?: boolean;
+  isAdmin?: boolean;
 }
 
 export function WebinarRoomCard({
   event,
   onRsvp,
   onJoinSession,
-  isRegistered = false
+  isRegistered = false,
+  isAdmin = false
 }: WebinarRoomCardProps) {
   const [registered, setRegistered] = useState(isRegistered);
   const [tick, setTick] = useState(0);

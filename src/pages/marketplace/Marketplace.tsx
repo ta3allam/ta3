@@ -13,6 +13,8 @@ import { AffiliateCourseModal } from "@/components/marketplace/AffiliateCourseMo
 import { CreatorCourseBuilderModal } from "@/components/creator/CreatorCourseBuilderModal";
 import { AFFILIATE_COURSES, AffiliateCourse } from "@/data/affiliateCourses";
 import { useCourseData } from "@/contexts/CourseContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { ShieldCheck } from "lucide-react";
 import { Course } from "@/pages/courses/types";
 import {
   Search,
@@ -34,6 +36,8 @@ import { getAssetUrl } from "@/lib/assetUtils";
 
 export default function Marketplace() {
   const { courseData } = useCourseData();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
   const [activeMarketTab, setActiveMarketTab] = useState<"native" | "affiliate">("native");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPricingFilter, setSelectedPricingFilter] = useState("all");
@@ -352,22 +356,34 @@ export default function Marketplace() {
                     </div>
 
                     <div className="p-4 bg-[#EDEBE0]/30 border-t border-[#428177]/10 flex gap-2">
-                      <Button
-                        onClick={() => setCheckoutCourse(c)}
-                        className="flex-1 bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs gap-1.5 rounded-xl shadow-xs"
-                      >
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                        <span>التسجيل والدفع</span>
-                      </Button>
+                      {isAdmin ? (
+                        <Button
+                          onClick={() => setPreviewCourse(c)}
+                          className="flex-1 bg-[#002623] hover:bg-[#054239] text-[#EDEBE0] font-bold text-xs gap-1.5 rounded-xl shadow-xs"
+                        >
+                          <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                          <span>تدقيق ومعاينة المنهج (إشراف)</span>
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            onClick={() => setCheckoutCourse(c)}
+                            className="flex-1 bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs gap-1.5 rounded-xl shadow-xs"
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            <span>التسجيل والدفع</span>
+                          </Button>
 
-                      <Button
-                        variant="outline"
-                        onClick={() => setPreviewCourse(c)}
-                        className="border-[#428177]/30 text-[#002623] hover:bg-[#EDEBE0] font-bold text-xs rounded-xl gap-1"
-                      >
-                        <Eye className="h-3.5 w-3.5 text-[#428177]" />
-                        <span>معاينة المنهج</span>
-                      </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => setPreviewCourse(c)}
+                            className="border-[#428177]/30 text-[#002623] hover:bg-[#EDEBE0] font-bold text-xs rounded-xl gap-1"
+                          >
+                            <Eye className="h-3.5 w-3.5 text-[#428177]" />
+                            <span>معاينة المنهج</span>
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </Card>
                 ))}
@@ -416,6 +432,7 @@ export default function Marketplace() {
             onOpenChange={() => setPreviewCourse(null)}
             course={previewCourse}
             onEnroll={() => setCheckoutCourse(previewCourse)}
+            isAdmin={isAdmin}
           />
         )}
 

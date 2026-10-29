@@ -25,6 +25,7 @@ interface MarketplaceCourseModalProps {
   onOpenChange: (open: boolean) => void;
   course: Course & { id: number };
   onEnroll: () => void;
+  isAdmin?: boolean;
 }
 
 export function MarketplaceCourseModal({
@@ -32,6 +33,7 @@ export function MarketplaceCourseModal({
   onOpenChange,
   course,
   onEnroll,
+  isAdmin = false,
 }: MarketplaceCourseModalProps) {
   const [activeTab, setActiveTab] = useState<'syllabus' | 'instructor' | 'reviews'>('syllabus');
 
@@ -261,7 +263,15 @@ export function MarketplaceCourseModal({
             >
               إغلاق
             </Button>
-            <Button
+            {isAdmin ? (
+              <Button
+                onClick={() => onOpenChange(false)}
+                className="flex-1 sm:flex-none px-6 bg-[#002623] hover:bg-[#054239] text-[#EDEBE0] font-bold text-xs gap-1.5 shadow-md"
+              >
+                <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                <span>وضع المشرف: اعتماد المنهج</span>
+              </Button>
+            ) : <Button
               onClick={() => {
                 onOpenChange(false);
                 onEnroll();
@@ -269,8 +279,8 @@ export function MarketplaceCourseModal({
               className="flex-1 sm:flex-none px-6 bg-[#002623] hover:bg-[#054239] text-[#EDEBE0] font-bold text-xs gap-1.5 shadow-md"
             >
               <CheckCircle2 className="h-4 w-4" />
-              <span>{isFree ? 'انضمام فوري للدورة' : `شراء وتسجيل ($${priceDollars})`}</span>
-            </Button>
+              <span>{isFree ? 'انضمام فوري للدورة' : `شراء وتسجيل (${priceDollars})`}</span>
+            </Button>}
           </div>
         </div>
       </DialogContent>

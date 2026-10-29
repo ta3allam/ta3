@@ -276,6 +276,7 @@ export default function CohortEvents() {
                       onRsvp={handleRsvpToggle}
                       onJoinSession={handleOpenStage}
                       isRegistered={userRsvps.includes(String(event.id))}
+                      isAdmin={user?.role === "admin"}
                     />
                   ))}
                 </div>
@@ -311,6 +312,7 @@ export default function CohortEvents() {
                     onRsvp={handleRsvpToggle}
                     onJoinSession={handleOpenStage}
                     isRegistered={userRsvps.includes(String(event.id))}
+                    isAdmin={user?.role === "admin"}
                   />
                 ))}
               </div>
