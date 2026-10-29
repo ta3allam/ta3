@@ -177,13 +177,12 @@ export default function AdminDashboard() {
           pendingRequests={requests.length}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden">
-              <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10">
-                <CardTitle className="text-lg font-bold text-[#002623]">مركز الإدارة والعمليات المركزية</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
+        <div className="space-y-6">
+          <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-3xl overflow-hidden w-full">
+            <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10 p-5">
+              <CardTitle className="text-lg font-bold text-[#002623]">مركز الإدارة والعمليات المركزية</CardTitle>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 overflow-hidden">
                 <Tabs defaultValue="payments" dir="rtl">
                   <TabsList className="flex flex-wrap items-center gap-1.5 mb-6 bg-[#EDEBE0] p-1.5 rounded-2xl w-full max-w-4xl">
                     <TabsTrigger value="payments" className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs">إيصالات الدفع 💵</TabsTrigger>
@@ -230,11 +229,11 @@ export default function AdminDashboard() {
                 </Tabs>
               </CardContent>
             </Card>
-          </div>
 
-          <div className="lg:col-span-1">
-            <PlatformAuditLog />
-          </div>
+            {/* Platform Security & Activity Audit Log */}
+            <div className="w-full">
+              <PlatformAuditLog />
+            </div>
         </div>
 
       </div>
