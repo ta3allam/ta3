@@ -24,6 +24,53 @@ erDiagram
     COURSES ||--o{ COHORT_RETENTION_METRICS : "tracks"
     COURSES ||--o{ MODULE_TELEMETRY_LOGS : "monitors"
     PROFILES ||--o{ ANALYTICS_REVENUE_LEDGER : "earns"
+    COURSES ||--o{ STUDY_GROUPS : "configures"
+    PROFILES ||--o{ TRAINER_APPLICATIONS : "submits"
+    PROFILES ||--o{ CERTIFIED_TRAINERS : "certified as"
+    PROFILES ||--o{ GEOGRAPHIC_DEMOGRAPHICS : "registered in"
+
+    
+    STUDY_GROUPS {
+        string id PK
+        bigint course_id FK
+        string name
+        integer max_members
+        integer current_members
+        text_array member_names
+        boolean is_locked
+        timestamp created_at
+    }
+
+    TRAINER_APPLICATIONS {
+        string id PK
+        uuid teacher_id FK
+        string specialization
+        string proposed_workshop
+        integer experience_years
+        string status
+        timestamp submitted_at
+    }
+
+    CERTIFIED_TRAINERS {
+        string id PK
+        uuid profile_id FK
+        string email
+        string specialization
+        integer workshops_count
+        boolean can_host_workshops
+        string status
+        timestamp certified_at
+    }
+
+    GEOGRAPHIC_DEMOGRAPHICS {
+        string country_code PK
+        string country_name
+        string flag_emoji
+        integer student_count
+        decimal percentage
+        text_array top_cities
+        timestamp last_aggregated_at
+    }
 
     PROFILES {
         uuid id PK
