@@ -16,8 +16,8 @@ The System Context diagram displays how users and regional infrastructure intera
 graph TD
     subgraph Users [" Platform Ecosystem Users "]
         Learner["🎓 Learner / Student (طالب)<br/>Enrolls in courses, upvotes in community, tracks XP"]
-        Creator["👨‍🏫 Creator / Instructor (صانع محتوى / معلم)<br/>Publishes courses, moderates channels, manages payouts"]
-        Admin["🛡️ SuperAdmin (مدير النظام)<br/>Role governance, GMV audits, manual receipt verification"]
+        Creator["👨‍🏫 Creator / Workshop Trainer (صانع محتوى / مدرب ورش)<br/>Publishes courses, hosts interactive workshops, manages payouts"]
+        Admin["🛡️ SuperAdmin (مدير النظام)<br/>Role governance, GMV audits, manual receipt verification, trainer certifications & demographics"]
     end
 
     subgraph Platform [" Core Ta3 Platform Ecosystem "]
@@ -30,7 +30,7 @@ graph TD
         MockEngine["💾 MockDataEngine & IndexedDB<br/>Local reactive storage & offline drafts"]
         AudioVideoSvc["🎧 Dual-Mode Video & Audio-Only Player<br/>Low-Bandwidth AAC 64kbps stream (85%+ saving)"]
         SupabaseDB[("🗄️ Supabase PostgreSQL DB<br/>Relational data & RLS policies")]
-        LevantGateways["💵 Regional Cashflow Engine<br/>ShamCash, Syriatel, ZainCash, Hawala, USDT"]
+        LevantGateways["💵 Regional Cashflow Engine<br/>ShamCash, Syriatel, ZainCash, USDT TRC-20"]
     end
 
     Learner -->|HTTPS / PWA| Ta3App
@@ -312,3 +312,20 @@ graph TD
   - `Antique Sand`: `#B9A779`
 - **Typography**: Native Arabic RTL, Standard Arabic Numerals (1, 2, 3, 4, 5, 6, 7, 8, 9, 0).
 
+
+
+---
+
+## 🏛️ Platform Governance, Study Groups & Domain Boundaries (Day 4 Update)
+
+### 1. Role Boundaries & Duties Separation
+* **SuperAdmin (مدير النظام)**: Executive platform auditor. Secluded from consumer buyer/enrollment loops in the Marketplace and Cohort RSVP queues. Has full oversight over all courses, live sessions, receipt verification queue, student registry, and trainer profile creation.
+* **Creator / Workshop Trainer (صانع محتوى / مدرب ورش عمل)**: Approved by administrators to host live cohort sessions, schedule interactive webinars, set pricing models, and request financial payouts (85% net split).
+* **Academic Teacher (معلم أكاديمي)**: Oversees course curricula, inspects discussion posts with triage status badges (*سؤال مفتوح / محلول*), sets study group limits (e.g. 4/group for CS-101, 2/group for CS-202), bulk-generates groups, monitors group discussions, and kicks disruptive members. Cannot participate as student peers in study groups.
+* **Student (طالب)**: Enrolls in free/paid courses via ShamCash, Syriatel Cash, ZainCash, or USDT TRC-20, joins study groups directly without approval friction, and attends live sessions.
+
+### 2. High-Capacity Student Directory
+* Integrated high-capacity data table with live debounced search, course-level filtering, pagination controls (6/page virtualized), academic completion progress gauges, and CSV export.
+
+### 3. Geographic Analytics Demographics
+* Replaced low-bandwidth audio mastery gauges with full geographic demographics breakdown: Syria (54%), Iraq (18%), Jordan (14%), Lebanon (8%), and GCC & Diaspora (6%).

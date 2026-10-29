@@ -99,25 +99,25 @@ export function AnalyticsExportModal({
         triggerFileDownload(JSON.stringify(retention, null, 2), `ta3allam-cohort-retention-${timestamp}.json`, "application/json");
       }
     } else {
-      // Modules
-      const modules = [
-        { title: "الوحدة 1: الأساسيات المعمارية", completion: "94%", audioShare: "38%", quizScore: "89%" },
-        { title: "الوحدة 2: بروتوكول التجزئة TUS", completion: "86%", audioShare: "54%", quizScore: "82%" },
-        { title: "الوحدة 3: التزامن المتفائل OCC", completion: "78%", audioShare: "42%", quizScore: "76%" },
-        { title: "الوحدة 4: الذاكرة المؤقتة Redis", completion: "71%", audioShare: "49%", quizScore: "74%" },
-        { title: "الوحدة 5: مشروع التخرج", completion: "64%", audioShare: "31%", quizScore: "91%" },
+      // Geographic Demographics
+      const demographics = [
+        { country: "الجمهورية العربية السورية", students: 1420, percentage: "54%", topCities: "دمشق، حلب، اللاذقية" },
+        { country: "جمهورية العراق", students: 472, percentage: "18%", topCities: "بغداد، البصرة، أربيل" },
+        { country: "المملكة الأردنية الهاشمية", students: 368, percentage: "14%", topCities: "عمان، إربد" },
+        { country: "الجمهورية اللبنانية", students: 210, percentage: "8%", topCities: "بيروت، طرابلس" },
+        { country: "المغتربون ودول الخليج", students: 160, percentage: "6%", topCities: "الرياض، دبي، برلين" },
       ];
       if (fileFormat === "csv") {
         const headers = [
-          { key: "title", label: "اسم الوحدة" },
-          { key: "completion", label: "معدل الإكمال" },
-          { key: "audioShare", label: "استهلاك نمط الصوت" },
-          { key: "quizScore", label: "متوسط الاختبار" },
+          { key: "country", label: "الدولة" },
+          { key: "students", label: "عدد الطلاب المسجلين" },
+          { key: "percentage", label: "النسبة المئوية" },
+          { key: "topCities", label: "أبرز المدن" },
         ];
-        const csv = exportToCsv(modules, headers);
-        triggerFileDownload(csv, `ta3allam-modules-mastery-${timestamp}.csv`, "text/csv;charset=utf-8;");
+        const csv = exportToCsv(demographics, headers);
+        triggerFileDownload(csv, `ta3allam-geographic-demographics-${timestamp}.csv`, "text/csv;charset=utf-8;");
       } else {
-        triggerFileDownload(JSON.stringify(modules, null, 2), `ta3allam-modules-mastery-${timestamp}.json`, "application/json");
+        triggerFileDownload(JSON.stringify(demographics, null, 2), `ta3allam-geographic-demographics-${timestamp}.json`, "application/json");
       }
     }
 
@@ -155,7 +155,7 @@ export function AnalyticsExportModal({
               <SelectContent dir="rtl">
                 <SelectItem value="financial">📊 التقرير المالي وتوزيع قنوات الدفع (85/15)</SelectItem>
                 <SelectItem value="retention">👥 تقرير استبقاء الدفعات والنشاط الأسبوعي</SelectItem>
-                <SelectItem value="modules">📚 تقرير إتقان الوحدات ونمط الصوت المنخفض</SelectItem>
+                <SelectItem value="modules">🌍 تقرير التوزيع الجغرافي ودول الطلاب</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -8,7 +8,9 @@ describe('Day 4 Milestone: Levant Multi-Channel Payment & Manual Receipt Verific
   });
 
   it('should provide comprehensive Levant regional payment methods and instructions', () => {
-    expect(LEVANT_PAYMENT_METHODS.length).toBeGreaterThanOrEqual(6);
+    expect(LEVANT_PAYMENT_METHODS.length).toBeGreaterThanOrEqual(4);
+    expect(LEVANT_PAYMENT_METHODS.map(m => m.id)).not.toContain("hawala_haram");
+    expect(LEVANT_PAYMENT_METHODS.map(m => m.id)).not.toContain("card_visa_master");
 
     const shamcash = LEVANT_PAYMENT_METHODS.find(m => m.id === 'shamcash');
     expect(shamcash).toBeDefined();

@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { Settings } from 'lucide-react';
 import { AdminMetricsOverview } from '@/components/admin/AdminMetricsOverview';
 import { UserManagementTable, UserItem } from '@/components/admin/UserManagementTable';
+import { RegisteredStudentsDirectory } from '@/components/admin/RegisteredStudentsDirectory';
+import { TrainerManagementHub } from '@/components/admin/TrainerManagementHub';
 import { CourseRequestsTable, RequestItem } from '@/components/admin/CourseRequestsTable';
 import { CourseCatalogTable, CourseCatalogItem } from '@/components/admin/CourseCatalogTable';
 import { PlatformAuditLog } from '@/components/admin/PlatformAuditLog';
@@ -14,15 +16,11 @@ import { getAssetUrl } from '@/lib/assetUtils';
 import { supabase } from '@/lib/supabase';
 
 import { PaymentVerificationQueue } from '@/components/admin/PaymentVerificationQueue';
-import { GoldenReleaseAuditModal } from '@/components/admin/GoldenReleaseAuditModal';
-import { Button } from '@/components/ui/button';
-import { ShieldCheck } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { courseData, addCourse } = useCourseData();
   const [users, setUsers] = useState<UserItem[]>([]);
   const [requests, setRequests] = useState<RequestItem[]>([]);
-  const [isAuditOpen, setIsAuditOpen] = useState(false);
 
   useEffect(() => {
     const savedUsers = localStorage.getItem('ta3_admin_users');
@@ -169,13 +167,6 @@ export default function AdminDashboard() {
               </p>
             </div>
 
-            <Button
-              onClick={() => setIsAuditOpen(true)}
-              className="bg-[#002623] hover:bg-[#054239] text-[#EDEBE0] font-bold text-xs gap-1.5 rounded-xl shadow-sm self-start md:self-auto"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>فحص الجاهزية الذهبية 🏆</span>
-            </Button>
           </div>
         </div>
 
@@ -186,16 +177,17 @@ export default function AdminDashboard() {
           pendingRequests={requests.length}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl overflow-hidden">
-              <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10">
-                <CardTitle className="text-lg font-bold text-[#002623]">مركز الإدارة والعمليات المركزية</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
+        <div className="space-y-6">
+          <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-3xl overflow-hidden w-full">
+            <CardHeader className="bg-[#EDEBE0]/30 border-b border-[#428177]/10 p-5">
+              <CardTitle className="text-lg font-bold text-[#002623]">مركز الإدارة والعمليات المركزية</CardTitle>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 overflow-hidden">
                 <Tabs defaultValue="payments" dir="rtl">
-                  <TabsList className="grid grid-cols-4 mb-6 max-w-xl bg-[#EDEBE0] p-1 rounded-xl">
+                  <TabsList className="flex flex-wrap items-center gap-1.5 mb-6 bg-[#EDEBE0] p-1.5 rounded-2xl w-full max-w-4xl">
                     <TabsTrigger value="payments" className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs">إيصالات الدفع 💵</TabsTrigger>
+                    <TabsTrigger value="students" className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs">الطلاب والمسجلون 🎓</TabsTrigger>
+                    <TabsTrigger value="trainers" className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs">مدربو الورش والترقيات 🎙️</TabsTrigger>
                     <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المستخدمون ({users.length})</TabsTrigger>
                     <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">الطلبات ({requests.length})</TabsTrigger>
                     <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المقررات ({courseCatalogItems.length})</TabsTrigger>
@@ -203,6 +195,14 @@ export default function AdminDashboard() {
 
                   <TabsContent value="payments">
                     <PaymentVerificationQueue verifierRole="admin" />
+                  </TabsContent>
+
+                  <TabsContent value="students">
+                    <RegisteredStudentsDirectory />
+                  </TabsContent>
+
+                  <TabsContent value="trainers">
+                    <TrainerManagementHub onAddUser={handleAddUser} />
                   </TabsContent>
 
                   <TabsContent value="users">
@@ -229,17 +229,13 @@ export default function AdminDashboard() {
                 </Tabs>
               </CardContent>
             </Card>
-          </div>
 
-          <div className="lg:col-span-1">
-            <PlatformAuditLog />
-          </div>
+            {/* Platform Security & Activity Audit Log */}
+            <div className="w-full">
+              <PlatformAuditLog />
+            </div>
         </div>
 
-        <GoldenReleaseAuditModal
-          open={isAuditOpen}
-          onOpenChange={setIsAuditOpen}
-        />
       </div>
     </DashboardLayout>
   );

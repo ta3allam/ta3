@@ -5,7 +5,7 @@ import { EnrollmentFunnelCard } from "@/components/analytics/EnrollmentFunnelCar
 import { LectureDropoffChart } from "@/components/analytics/LectureDropoffChart";
 import { RevenueLedgerBreakdownCard } from "@/components/analytics/RevenueLedgerBreakdownCard";
 import { CohortRetentionHeatmap } from "@/components/analytics/CohortRetentionHeatmap";
-import { ModuleMasteryFunnel } from "@/components/analytics/ModuleMasteryFunnel";
+import { GeographicDemographicsCard } from "@/components/analytics/GeographicDemographicsCard";
 import { AnalyticsExportModal } from "@/components/analytics/AnalyticsExportModal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -207,6 +207,7 @@ export default function CreatorAnalytics() {
               <EnrollmentFunnelCard />
               <LectureDropoffChart />
             </div>
+            <GeographicDemographicsCard />
             {!isTeacher && <CohortRetentionHeatmap />}
           </div>
         )}
