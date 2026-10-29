@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Settings } from 'lucide-react';
 import { AdminMetricsOverview } from '@/components/admin/AdminMetricsOverview';
 import { UserManagementTable, UserItem } from '@/components/admin/UserManagementTable';
+import { RegisteredStudentsDirectory } from '@/components/admin/RegisteredStudentsDirectory';
 import { CourseRequestsTable, RequestItem } from '@/components/admin/CourseRequestsTable';
 import { CourseCatalogTable, CourseCatalogItem } from '@/components/admin/CourseCatalogTable';
 import { PlatformAuditLog } from '@/components/admin/PlatformAuditLog';
@@ -183,8 +184,9 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent className="p-6">
                 <Tabs defaultValue="payments" dir="rtl">
-                  <TabsList className="grid grid-cols-4 mb-6 max-w-xl bg-[#EDEBE0] p-1 rounded-xl">
+                  <TabsList className="grid grid-cols-2 sm:grid-cols-5 mb-6 max-w-3xl bg-[#EDEBE0] p-1 rounded-xl gap-1">
                     <TabsTrigger value="payments" className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs">إيصالات الدفع 💵</TabsTrigger>
+                    <TabsTrigger value="students" className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs">الطلاب والمسجلون 🎓</TabsTrigger>
                     <TabsTrigger value="users" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المستخدمون ({users.length})</TabsTrigger>
                     <TabsTrigger value="requests" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">الطلبات ({requests.length})</TabsTrigger>
                     <TabsTrigger value="courses" className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-bold text-xs">المقررات ({courseCatalogItems.length})</TabsTrigger>
@@ -192,6 +194,10 @@ export default function AdminDashboard() {
 
                   <TabsContent value="payments">
                     <PaymentVerificationQueue verifierRole="admin" />
+                  </TabsContent>
+
+                  <TabsContent value="students">
+                    <RegisteredStudentsDirectory />
                   </TabsContent>
 
                   <TabsContent value="users">
