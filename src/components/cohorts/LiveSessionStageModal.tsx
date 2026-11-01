@@ -233,26 +233,20 @@ export function LiveSessionStageModal({
             </div>
 
             {/* Question Input Form */}
-            <form onSubmit={handleSendQuestion} className="pt-3 mt-3 border-t border-[#428177]/20 space-y-2">
-              <Input
-                placeholder="اسمك أو صفتك..."
-                value={authorName}
-                onChange={(e) => setAuthorName(e.target.value)}
-                className="bg-[#054239]/50 border-[#428177]/30 text-white text-xs h-7"
-              />
+            <form onSubmit={handleSendQuestion} className="pt-3 mt-3 border-t border-[#428177]/20">
               <div className="flex gap-2">
                 <Input
-                  placeholder="اطرح سؤالك أو ملاحظتك هنا..."
+                  placeholder="اطرح سؤالك أو استفسارك الأكاديمي هنا..."
                   value={newQuestionText}
                   onChange={(e) => setNewQuestionText(e.target.value)}
-                  className="bg-[#054239]/50 border-[#428177]/30 text-white text-xs h-8 focus-visible:ring-[#428177]"
+                  className="bg-[#054239]/50 border-[#428177]/30 text-white text-xs h-9 focus-visible:ring-[#428177] rounded-xl placeholder:text-white/40"
                 />
                 <Button
                   type="submit"
                   size="sm"
-                  className="bg-[#428177] hover:bg-[#054239] text-white h-8 px-3"
+                  className="bg-[#428177] hover:bg-[#054239] text-white h-9 px-4 rounded-xl shadow-sm transition-colors cursor-pointer"
                 >
-                  <Send className="w-3.5 h-3.5" />
+                  <Send className="w-4 h-4" />
                 </Button>
               </div>
             </form>
