@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +26,8 @@ import {
   CheckCircle2,
   ExternalLink,
   ShieldCheck,
-  Headphones
+  Headphones,
+  X
 } from "lucide-react";
 
 interface LiveSessionStageModalProps {
@@ -72,31 +74,31 @@ export function LiveSessionStageModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] p-0 bg-[#002623] text-white border border-[#428177]/40 rounded-2xl flex flex-col overflow-hidden shadow-2xl" dir="rtl">
+      <DialogContent hideDefaultClose className="w-[95vw] max-w-4xl max-h-[90vh] p-0 bg-[#002623] text-white border border-[#428177]/40 rounded-2xl flex flex-col overflow-hidden shadow-2xl" dir="rtl">
         {/* Header Bar */}
         <div className="p-4 sm:p-5 border-b border-[#428177]/25 flex flex-wrap items-center justify-between gap-3 bg-[#054239]/80 backdrop-blur-md">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
             {countdown.isLiveNow ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-600 text-white animate-pulse">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-600 text-white animate-pulse shrink-0">
                 <span className="w-2 h-2 rounded-full bg-white"></span>
                 بث مباشر الآن 🔴
               </span>
             ) : countdown.hasEnded ? (
-              <Badge variant="outline" className="border-slate-500 text-slate-300 text-xs font-bold">
+              <Badge variant="outline" className="border-slate-500 text-slate-300 text-xs font-bold shrink-0">
                 تسجيل الجلسة
               </Badge>
             ) : (
-              <Badge variant="outline" className="border-[#428177] text-[#EDEBE0] text-xs font-bold">
+              <Badge variant="outline" className="border-[#428177] text-[#EDEBE0] text-xs font-bold shrink-0">
                 جلسة قادمة
               </Badge>
             )}
 
-            <h2 className="text-sm sm:text-base font-bold text-white truncate max-w-md">
+            <h2 className="text-sm sm:text-base font-bold text-white break-words line-clamp-1 max-w-xl">
               {event.title}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 shrink-0">
             <Button
               variant={isAudioOnly ? "secondary" : "outline"}
               size="sm"
@@ -106,6 +108,10 @@ export function LiveSessionStageModal({
               <Headphones className="w-3.5 h-3.5 text-[#EDEBE0]" />
               {isAudioOnly ? "نمط الصوت فقط (توفير 97%)" : "بث الفيديو كامل"}
             </Button>
+            <DialogClose className="rounded-lg p-1.5 text-white/80 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#428177]">
+              <X className="h-4 w-4" />
+              <span className="sr-only">إغلاق النافذة</span>
+            </DialogClose>
           </div>
         </div>
 
