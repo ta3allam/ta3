@@ -131,7 +131,7 @@ export default function Marketplace() {
         <div
           className="relative overflow-hidden rounded-3xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
           style={{
-            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.85)), url('${getAssetUrl("/dashboard bg/otherbackground.png")}')`,
+            backgroundImage: `linear-gradient(to left, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.85)), url('${getAssetUrl("/dashboard bg/otherbackground.jpg")}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
