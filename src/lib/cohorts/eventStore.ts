@@ -84,7 +84,7 @@ export const INITIAL_EVENTS: CohortEvent[] = [
   {
     id: "ev-4",
     title: "ورشة عمل مسجلة: أسرار بناء مجتمعات المتعلمين وتفعيل تفاعل الأقران",
-    description: "تسجيل كامل لورشة إطلاق مجتمعات Skool المصغرة وإدارة النقاشات التفاعلية بنجاح.",
+    description: "تسجيل كامل لورشة إطلاق مجتمعات التعلم التفاعلية وإدارة نقاشات الأقران بنجاح.",
     instructorName: "سارة الزعبي",
     instructorAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80",
     startTime: new Date(Date.now() - 1000 * 60 * 60 * 96).toISOString(), // Past
@@ -95,6 +95,45 @@ export const INITIAL_EVENTS: CohortEvent[] = [
     category: "qa",
     timezone: "دمشق / الرياض (UTC+3)"
   }
+];
+
+export const INITIAL_QUESTIONS: LiveQuestion[] = [
+  {
+    id: "q-default-1",
+    eventId: "ev-1",
+    authorName: "سامي الطالب",
+    text: "هل يدعم بروتوكول 512KB استئناف الرفع تلقائياً عند انقطاع الاتصال المؤقت؟",
+    upvotes: 6,
+    createdAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+    isAnswered: true,
+  },
+  {
+    id: "q-default-2",
+    eventId: "ev-1",
+    authorName: "رنا العلي",
+    text: "ما هو حجم الـ chunk الأمثل عند العمل عبر شبكات الجيل الثالث 3G في الأرياف؟",
+    upvotes: 4,
+    createdAt: new Date(Date.now() - 1000 * 60 * 8).toISOString(),
+    isAnswered: false,
+  },
+  {
+    id: "q-default-3",
+    eventId: "ev-4",
+    authorName: "أحمد السوري",
+    text: "كيف نحافظ على تفاعل الطلاب الأسبوعي في مساحات النقاش غير المتزامنة؟",
+    upvotes: 5,
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 94).toISOString(),
+    isAnswered: true,
+  },
+  {
+    id: "q-default-4",
+    eventId: "ev-4",
+    authorName: "نور الهدى",
+    text: "هل تسجيل الورشة متاح للتنزيل المباشر كصوت فقط للطلاب في بيئات النت المحدود؟",
+    upvotes: 3,
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 92).toISOString(),
+    isAnswered: true,
+  },
 ];
 
 export class EventStore {
@@ -196,12 +235,15 @@ export class EventStore {
    */
   static getQuestions(eventId: string | number): LiveQuestion[] {
     const raw = getStoredItem(STORAGE_QUESTIONS_KEY);
-    if (!raw) return [];
+    if (!raw) {
+      setStoredItem(STORAGE_QUESTIONS_KEY, JSON.stringify(INITIAL_QUESTIONS));
+      return INITIAL_QUESTIONS.filter(q => String(q.eventId) === String(eventId));
+    }
     try {
       const all: LiveQuestion[] = JSON.parse(raw);
       return all.filter(q => String(q.eventId) === String(eventId));
     } catch {
-      return [];
+      return INITIAL_QUESTIONS.filter(q => String(q.eventId) === String(eventId));
     }
   }
 
@@ -249,6 +291,6 @@ export class EventStore {
   static reset(): void {
     setStoredItem(STORAGE_EVENTS_KEY, JSON.stringify(INITIAL_EVENTS));
     setStoredItem(STORAGE_RSVP_KEY, JSON.stringify([]));
-    setStoredItem(STORAGE_QUESTIONS_KEY, JSON.stringify([]));
+    setStoredItem(STORAGE_QUESTIONS_KEY, JSON.stringify(INITIAL_QUESTIONS));
   }
 }

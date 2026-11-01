@@ -190,7 +190,7 @@ export default function UserProfilePage() {
               src={
                 user.role === 'student'
                   ? getAssetUrl('/dashboard bg/student background.jpg')
-                  : getAssetUrl('/dashboard bg/otherbackground.png')
+                  : getAssetUrl('/dashboard bg/otherbackground.jpg')
               }
               alt="Profile Cover"
               className="w-full h-full object-cover opacity-40 mix-blend-overlay"
