@@ -15,9 +15,9 @@ Combining modular course delivery (LMS), Skool-style community feeds with XP gam
 
 ## 🚀 Core Platform Pillars
 
-1. **💬 Community Engine (Arabic Skool-Style Feeds)**:
+1. **💬 Community Engine (Interactive Arabic Feeds)**:
    - Dedicated category channels (`#جميع_المنشورات`, `📢 إعلانات صانع المحتوى`, `💬 نقاشات وأسئلة برمجية`, `🚀 مشاريع الطلاب والابتكارات`, `💼 فرص عمل وتدريب محلي`).
-   - Interactive upvotes with dynamic XP calculation (+5 XP for author, +1 XP for voter) and Level badges (Level 1–9).
+   - Interactive upvotes with engagement metrics and Level badges (Level 1–9).
    - Inline comment discussions, syntax-highlighted code snippet sharing, pinned announcements, and weekly contributor leaderboards.
 2. **📚 Modular Classroom & Resource Vault**:
    - High-performance video & audio lesson player with speed control (0.75x–2.0x), chapter timestamps, and low-bandwidth "Audio Only" mode (97%+ bandwidth reduction on 3G).
@@ -25,13 +25,13 @@ Combining modular course delivery (LMS), Skool-style community feeds with XP gam
    - **Downloadable Resource Vault (خزنة الموارد المفتوحة)**: Category-filtered repository of course PDF slides, exercise code ZIPs, cheat sheets, and templates with batch download support.
 3. **🛒 Open Marketplace & Affiliate Course Hub**:
    - Open creator onboarding with free, paid one-time, subscription, and cohort pricing models.
-   - Curated global affiliate courses (Coursera, Udemy, bootcamps) for comprehensive Day 1 catalog breadth with up to 85% discount coupons.
+   - Curated global affiliate courses for comprehensive Day 1 catalog breadth with up to 85% discount coupons.
 4. **💵 Levant High-Volume Financial Infrastructure**:
    - Regional payment methods: ShamCash, Syriatel Cash, ZainCash, and USDT TRC-20.
    - Semi-automated receipt uploader with 1-click SuperAdmin/Teacher verification and instant student enrollment.
    - Creator payout balance dashboards with transparent 85/15 revenue split accounting.
 5. **📅 Interactive Cohort Calendar & Live Event Sync**:
-   - Skool-style live events schedule with interactive Month & Day calendar grid views.
+   - Comprehensive live events schedule with interactive Month & Day calendar grid views.
    - 1-click calendar synchronization for **Google Calendar** and **Apple / Outlook iCal (.ics)** files.
    - Multi-regional Middle Eastern timezone picker (`دمشق / مكة المكرمة`, `القاهرة / بيروت`, `دبي / مسقط`, `الدار البيضاء`, `UTC`).
    - Virtual live stage modal with low-bandwidth audio-only toggle (97% bandwidth reduction) and interactive student Q&A upvote engine.
@@ -45,9 +45,9 @@ Combining modular course delivery (LMS), Skool-style community feeds with XP gam
    - **8-Week Cohort Retention Heatmap Matrix** calculating registration drop-off, active weekly engagement, and at-risk student intervention alerts.
    - **Low-Bandwidth Telemetry**: Tracking 3G audio-only vs video consumption percentages across individual course modules.
    - **1-Click Excel Export with Arabic UTF-8 BOM**: Instant generation and browser download of CSV & JSON analytics reports compatible with Microsoft Excel.
-8. **🛡️ System Health & Golden Release Pre-Flight Diagnostics**:
+8. **🛡️ System Health & Release Diagnostics**:
    - Automated multi-tier health verification engine (`systemHealthEngine.ts`) executing real-time tests across all platform pillars.
-   - Interactive audit modal (`GoldenReleaseAuditModal.tsx`) surfacing latency benchmarks, role isolation validation, and zero AI operational cost verification.
+   - Role isolation validation, zero AI operational cost verification, and automated quality gates.
 9. **🔌 Levant Low-Bandwidth Resiliency**:
    - Offline-first PWA with IndexedDB draft caching, TUS 512KB resumable chunked uploads on 3G, and zero layout shift (CLS).
 
