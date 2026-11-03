@@ -456,117 +456,218 @@ export default function CourseGroups() {
 
         {/* DEFAULT VIEW: LIST VIEW */}
         {viewLayout === 'list' && (
-          <div className="border border-[#428177]/30 rounded-2xl overflow-hidden bg-white shadow-sm">
-            <Table dir="rtl">
-              <TableHeader className="bg-[#EDEBE0]/50">
-                <TableRow>
-                  <TableHead className="text-right font-bold text-[#002623]">اسم المجموعة</TableHead>
-                  <TableHead className="text-right font-bold text-[#002623]">الوصف</TableHead>
-                  <TableHead className="text-center font-bold text-[#002623]">الأعضاء الحاليون</TableHead>
-                  <TableHead className="text-center font-bold text-[#002623]">محادثة المجموعة</TableHead>
-                  <TableHead className="text-center font-bold text-[#002623]">الإجراءات والعمليات</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {groups.map((group) => {
-                  const members = group.members || [];
-                  const applications = group.applications || [];
-                  const isMember = user && members.some(m => m.name === user.name);
-                  const hasPendingApp = user && applications.some(a => a.studentName === user.name && a.status === 'pending');
+          <div className="space-y-4">
+            {/* Desktop Table View */}
+            <div className="hidden md:block border border-[#428177]/30 rounded-2xl overflow-hidden bg-white shadow-sm">
+              <Table dir="rtl">
+                <TableHeader className="bg-[#EDEBE0]/50">
+                  <TableRow>
+                    <TableHead className="text-right font-bold text-[#002623]">اسم المجموعة</TableHead>
+                    <TableHead className="text-right font-bold text-[#002623]">الوصف</TableHead>
+                    <TableHead className="text-center font-bold text-[#002623]">الأعضاء الحاليون</TableHead>
+                    <TableHead className="text-center font-bold text-[#002623]">محادثة المجموعة</TableHead>
+                    <TableHead className="text-center font-bold text-[#002623]">الإجراءات والعمليات</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {groups.map((group) => {
+                    const members = group.members || [];
+                    const isMember = user && members.some(m => m.name === user.name);
 
-                  return (
-                    <TableRow key={group.id} className="hover:bg-[#EDEBE0]/20 transition-colors">
-                      <TableCell className="font-bold text-[#002623]">{group.name}</TableCell>
-                      <TableCell className="text-xs text-[#3D3A3B] max-w-xs truncate font-medium">{group.description}</TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex flex-col items-center gap-1.5">
-                          <Badge className="bg-[#428177]/15 text-[#054239] border border-[#428177]/30 font-bold text-xs">
-                            {members.length} / {group.maxMembers || defaultCourseLimit} أعضاء
-                          </Badge>
-                          {members.length > 0 && (
-                            <div className="flex flex-wrap justify-center gap-1 max-w-[220px]">
-                              {members.map((m, mIdx) => (
-                                <Badge key={mIdx} variant="outline" className="text-[10px] py-0 px-1.5 border-[#428177]/30 text-[#002623] flex items-center gap-1">
-                                  <span>{m.name}</span>
-                                  {isTeacher && (
-                                    <button
-                                      type="button"
-                                      onClick={() => handleKickMember(group.id, m.name)}
-                                      className="text-rose-600 hover:text-rose-800 transition-colors ml-0.5"
-                                      title="استبعاد الطالب من المجموعة"
-                                    >
-                                      <X className="w-2.5 h-2.5" />
-                                    </button>
-                                  )}
-                                </Badge>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setActiveChatGroup(group)}
-                          className="border-[#428177]/30 text-[#002623] hover:bg-[#428177]/10 text-xs font-bold gap-1"
-                        >
-                          <MessageSquare className="h-3.5 w-3.5 text-[#428177]" />
-                          دردشة الفريق ({group.messages?.length || 0})
-                        </Button>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          {isTeacher ? (
-                            <Badge variant="outline" className="border-[#428177]/40 text-[#428177] font-bold py-1 px-2.5 text-xs">
-                              إشراف وإدارة المعلم 👨‍🏫
+                    return (
+                      <TableRow key={group.id} className="hover:bg-[#EDEBE0]/20 transition-colors">
+                        <TableCell className="font-bold text-[#002623]">{group.name}</TableCell>
+                        <TableCell className="text-xs text-[#3D3A3B] max-w-xs truncate font-medium">{group.description}</TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex flex-col items-center gap-1.5">
+                            <Badge className="bg-[#428177]/15 text-[#054239] border border-[#428177]/30 font-bold text-xs">
+                              {members.length} / {group.maxMembers || defaultCourseLimit} أعضاء
                             </Badge>
-                          ) : isMember ? (
-                            <div className="flex items-center gap-1.5">
-                              <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-2.5 text-xs">
-                                عضو بالفريق ✅
+                            {members.length > 0 && (
+                              <div className="flex flex-wrap justify-center gap-1 max-w-[220px]">
+                                {members.map((m, mIdx) => (
+                                  <Badge key={mIdx} variant="outline" className="text-[10px] py-0 px-1.5 border-[#428177]/30 text-[#002623] flex items-center gap-1">
+                                    <span>{m.name}</span>
+                                    {isTeacher && (
+                                      <button
+                                        type="button"
+                                        onClick={() => handleKickMember(group.id, m.name)}
+                                        className="text-rose-600 hover:text-rose-800 transition-colors ml-0.5"
+                                        title="استبعاد الطالب من المجموعة"
+                                      >
+                                        <X className="w-2.5 h-2.5" />
+                                      </button>
+                                    )}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setActiveChatGroup(group)}
+                            className="border-[#428177]/30 text-[#002623] hover:bg-[#428177]/10 text-xs font-bold gap-1"
+                          >
+                            <MessageSquare className="h-3.5 w-3.5 text-[#428177]" />
+                            دردشة الفريق ({group.messages?.length || 0})
+                          </Button>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            {isTeacher ? (
+                              <Badge variant="outline" className="border-[#428177]/40 text-[#428177] font-bold py-1 px-2.5 text-xs">
+                                إشراف وإدارة المعلم 👨‍🏫
                               </Badge>
+                            ) : isMember ? (
+                              <div className="flex items-center gap-1.5">
+                                <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-2.5 text-xs">
+                                  عضو بالفريق ✅
+                                </Badge>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleLeaveGroup(group.id)}
+                                  className="text-xs text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-7 px-2 font-bold"
+                                >
+                                  مغادرة
+                                </Button>
+                              </div>
+                            ) : members.length >= (group.maxMembers || 4) ? (
+                              <Badge variant="secondary" className="text-muted-foreground text-xs py-1 px-2.5 font-bold">
+                                المجموعة مكتملة
+                              </Badge>
+                            ) : (
+                              <Button
+                                size="sm"
+                                onClick={() => handleJoinGroup(group.id)}
+                                className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
+                              >
+                                انضمام للمجموعة
+                              </Button>
+                            )}
+
+                            {isTeacher && (
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                onClick={() => handleLeaveGroup(group.id)}
-                                className="text-xs text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-7 px-2 font-bold"
+                                onClick={() => handleDeleteGroup(group.id)}
+                                className="text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-8 w-8 p-0"
+                                title="حذف المجموعة (خاص بالمعلم)"
                               >
-                                مغادرة
+                                <Trash2 className="w-4 h-4" />
                               </Button>
-                            </div>
-                          ) : members.length >= (group.maxMembers || 4) ? (
-                            <Badge variant="secondary" className="text-muted-foreground text-xs py-1 px-2.5 font-bold">
-                              المجموعة مكتملة
-                            </Badge>
-                          ) : (
-                            <Button
-                              size="sm"
-                              onClick={() => handleJoinGroup(group.id)}
-                              className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
-                            >
-                              انضمام للمجموعة
-                            </Button>
-                          )}
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
 
-                          {isTeacher && (
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleDeleteGroup(group.id)}
-                              className="text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-8 w-8 p-0"
-                              title="حذف المجموعة (خاص بالمعلم)"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          )}
+            {/* Mobile Responsive Cards View */}
+            <div className="block md:hidden space-y-3">
+              {groups.map((group) => {
+                const members = group.members || [];
+                const isMember = user && members.some(m => m.name === user.name);
+
+                return (
+                  <Card key={group.id} className="border border-[#428177]/30 bg-white rounded-2xl shadow-sm p-4 space-y-3 text-right">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-1">
+                        <h3 className="font-bold text-base text-[#002623]">{group.name}</h3>
+                        <p className="text-xs text-[#3D3A3B] leading-relaxed font-medium">{group.description}</p>
+                      </div>
+                      <Badge className="bg-[#428177]/15 text-[#054239] border border-[#428177]/30 font-bold text-xs shrink-0">
+                        {members.length} / {group.maxMembers || defaultCourseLimit}
+                      </Badge>
+                    </div>
+
+                    {members.length > 0 && (
+                      <div className="pt-1">
+                        <span className="text-[11px] font-bold text-[#002623] block mb-1">الأعضاء:</span>
+                        <div className="flex flex-wrap gap-1">
+                          {members.map((m, mIdx) => (
+                            <Badge key={mIdx} variant="outline" className="text-[11px] py-0.5 px-2 border-[#428177]/30 text-[#002623] flex items-center gap-1">
+                              <span>{m.name}</span>
+                              {isTeacher && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleKickMember(group.id, m.name)}
+                                  className="text-rose-600 hover:text-rose-800 transition-colors ml-0.5"
+                                  title="استبعاد الطالب من المجموعة"
+                                >
+                                  <X className="w-2.5 h-2.5" />
+                                </button>
+                              )}
+                            </Badge>
+                          ))}
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                      </div>
+                    )}
+
+                    <div className="pt-2 border-t border-[#EDEBE0] flex items-center justify-between gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setActiveChatGroup(group)}
+                        className="border-[#428177]/30 text-[#002623] hover:bg-[#428177]/10 text-xs font-bold gap-1 flex-1"
+                      >
+                        <MessageSquare className="h-3.5 w-3.5 text-[#428177]" />
+                        الدردشة ({group.messages?.length || 0})
+                      </Button>
+
+                      {isTeacher ? (
+                        <div className="flex items-center gap-1">
+                          <Badge variant="outline" className="border-[#428177]/40 text-[#428177] font-bold text-[11px] py-1 px-2">
+                            إشراف المعلم 👨‍🏫
+                          </Badge>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDeleteGroup(group.id)}
+                            className="text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-7 w-7 p-0"
+                            title="حذف المجموعة"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      ) : isMember ? (
+                        <div className="flex items-center gap-1">
+                          <Badge className="bg-[#428177] text-white border-none font-bold py-1 px-2 text-[11px]">
+                            عضو بالفريق ✅
+                          </Badge>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleLeaveGroup(group.id)}
+                            className="text-xs text-[#6B1F2A] hover:bg-[#6B1F2A]/10 h-7 px-2 font-bold"
+                          >
+                            مغادرة
+                          </Button>
+                        </div>
+                      ) : members.length >= (group.maxMembers || 4) ? (
+                        <Badge variant="secondary" className="text-muted-foreground text-xs py-1 px-2 font-bold">
+                          مكتملة
+                        </Badge>
+                      ) : (
+                        <Button
+                          size="sm"
+                          onClick={() => handleJoinGroup(group.id)}
+                          className="bg-[#428177] hover:bg-[#054239] text-white font-bold text-xs"
+                        >
+                          انضمام
+                        </Button>
+                      )}
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
         )}
 
