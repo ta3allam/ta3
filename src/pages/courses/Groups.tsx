@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Users, Plus, ArrowRight, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2, MessageSquare, Send, Wand2, X } from "lucide-react";
+import { Users, Plus, ArrowLeft, List, LayoutGrid, CheckCircle2, XCircle, Trash2, Undo2, MessageSquare, Send, Wand2, X } from "lucide-react";
 import { toast } from "sonner";
 
 export interface GroupMember {
@@ -303,11 +303,10 @@ export default function CourseGroups() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#428177]/20 pb-4">
           <div className="text-right space-y-1">
             <div className="flex items-center gap-2 justify-start text-xs text-[#3D3A3B]">
-              <Link to={backPath} className="hover:text-[#428177] transition-colors flex items-center gap-1 font-semibold">
+              <Link to={backPath} className="hover:text-[#428177] transition-colors font-semibold">
                 {course.name}
-                <ArrowRight className="h-3 w-3" />
               </Link>
-              <span>/</span>
+              <ArrowLeft className="h-3 w-3 text-[#428177]" />
               <span className="font-bold text-[#002623]">المجموعات الدراسية</span>
             </div>
             <h1 className="text-3xl font-extrabold text-[#002623]">دليل المجموعات والفرق الدراسية</h1>
