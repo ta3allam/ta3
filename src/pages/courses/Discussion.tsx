@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Plus, MessageSquare, ArrowRight } from "lucide-react";
+import { Plus, MessageSquare, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
@@ -187,16 +187,16 @@ export default function CourseDiscussion() {
 
     return (
         <DashboardLayout title={`منتدى النقاش - ${course.name}`}>
-            <div className="space-y-6" dir="rtl">
+            <div className="space-y-6 pb-28 md:pb-8" dir="rtl">
                 {/* Header Navigation */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border/40 pb-4">
                     <div className="text-right space-y-1">
                         <div className="flex items-center gap-2 justify-end text-xs text-muted-foreground">
                             <Link to={backPath} className="hover:text-primary transition-colors flex items-center gap-1">
                                 {course.name}
-                                <ArrowRight className="h-3 w-3" />
+                                <ArrowLeft className="h-3 w-3 text-primary" />
                             </Link>
-                            <span>/</span>
+
                             <span className="font-semibold text-foreground">منتدى النقاش</span>
                         </div>
                         <h1 className="text-3xl font-extrabold text-foreground">منتدى نقاشات المقرر</h1>

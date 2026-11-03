@@ -187,19 +187,19 @@ export default function CourseDiscussions() {
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-[#428177] absolute right-3 top-3" />
           <Input
-            placeholder="البحث في الأسئلة والمواقشات..."
+            placeholder="البحث في الأسئلة والمناقشات..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pr-9 text-xs bg-[#EDEBE0]/20 border-[#428177]/30 text-[#002623]"
           />
         </div>
 
-        <div className="flex items-center gap-1.5 bg-[#EDEBE0]/60 p-1 rounded-xl border border-[#428177]/20">
+        <div className="flex items-center gap-1.5 bg-[#EDEBE0]/60 p-1 rounded-xl border border-[#428177]/20 overflow-x-auto no-scrollbar max-w-full">
           <Button
             size="sm"
             variant={filterTab === 'all' ? 'default' : 'ghost'}
             onClick={() => setFilterTab('all')}
-            className={filterTab === 'all' ? 'bg-[#428177] text-white font-bold text-xs' : 'text-[#002623] font-bold text-xs'}
+            className={filterTab === 'all' ? 'bg-[#428177] text-white font-bold text-xs shrink-0 whitespace-nowrap' : 'text-[#002623] font-bold text-xs shrink-0 whitespace-nowrap'}
           >
             جميع المواضيع ({posts.length})
           </Button>
@@ -207,7 +207,7 @@ export default function CourseDiscussions() {
             size="sm"
             variant={filterTab === 'unanswered' ? 'default' : 'ghost'}
             onClick={() => setFilterTab('unanswered')}
-            className={filterTab === 'unanswered' ? 'bg-[#428177] text-white font-bold text-xs' : 'text-[#002623] font-bold text-xs'}
+            className={filterTab === 'unanswered' ? 'bg-[#428177] text-white font-bold text-xs shrink-0 whitespace-nowrap' : 'text-[#002623] font-bold text-xs shrink-0 whitespace-nowrap'}
           >
             أسئلة بلا إجابة ({posts.filter(p => (p.replies || []).length === 0).length})
           </Button>
@@ -215,7 +215,7 @@ export default function CourseDiscussions() {
             size="sm"
             variant={filterTab === 'solved' ? 'default' : 'ghost'}
             onClick={() => setFilterTab('solved')}
-            className={filterTab === 'solved' ? 'bg-[#428177] text-white font-bold text-xs' : 'text-[#002623] font-bold text-xs'}
+            className={filterTab === 'solved' ? 'bg-[#428177] text-white font-bold text-xs shrink-0 whitespace-nowrap' : 'text-[#002623] font-bold text-xs shrink-0 whitespace-nowrap'}
           >
             مجابة ومحلولة ({posts.filter(p => p.isSolved).length})
           </Button>
