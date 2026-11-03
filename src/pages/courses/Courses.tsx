@@ -260,7 +260,7 @@ export default function CourseDetail() {
 
         {/* Tabs */}
         <Tabs defaultValue="home" className="w-full" dir="rtl">
-          <div className="bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20 overflow-x-auto">
+          <div className="bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20 overflow-x-auto no-scrollbar scroll-smooth">
             <TabsList className="w-full h-auto bg-transparent gap-1.5 flex flex-nowrap min-w-max lg:min-w-0 lg:grid lg:grid-cols-6 p-1">
               <TabsTrigger value="home" className="flex-1 py-2 px-3 text-xs sm:text-sm font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white rounded-lg transition-all text-center">الرئيسية</TabsTrigger>
               <TabsTrigger value="content" className="flex-1 py-2 px-3 text-xs sm:text-sm font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white rounded-lg transition-all text-center">المحتوى والمحاضرات</TabsTrigger>

@@ -336,4 +336,12 @@ All colors MUST be HSL.
   .safe-bottom-pad {
     padding-bottom: env(safe-area-inset-bottom, 16px);
   }
+  /* Hide scrollbar for Chrome, Safari, Edge and Firefox */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
