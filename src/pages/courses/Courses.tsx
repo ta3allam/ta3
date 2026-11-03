@@ -260,8 +260,12 @@ export default function CourseDetail() {
 
         {/* Tabs */}
         <Tabs defaultValue="home" className="w-full" dir="rtl">
-          <div className="bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20 overflow-x-auto no-scrollbar scroll-smooth">
-            <TabsList className="w-full h-auto bg-transparent gap-1.5 flex flex-nowrap min-w-max lg:min-w-0 lg:grid lg:grid-cols-6 p-1">
+          <div className="relative bg-[#EDEBE0] p-1.5 rounded-xl mb-6 border border-[#428177]/20 group">
+            {/* Mobile edge scroll fade indicators */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#EDEBE0] to-transparent z-10 rounded-l-xl lg:hidden" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#EDEBE0] to-transparent z-10 rounded-r-xl lg:hidden" />
+            <div className="overflow-x-auto no-scrollbar scroll-smooth">
+              <TabsList className="w-full h-auto bg-transparent gap-1.5 flex flex-nowrap min-w-max lg:min-w-0 lg:grid lg:grid-cols-6 p-1">
               <TabsTrigger value="home" className="flex-1 py-2 px-3 text-xs sm:text-sm font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white rounded-lg transition-all text-center">الرئيسية</TabsTrigger>
               <TabsTrigger value="content" className="flex-1 py-2 px-3 text-xs sm:text-sm font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white rounded-lg transition-all text-center">المحتوى والمحاضرات</TabsTrigger>
               <TabsTrigger value="vault" className="flex-1 py-2 px-3 text-xs sm:text-sm font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white rounded-lg transition-all text-center">خزنة الموارد</TabsTrigger>
@@ -269,6 +273,7 @@ export default function CourseDetail() {
               <TabsTrigger value="discussions" className="flex-1 py-2 px-3 text-xs sm:text-sm font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white rounded-lg transition-all text-center">ساحة المناقشات</TabsTrigger>
               <TabsTrigger value="help" className="flex-1 py-2 px-3 text-xs sm:text-sm font-bold data-[state=active]:bg-[#428177] data-[state=active]:text-white rounded-lg transition-all text-center">الدليل والمساعدة</TabsTrigger>
             </TabsList>
+            </div>
           </div>
 
 
