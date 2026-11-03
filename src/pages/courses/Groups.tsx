@@ -298,7 +298,7 @@ export default function CourseGroups() {
 
   return (
     <DashboardLayout title={`المجموعات الدراسية - ${course.name}`}>
-      <div className="space-y-6" dir="rtl">
+      <div className="space-y-6 pb-28 md:pb-8" dir="rtl">
         {/* Navigation Breadcrumb & Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#428177]/20 pb-4">
           <div className="text-right space-y-1">

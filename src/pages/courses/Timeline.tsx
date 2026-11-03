@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar as CalendarIcon, ChevronRight, ChevronLeft, Plus, Clock, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronRight, ChevronLeft, Plus, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { EventType } from "./types";
 
@@ -241,16 +241,16 @@ export default function CourseTimeline() {
 
   return (
     <DashboardLayout title={`التقويم الزمني - ${course.name}`}>
-      <div className="space-y-6" dir="rtl">
+      <div className="space-y-6 pb-28 md:pb-8" dir="rtl">
         {/* Header Navigation & Teacher Controls */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#428177]/20 pb-4">
           <div className="text-right space-y-1">
             <div className="flex items-center gap-2 justify-start text-xs text-[#3D3A3B]">
               <Link to={backPath} className="hover:text-[#428177] transition-colors flex items-center gap-1 font-semibold">
                 {course.name}
-                <ArrowRight className="h-3 w-3" />
+                <ArrowLeft className="h-3 w-3 text-[#428177]" />
               </Link>
-              <span>/</span>
+
               <span className="font-bold text-[#002623]">التقويم الأكاديمي</span>
             </div>
             <h1 className="text-3xl font-extrabold text-[#002623]">التقويم الزمني للمقرر (الفصل الدراسي)</h1>
