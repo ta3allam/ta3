@@ -113,7 +113,7 @@ npm run build
 | | **Day 8 (Thu)** | **Multi-Role E2E Golden Suite, Complete Docs & Golden Master Release** | 🏆 **Completed (Golden Master)** |
 | **Polish Sprint** | **Day 1** | **Modals, Certificate Viewer, Cohort Player & Asset Optimization** | ✅ **Completed (PR #228)** |
 | | **Day 2** | **Classroom Tabs, Discussion Filters & Groups Responsive Mobile Layout** | ✅ **Completed (PR #229)** |
-| | **Day 3** | **Marketplace Filtering, Cart Drawer & Multi-Payment Flow** | ⏳ **In Progress** |
+| | **Day 3** | **Marketplace Tab Responsiveness, Chip Scrollbars & Community Sanitization** | ✅ **Completed (PR #230)** |
 | | **Day 4** | **Creator Analytics, Currency Formatting & Profile RTL Alignment** | ⏳ **Upcoming** |
 
 ---
@@ -122,5 +122,5 @@ npm run build
 
 - **Git Branching Policy**: Strictly isolated feature branches (`feature/<agent>-<feature-name>` or `fix/<milestone>`). Never push directly to `main`.
 - **Activity Target**: Minimum **10 GitHub activities/commits per shift**.
-- **Quality Gate**: Every PR requires static typecheck `npx tsc --noEmit` and Vitest pass verification (`npx vitest run` — **49 test files / 268 tests passed 100%**).
+- **Quality Gate**: Every PR requires static typecheck `npx tsc --noEmit` and Vitest pass verification (`npx vitest run` — **50 test files / 276 tests passed 100%**).
 - **Release Sequence**: Commits $\rightarrow$ PR Merge to `main` $\rightarrow$ `git push origin main` $\rightarrow$ `npm run git` (*GitHub Pages deploy*).
