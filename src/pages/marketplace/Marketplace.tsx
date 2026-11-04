@@ -126,7 +126,7 @@ export default function Marketplace() {
 
   return (
     <DashboardLayout title="سوق المنصة والدورات">
-      <div className="space-y-6" dir="rtl">
+      <div className="space-y-6 pb-28 md:pb-8" dir="rtl">
         {/* Header Banner */}
         <div
           className="relative overflow-hidden rounded-3xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
@@ -176,20 +176,20 @@ export default function Marketplace() {
             }}
             className="w-full sm:w-auto"
           >
-            <TabsList className="bg-[#EDEBE0] p-1.5 rounded-2xl w-full sm:w-auto grid grid-cols-2 gap-1">
+            <TabsList className="bg-[#EDEBE0] p-1.5 rounded-2xl w-full sm:w-auto flex flex-col sm:flex-row gap-1 h-auto">
               <TabsTrigger
                 value="native"
-                className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-black text-xs rounded-xl py-2 px-4 gap-2"
+                className="w-full sm:w-auto data-[state=active]:bg-[#428177] data-[state=active]:text-white font-black text-xs rounded-xl py-2.5 px-4 gap-2 flex items-center justify-center text-center leading-normal"
               >
-                <GraduationCap className="h-4 w-4" />
+                <GraduationCap className="h-4 w-4 shrink-0" />
                 <span>دورات المنصة ومجتمعات المعلمين ({coursesList.length})</span>
               </TabsTrigger>
 
               <TabsTrigger
                 value="affiliate"
-                className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs rounded-xl py-2 px-4 gap-2"
+                className="w-full sm:w-auto data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs rounded-xl py-2.5 px-4 gap-2 flex items-center justify-center text-center leading-normal"
               >
-                <Globe className="h-4 w-4 text-[#988561]" />
+                <Globe className="h-4 w-4 text-[#988561] shrink-0" />
                 <span>دليل المسارات والشهادات العالمية بالعمولة ({AFFILIATE_COURSES.length})</span>
               </TabsTrigger>
             </TabsList>
@@ -268,7 +268,7 @@ export default function Marketplace() {
 
           {/* Provider Chips for Affiliate Mode */}
           {activeMarketTab === "affiliate" && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-2 border-t border-[#EDEBE0]">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-2 border-t border-[#EDEBE0]">
               <Filter className="h-4 w-4 text-[#428177] shrink-0" />
               <span className="text-[11px] font-bold text-[#002623] shrink-0">المزود:</span>
               {providers.map((p) => (
@@ -288,7 +288,7 @@ export default function Marketplace() {
           )}
 
           {/* Category Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 border-t border-[#EDEBE0]">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-2 border-t border-[#EDEBE0]">
             <Layers className="h-4 w-4 text-[#428177] shrink-0" />
             <span className="text-[11px] font-bold text-[#002623] shrink-0">المجال:</span>
             {(activeMarketTab === "native" ? nativeCategories : affiliateCategories).map((cat) => (

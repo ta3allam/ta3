@@ -69,7 +69,7 @@ export default function CommunityFeed() {
       authorXp: 1200,
       channelName: "📢 إعلانات صانع المحتوى",
       title: "مرحباً بكم في مجتمع تعلّم لهندسة البرمجيات والأنظمة الموزعة! 🌟",
-      content: "يسعدنا انضمامكم جميعاً. هذا المجتمع مصمم على نموذج Skool ليكون بيتكم المعرفي اليومي. كل مشاركة هادفة، سؤال بناء، أو مساعدة لزميل تمنحكم نقاط خبرة (XP) ومستويات متقدمة تفتح لكم مسارات تدريبية إضافية!",
+      content: "يسعدنا انضمامكم جميعاً. هذا المجتمع مصمم على نموذج مجتمعات التعلّم التفاعلية ليكون بيتكم المعرفي اليومي. كل مشاركة هادفة، سؤال بناء، أو مساعدة لزميل تمنحكم شارات التفاعل المعرفي ومستويات متقدمة تفتح لكم مسارات تدريبية إضافية!",
       tags: ["ترحيب", "أنظمة_موزعة", "مجتمع_تعلّم"],
       upvotesCount: 52,
       commentsCount: 18,
@@ -213,7 +213,7 @@ export default function CommunityFeed() {
   return (
     <DashboardLayout title="مجتمع تعلّم التفاعلي">
       <PullToRefreshContainer onRefresh={handleRefresh}>
-        <div className="space-y-6" dir="rtl">
+        <div className="space-y-6 pb-28 md:pb-8" dir="rtl">
         {/* Header Hero Banner */}
         <div
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
@@ -342,7 +342,7 @@ export default function CommunityFeed() {
               </div>
             </Card>
 
-            {/* Skool Gamification Leaderboard Card */}
+            {/* Community Interaction Leaderboard Card */}
             <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl p-4 text-right">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-xs font-extrabold text-[#002623] flex items-center gap-1.5">
@@ -367,7 +367,7 @@ export default function CommunityFeed() {
                       <Badge variant="outline" className="text-[9px] py-0 px-1 border-[#428177]/40 text-[#054239] font-bold">
                         Lvl {item.level}
                       </Badge>
-                      <span className="text-[10px] font-extrabold text-[#6B1F2A]">{item.xp} XP</span>
+                      <span className="text-[10px] font-extrabold text-[#6B1F2A]">{item.xp} نقطة</span>
                     </div>
                   </div>
                 ))}
