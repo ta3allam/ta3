@@ -268,7 +268,7 @@ export default function Marketplace() {
 
           {/* Provider Chips for Affiliate Mode */}
           {activeMarketTab === "affiliate" && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-2 border-t border-[#EDEBE0]">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-2 border-t border-[#EDEBE0]">
               <Filter className="h-4 w-4 text-[#428177] shrink-0" />
               <span className="text-[11px] font-bold text-[#002623] shrink-0">المزود:</span>
               {providers.map((p) => (
@@ -288,7 +288,7 @@ export default function Marketplace() {
           )}
 
           {/* Category Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 border-t border-[#EDEBE0]">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-2 border-t border-[#EDEBE0]">
             <Layers className="h-4 w-4 text-[#428177] shrink-0" />
             <span className="text-[11px] font-bold text-[#002623] shrink-0">المجال:</span>
             {(activeMarketTab === "native" ? nativeCategories : affiliateCategories).map((cat) => (
