@@ -176,20 +176,20 @@ export default function Marketplace() {
             }}
             className="w-full sm:w-auto"
           >
-            <TabsList className="bg-[#EDEBE0] p-1.5 rounded-2xl w-full sm:w-auto grid grid-cols-2 gap-1">
+            <TabsList className="bg-[#EDEBE0] p-1.5 rounded-2xl w-full sm:w-auto flex flex-col sm:flex-row gap-1 h-auto">
               <TabsTrigger
                 value="native"
-                className="data-[state=active]:bg-[#428177] data-[state=active]:text-white font-black text-xs rounded-xl py-2 px-4 gap-2"
+                className="w-full sm:w-auto data-[state=active]:bg-[#428177] data-[state=active]:text-white font-black text-xs rounded-xl py-2.5 px-4 gap-2 flex items-center justify-center text-center leading-normal"
               >
-                <GraduationCap className="h-4 w-4" />
+                <GraduationCap className="h-4 w-4 shrink-0" />
                 <span>دورات المنصة ومجتمعات المعلمين ({coursesList.length})</span>
               </TabsTrigger>
 
               <TabsTrigger
                 value="affiliate"
-                className="data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs rounded-xl py-2 px-4 gap-2"
+                className="w-full sm:w-auto data-[state=active]:bg-[#002623] data-[state=active]:text-[#EDEBE0] font-black text-xs rounded-xl py-2.5 px-4 gap-2 flex items-center justify-center text-center leading-normal"
               >
-                <Globe className="h-4 w-4 text-[#988561]" />
+                <Globe className="h-4 w-4 text-[#988561] shrink-0" />
                 <span>دليل المسارات والشهادات العالمية بالعمولة ({AFFILIATE_COURSES.length})</span>
               </TabsTrigger>
             </TabsList>
