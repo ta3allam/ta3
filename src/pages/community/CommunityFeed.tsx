@@ -69,7 +69,7 @@ export default function CommunityFeed() {
       authorXp: 1200,
       channelName: "📢 إعلانات صانع المحتوى",
       title: "مرحباً بكم في مجتمع تعلّم لهندسة البرمجيات والأنظمة الموزعة! 🌟",
-      content: "يسعدنا انضمامكم جميعاً. هذا المجتمع مصمم على نموذج Skool ليكون بيتكم المعرفي اليومي. كل مشاركة هادفة، سؤال بناء، أو مساعدة لزميل تمنحكم نقاط خبرة (XP) ومستويات متقدمة تفتح لكم مسارات تدريبية إضافية!",
+      content: "يسعدنا انضمامكم جميعاً. هذا المجتمع مصمم على نموذج مجتمعات التعلّم التفاعلية ليكون بيتكم المعرفي اليومي. كل مشاركة هادفة، سؤال بناء، أو مساعدة لزميل تمنحكم شارات التفاعل المعرفي ومستويات متقدمة تفتح لكم مسارات تدريبية إضافية!",
       tags: ["ترحيب", "أنظمة_موزعة", "مجتمع_تعلّم"],
       upvotesCount: 52,
       commentsCount: 18,
@@ -367,7 +367,7 @@ export default function CommunityFeed() {
                       <Badge variant="outline" className="text-[9px] py-0 px-1 border-[#428177]/40 text-[#054239] font-bold">
                         Lvl {item.level}
                       </Badge>
-                      <span className="text-[10px] font-extrabold text-[#6B1F2A]">{item.xp} XP</span>
+                      <span className="text-[10px] font-extrabold text-[#6B1F2A]">{item.xp} نقطة</span>
                     </div>
                   </div>
                 ))}
