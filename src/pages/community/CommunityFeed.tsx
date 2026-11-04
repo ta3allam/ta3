@@ -342,7 +342,7 @@ export default function CommunityFeed() {
               </div>
             </Card>
 
-            {/* Skool Gamification Leaderboard Card */}
+            {/* Community Interaction Leaderboard Card */}
             <Card className="border border-[#428177]/30 bg-white shadow-sm rounded-2xl p-4 text-right">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-xs font-extrabold text-[#002623] flex items-center gap-1.5">
