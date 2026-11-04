@@ -213,7 +213,7 @@ export default function CommunityFeed() {
   return (
     <DashboardLayout title="مجتمع تعلّم التفاعلي">
       <PullToRefreshContainer onRefresh={handleRefresh}>
-        <div className="space-y-6" dir="rtl">
+        <div className="space-y-6 pb-28 md:pb-8" dir="rtl">
         {/* Header Hero Banner */}
         <div
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
