@@ -134,8 +134,8 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
     }`} dir="rtl">
       <CardContent className="p-6 sm:p-7 space-y-5">
         {/* Top Header: Channel + Pinned badge + Date */}
-        <div className="flex justify-between items-center text-xs">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap justify-between items-center gap-2 text-xs">
+          <div className="flex flex-wrap items-center gap-1.5">
             <Badge className="bg-[#428177]/15 text-[#054239] border-none font-bold text-[11px]">
               {post.channelName}
             </Badge>
@@ -146,7 +146,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
               </Badge>
             )}
           </div>
-          <span className="text-muted-foreground text-[11px] font-medium">{post.createdAt}</span>
+          <span className="text-muted-foreground text-[11px] font-medium shrink-0">{post.createdAt}</span>
         </div>
 
         {/* Author Info & Gamification XP Level */}
@@ -167,7 +167,7 @@ export function CommunityPostCard({ post, onUpvote, onAddComment }: CommunityPos
                   </Badge>
                 ) : (
                   <Badge variant="outline" className="text-[10px] py-0 px-1.5 font-bold border-[#988561] text-[#6B1F2A] bg-[#EDEBE0]/40 flex items-center gap-0.5">
-                    <Flame className="w-2.5 h-2.5 text-[#Damask Red] fill-[#6B1F2A]" />
+                    <Flame className="w-2.5 h-2.5 text-[#6B1F2A] fill-[#6B1F2A]" />
                     المستوى {authorLevel}
                   </Badge>
                 )}
