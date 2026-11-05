@@ -181,7 +181,7 @@ export default function UserProfilePage() {
         className="hidden"
       />
 
-      <div className="space-y-6 text-right" dir="rtl">
+      <div className="space-y-6 pb-28 md:pb-8 text-right" dir="rtl">
         {/* Profile Card Container */}
         <div className="bg-white rounded-3xl border border-[#428177]/20 shadow-md overflow-hidden">
           {/* Header Banner */}
