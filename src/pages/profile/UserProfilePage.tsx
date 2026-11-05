@@ -181,7 +181,7 @@ export default function UserProfilePage() {
         className="hidden"
       />
 
-      <div className="space-y-6 text-right" dir="rtl">
+      <div className="space-y-6 pb-28 md:pb-8 text-right" dir="rtl">
         {/* Profile Card Container */}
         <div className="bg-white rounded-3xl border border-[#428177]/20 shadow-md overflow-hidden">
           {/* Header Banner */}
@@ -340,9 +340,10 @@ export default function UserProfilePage() {
                         <Input
                           value={user.email}
                           disabled
-                          className="rounded-xl border-[#EDEBE0] bg-gray-50 text-gray-500 text-xs sm:text-sm font-mono"
+                          dir="ltr"
+                          className="rounded-xl border-[#EDEBE0] bg-gray-50 text-gray-500 text-xs sm:text-sm font-mono pl-10 text-left"
                         />
-                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
                       </div>
                     </div>
 
@@ -353,21 +354,23 @@ export default function UserProfilePage() {
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="+963 9xx xxx xxx"
-                          className="rounded-xl border-[#428177]/30 text-xs sm:text-sm bg-[#EDEBE0]/20 font-medium"
+                          dir="ltr"
+                          className="rounded-xl border-[#428177]/30 text-xs sm:text-sm bg-[#EDEBE0]/20 font-medium pl-10 text-left font-mono"
                         />
-                        <Phone className="absolute left-3 top-2.5 h-4 w-4 text-[#988561]" />
+                        <Phone className="absolute left-3 top-2.5 h-4 w-4 text-[#988561] pointer-events-none" />
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 text-right">
                     <label className="font-bold text-[#002623]">النبذة التعريفية (Bio)</label>
                     <Textarea
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                       rows={4}
+                      dir="rtl"
                       placeholder="اكتب نبذة مختصرة عن اهتماماتك التعليمية وخبراتك..."
-                      className="rounded-xl border-[#428177]/30 text-xs sm:text-sm bg-[#EDEBE0]/20 font-medium leading-relaxed"
+                      className="rounded-xl border-[#428177]/30 text-xs sm:text-sm bg-[#EDEBE0]/20 font-medium leading-relaxed text-right"
                     />
                   </div>
 

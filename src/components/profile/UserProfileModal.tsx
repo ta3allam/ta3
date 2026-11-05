@@ -348,9 +348,10 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
                         <Input
                           value={user.email}
                           disabled
-                          className="rounded-xl border-[#EDEBE0] bg-gray-50 text-gray-500 text-right text-xs font-mono"
+                          dir="ltr"
+                          className="rounded-xl border-[#EDEBE0] bg-gray-50 text-gray-500 pl-10 text-left font-mono text-xs"
                         />
-                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
                       </div>
                     </div>
 
@@ -361,9 +362,10 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="+963 9xx xxx xxx"
-                          className="rounded-xl border-[#428177]/30 text-right text-xs bg-[#EDEBE0]/20 font-medium"
+                          dir="ltr"
+                          className="rounded-xl border-[#428177]/30 pl-10 text-left font-mono text-xs bg-[#EDEBE0]/20 font-medium"
                         />
-                        <Phone className="absolute left-3 top-2.5 h-4 w-4 text-[#988561]" />
+                        <Phone className="absolute left-3 top-2.5 h-4 w-4 text-[#988561] pointer-events-none" />
                       </div>
                     </div>
                   </div>
@@ -374,6 +376,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                       rows={3}
+                      dir="rtl"
                       placeholder="اكتب نبذة مختصرة عن اهتماماتك التعليمية وخبراتك..."
                       className="rounded-xl border-[#428177]/30 text-right text-xs bg-[#EDEBE0]/20 font-medium leading-relaxed"
                     />

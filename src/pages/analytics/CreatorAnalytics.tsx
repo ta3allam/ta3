@@ -39,7 +39,7 @@ export default function CreatorAnalytics() {
 
   return (
     <DashboardLayout title="تحليلات الأداء ومؤشرات النجاح">
-      <div className="space-y-6" dir="rtl">
+      <div className="space-y-6 pb-28 md:pb-8" dir="rtl">
         {/* Header Banner */}
         <div
           className="relative overflow-hidden rounded-2xl bg-white border border-[#428177] p-6 md:p-8 shadow-sm"
@@ -76,7 +76,7 @@ export default function CreatorAnalytics() {
               </Select>
 
               <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="text-xs h-9 bg-white border-[#428177]/40 font-bold w-32">
+                <SelectTrigger className="text-xs h-9 bg-white border-[#428177]/40 font-bold min-w-[130px] shrink-0">
                   <SelectValue placeholder="الفترة" />
                 </SelectTrigger>
                 <SelectContent dir="rtl">
