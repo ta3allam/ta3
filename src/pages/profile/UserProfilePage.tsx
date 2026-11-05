@@ -362,14 +362,15 @@ export default function UserProfilePage() {
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 text-right">
                     <label className="font-bold text-[#002623]">النبذة التعريفية (Bio)</label>
                     <Textarea
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                       rows={4}
+                      dir="rtl"
                       placeholder="اكتب نبذة مختصرة عن اهتماماتك التعليمية وخبراتك..."
-                      className="rounded-xl border-[#428177]/30 text-xs sm:text-sm bg-[#EDEBE0]/20 font-medium leading-relaxed"
+                      className="rounded-xl border-[#428177]/30 text-xs sm:text-sm bg-[#EDEBE0]/20 font-medium leading-relaxed text-right"
                     />
                   </div>
 
