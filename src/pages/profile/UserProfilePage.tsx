@@ -340,9 +340,10 @@ export default function UserProfilePage() {
                         <Input
                           value={user.email}
                           disabled
-                          className="rounded-xl border-[#EDEBE0] bg-gray-50 text-gray-500 text-xs sm:text-sm font-mono"
+                          dir="ltr"
+                          className="rounded-xl border-[#EDEBE0] bg-gray-50 text-gray-500 text-xs sm:text-sm font-mono pl-10 text-left"
                         />
-                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
                       </div>
                     </div>
 
@@ -353,9 +354,10 @@ export default function UserProfilePage() {
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="+963 9xx xxx xxx"
-                          className="rounded-xl border-[#428177]/30 text-xs sm:text-sm bg-[#EDEBE0]/20 font-medium"
+                          dir="ltr"
+                          className="rounded-xl border-[#428177]/30 text-xs sm:text-sm bg-[#EDEBE0]/20 font-medium pl-10 text-left font-mono"
                         />
-                        <Phone className="absolute left-3 top-2.5 h-4 w-4 text-[#988561]" />
+                        <Phone className="absolute left-3 top-2.5 h-4 w-4 text-[#988561] pointer-events-none" />
                       </div>
                     </div>
                   </div>
