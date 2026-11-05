@@ -349,7 +349,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
                           value={user.email}
                           disabled
                           dir="ltr"
-                          className="rounded-xl border-[#EDEBE0] bg-gray-50 text-gray-500 text-left pl-10 text-xs font-mono"
+                          className="rounded-xl border-[#EDEBE0] bg-gray-50 text-gray-500 pl-10 text-left font-mono text-xs"
                         />
                         <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 pointer-events-none" />
                       </div>
@@ -363,7 +363,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="+963 9xx xxx xxx"
                           dir="ltr"
-                          className="rounded-xl border-[#428177]/30 text-left pl-10 text-xs bg-[#EDEBE0]/20 font-medium font-mono"
+                          className="rounded-xl border-[#428177]/30 pl-10 text-left font-mono text-xs bg-[#EDEBE0]/20 font-medium"
                         />
                         <Phone className="absolute left-3 top-2.5 h-4 w-4 text-[#988561] pointer-events-none" />
                       </div>
