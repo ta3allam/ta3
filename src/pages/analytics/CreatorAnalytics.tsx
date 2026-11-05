@@ -76,7 +76,7 @@ export default function CreatorAnalytics() {
               </Select>
 
               <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="text-xs h-9 bg-white border-[#428177]/40 font-bold w-32">
+                <SelectTrigger className="text-xs h-9 bg-white border-[#428177]/40 font-bold min-w-[130px] shrink-0">
                   <SelectValue placeholder="الفترة" />
                 </SelectTrigger>
                 <SelectContent dir="rtl">
