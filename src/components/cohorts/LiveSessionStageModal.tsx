@@ -108,7 +108,7 @@ export function LiveSessionStageModal({
               <Headphones className="w-3.5 h-3.5 text-[#EDEBE0]" />
               {isAudioOnly ? "نمط الصوت فقط (توفير 97%)" : "بث الفيديو كامل"}
             </Button>
-            <DialogClose className="rounded-lg p-1.5 text-white/80 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#428177]">
+            <DialogClose className="rounded-xl p-2.5 ms-2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-[#428177]">
               <X className="h-4 w-4" />
               <span className="sr-only">إغلاق النافذة</span>
             </DialogClose>

@@ -145,7 +145,7 @@ export function CreatorCourseBuilderModal({
       >
         <form onSubmit={handleSubmit}>
           {/* Header */}
-          <div className="bg-[#002623] text-[#EDEBE0] p-6 rounded-t-3xl space-y-2">
+          <div className="bg-[#002623] text-[#EDEBE0] p-6 rounded-t-3xl space-y-2 rtl:pl-16 ltr:pr-16">
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-xl bg-[#428177] text-white text-xs font-black inline-flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5" />

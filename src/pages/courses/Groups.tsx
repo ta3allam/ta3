@@ -491,7 +491,7 @@ export default function CourseGroups() {
                                       <button
                                         type="button"
                                         onClick={() => handleKickMember(group.id, m.name)}
-                                        className="text-rose-600 hover:text-rose-800 transition-colors ml-0.5"
+                                        className="text-rose-600 hover:text-rose-800 hover:bg-rose-100 p-1 rounded-full transition-colors mx-1 inline-flex items-center justify-center"
                                         title="استبعاد الطالب من المجموعة"
                                       >
                                         <X className="w-2.5 h-2.5" />
@@ -597,7 +597,7 @@ export default function CourseGroups() {
                                 <button
                                   type="button"
                                   onClick={() => handleKickMember(group.id, m.name)}
-                                  className="text-rose-600 hover:text-rose-800 transition-colors ml-0.5"
+                                  className="text-rose-600 hover:text-rose-800 hover:bg-rose-100 p-1 rounded-full transition-colors mx-1 inline-flex items-center justify-center"
                                   title="استبعاد الطالب من المجموعة"
                                 >
                                   <X className="w-2.5 h-2.5" />
@@ -718,7 +718,7 @@ export default function CourseGroups() {
                                 <button
                                   type="button"
                                   onClick={() => handleKickMember(group.id, m.name)}
-                                  className="text-rose-600 hover:text-rose-800 transition-colors p-0.5 rounded"
+                                  className="text-rose-600 hover:text-rose-800 hover:bg-rose-100 p-1 rounded-full transition-colors mx-1 inline-flex items-center justify-center"
                                   title="استبعاد الطالب من المجموعة"
                                 >
                                   <X className="w-3 h-3" />

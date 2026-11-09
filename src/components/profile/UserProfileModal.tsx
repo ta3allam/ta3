@@ -195,7 +195,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
               className="w-full h-full object-cover opacity-40 mix-blend-overlay"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#002623] via-transparent to-transparent" />
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-4 left-16 rtl:left-16 z-20">
               <Badge className={`px-3 py-1 font-bold text-xs gap-1.5 shadow-md ${roleInfo.bg}`}>
                 <RoleIcon className="h-3.5 w-3.5" />
                 {roleInfo.label}
