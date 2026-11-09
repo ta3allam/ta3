@@ -51,7 +51,7 @@ export function MarketplaceCourseModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent dir="rtl" className="max-w-3xl bg-white border border-[#428177]/40 text-right rounded-3xl p-0 overflow-hidden shadow-2xl">
         {/* Header Hero Banner */}
-        <div className="relative bg-gradient-to-r from-[#002623] via-[#054239] to-[#428177] text-white p-6 sm:p-8">
+        <div className="relative bg-gradient-to-r from-[#002623] via-[#054239] to-[#428177] text-white p-6 sm:p-8 rtl:pl-16 ltr:pr-16">
           <div className="flex justify-between items-start gap-4">
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-2">
@@ -68,7 +68,7 @@ export function MarketplaceCourseModal({
               </p>
             </div>
 
-            <div className="hidden sm:block text-left bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20">
+            <div className="hidden sm:block text-left bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 shrink-0">
               <span className="text-[11px] text-white/70 block">سعر الدورة:</span>
               <span className="text-2xl font-black text-[#EDEBE0]">
                 {isFree ? 'مجاناً' : `$${priceDollars}`}

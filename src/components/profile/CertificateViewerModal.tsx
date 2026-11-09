@@ -46,7 +46,7 @@ export default function CertificateViewerModal({
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" />
               شهادة موثقة ورسمية
             </Badge>
-            <DialogClose className="rounded-lg p-1.5 text-[#EDEBE0]/80 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#428177]">
+            <DialogClose className="rounded-xl p-2.5 ms-2 text-[#EDEBE0]/80 hover:text-white bg-white/10 hover:bg-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-[#428177]">
               <X className="h-4 w-4" />
               <span className="sr-only">إغلاق النافذة</span>
             </DialogClose>

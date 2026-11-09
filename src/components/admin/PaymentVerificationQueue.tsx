@@ -328,7 +328,7 @@ export function PaymentVerificationQueue({
       {selectedReceipt && (
         <Dialog open={!!selectedReceipt} onOpenChange={() => setSelectedReceipt(null)}>
           <DialogContent className="w-[95vw] max-w-xl max-h-[90vh] overflow-y-auto p-0 rounded-3xl border border-[#428177]/30 bg-white shadow-2xl" dir="rtl">
-            <div className="bg-[#002623] text-[#EDEBE0] p-5 rounded-t-3xl flex justify-between items-center">
+            <div className="bg-[#002623] text-[#EDEBE0] p-5 rounded-t-3xl flex justify-between items-center rtl:pl-16 ltr:pr-16">
               <DialogHeader className="text-right">
                 <DialogTitle className="text-lg font-black text-white">
                   معاينة وتدقيق إيصال التحويل المالي 🔍

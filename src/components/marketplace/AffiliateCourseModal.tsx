@@ -67,7 +67,7 @@ export function AffiliateCourseModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 rounded-3xl border border-[#428177]/30 bg-white" dir="rtl">
         {/* Header Hero Area */}
-        <div className="bg-[#002623] text-[#EDEBE0] p-6 rounded-t-3xl space-y-3 relative overflow-hidden">
+        <div className="bg-[#002623] text-[#EDEBE0] p-6 rounded-t-3xl space-y-3 relative overflow-hidden rtl:pl-16 ltr:pr-16">
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-xl bg-[#428177] text-white text-xs font-black inline-flex items-center gap-1">
@@ -81,7 +81,7 @@ export function AffiliateCourseModal({
 
             <button
               onClick={handleShare}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-[#EDEBE0] transition-colors"
+              className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-[#EDEBE0] transition-colors"
               title="مشاركة رابط الدورة"
             >
               <Share2 className="h-4 w-4" />
