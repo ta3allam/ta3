@@ -13,6 +13,8 @@ import RoleQuickSelector from "@/components/layout/RoleQuickSelector";
 import { LogIn, UserPlus } from "lucide-react";
 
 export default function Login() {
+    // Feature flag: Conceal new user registration temporarily without deleting underlying implementation
+    const ENABLE_REGISTRATION = false;
     const { user, login, register } = useAuth();
     const navigate = useNavigate();
 
@@ -106,9 +108,11 @@ export default function Login() {
                 <Card className="border border-border/80 shadow-lg bg-card/90 backdrop-blur-sm transition-all duration-300">
                     <Tabs defaultValue="login" dir="rtl" className="w-full">
                         <CardHeader className="space-y-3 pb-2">
-                            <TabsList className="grid grid-cols-2 w-full bg-muted/60 p-1">
+                            <TabsList className={`grid ${ENABLE_REGISTRATION ? "grid-cols-2" : "grid-cols-1"} w-full bg-muted/60 p-1`}>
                                 <TabsTrigger value="login" className="font-bold text-xs">تسجيل الدخول</TabsTrigger>
-                                <TabsTrigger value="register" className="font-bold text-xs">إنشاء حساب جديد</TabsTrigger>
+                                {ENABLE_REGISTRATION && (
+                                    <TabsTrigger value="register" className="font-bold text-xs">إنشاء حساب جديد</TabsTrigger>
+                                )}
                             </TabsList>
                         </CardHeader>
 
@@ -162,7 +166,8 @@ export default function Login() {
                             </form>
                         </TabsContent>
 
-                        {/* REGISTER TAB */}
+                        {/* REGISTER TAB (Preserved but hidden while ENABLE_REGISTRATION is false) */}
+                        {ENABLE_REGISTRATION && (
                         <TabsContent value="register">
                             <form onSubmit={handleRegister}>
                                 <CardContent className="space-y-3 pt-2">
@@ -233,6 +238,7 @@ export default function Login() {
                                 </CardFooter>
                             </form>
                         </TabsContent>
+                        )}
                     </Tabs>
                 </Card>
 
