@@ -1,6 +1,7 @@
 import { PaymentReceipt, LevantPaymentMethod } from '@/types/payments';
 import { sanitizePlainText, isSafeUrl } from '@/lib/security/contentSanitizer';
 import { rateLimiter } from '@/lib/security/rateLimiter';
+import { IReceiptRepository, repositoryRegistry } from '@/types/repository';
 
 export function generateReceiptChecksumSync(receipt: {
   courseId: number;
@@ -133,7 +134,7 @@ function setStoredItem(key: string, value: string): void {
   memoryStore[key] = value;
 }
 
-export const ReceiptStore = {
+export const ReceiptStore: IReceiptRepository = {
   clearMemory(): void {
     memoryStore = {};
   },
@@ -300,3 +301,6 @@ export const ReceiptStore = {
     return updatedReceipt;
   }
 };
+
+repositoryRegistry.registerReceiptRepository(ReceiptStore);
+

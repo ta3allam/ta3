@@ -1,6 +1,7 @@
 import coursesJson from '@/pages/courses/courses.json';
 import { CourseData, Announcement, Lecture, CourseEvent, Assignment, Submission, Course } from '@/pages/courses/types';
 import { CommandBus, EventBus, createDomainEvent } from '@/lib/cqrs/commandBus';
+import { ICourseRepository, repositoryRegistry } from '@/types/repository';
 
 const STORAGE_KEY = 'ta3_courses';
 
@@ -176,3 +177,44 @@ export class MockDataEngine {
     return updated;
   }
 }
+
+/**
+ * Local implementation of ICourseRepository decoupling storage from UI components.
+ */
+export class LocalCourseRepository implements ICourseRepository {
+  public loadCourses(): CourseData {
+    return MockDataEngine.loadCourses();
+  }
+
+  public saveCourses(data: CourseData): void {
+    MockDataEngine.saveCourses(data);
+  }
+
+  public addAnnouncement(courseId: number, announcement: Omit<Announcement, 'id'>): CourseData {
+    const current = MockDataEngine.loadCourses();
+    return MockDataEngine.addAnnouncement(current, courseId, announcement);
+  }
+
+  public addLecture(courseId: number, lecture: Omit<Lecture, 'id'>): CourseData {
+    const current = MockDataEngine.loadCourses();
+    return MockDataEngine.addLecture(current, courseId, lecture);
+  }
+
+  public addAssignment(courseId: number, assignment: Omit<Assignment, 'id'>): CourseData {
+    const current = MockDataEngine.loadCourses();
+    return MockDataEngine.addAssignment(current, courseId, assignment);
+  }
+
+  public addSubmission(courseId: number, submission: Omit<Submission, 'id'>): CourseData {
+    const current = MockDataEngine.loadCourses();
+    return MockDataEngine.addSubmission(current, courseId, submission);
+  }
+
+  public subscribe(listener: (data: CourseData) => void): () => void {
+    return MockDataEngine.subscribe(listener);
+  }
+}
+
+export const localCourseRepository = new LocalCourseRepository();
+repositoryRegistry.registerCourseRepository(localCourseRepository);
+
