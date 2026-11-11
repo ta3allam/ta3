@@ -9,8 +9,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "npx vitest run",
+    "test:watch": "npx vitest",
     "git": "npm run build && npm run deploy",
     "deploy": "gh-pages -d dist"
   },
