@@ -1,72 +1,90 @@
 import { describe, it, expect } from 'vitest';
-import { UserRole } from '@/contexts/AuthContext';
+import {
+  canAccessRoute,
+  getDashboardRouteForRole,
+  hasComponentPermission,
+  assertActionAuthorized,
+  AuthorizationError,
+} from '@/lib/security/rbacGuard';
 
-describe('Strict Role-Based Access Control (RBAC) & Action Isolation Unit Tests', () => {
-  const checkRoutePermission = (userRole: UserRole, allowedRoles: UserRole[]): boolean => {
-    return allowedRoles.includes(userRole);
-  };
+describe('Three-Tier RBAC & Authentic Permission Isolation Suite', () => {
+  describe('Tier 1: Route-Level Navigation Guards', () => {
+    it('permits students only on student-allowed routes and resolves correct dashboard', () => {
+      expect(canAccessRoute('student', ['student'])).toBe(true);
+      expect(canAccessRoute('student', ['teacher', 'admin'])).toBe(false);
+      expect(canAccessRoute('student', ['admin'])).toBe(false);
+      expect(getDashboardRouteForRole('student')).toBe('/student');
+    });
 
-  const getRedirectRoute = (userRole: UserRole): string => {
-    switch (userRole) {
-      case 'student':
-        return '/student';
-      case 'teacher':
-        return '/teacher';
-      case 'admin':
-        return '/admin';
-      default:
-        return '/';
-    }
-  };
+    it('permits teachers to access teacher routes and blocks admin consoles', () => {
+      expect(canAccessRoute('teacher', ['teacher'])).toBe(true);
+      expect(canAccessRoute('teacher', ['teacher', 'admin'])).toBe(true);
+      expect(canAccessRoute('teacher', ['admin'])).toBe(false);
+      expect(getDashboardRouteForRole('teacher')).toBe('/teacher');
+    });
 
-  it('should permit students to access student routes and block unauthorized routes', () => {
-    const studentRole: UserRole = 'student';
+    it('permits creators to access creator workspaces and resolves creator dashboard', () => {
+      expect(canAccessRoute('creator', ['creator'])).toBe(true);
+      expect(canAccessRoute('creator', ['admin'])).toBe(false);
+      expect(getDashboardRouteForRole('creator')).toBe('/creator');
+    });
 
-    expect(checkRoutePermission(studentRole, ['student'])).toBe(true);
-    expect(checkRoutePermission(studentRole, ['teacher'])).toBe(false);
-    expect(checkRoutePermission(studentRole, ['admin'])).toBe(false);
-    expect(getRedirectRoute(studentRole)).toBe('/student');
+    it('permits administrators across administrative routes', () => {
+      expect(canAccessRoute('admin', ['admin'])).toBe(true);
+      expect(canAccessRoute('admin', ['teacher', 'admin'])).toBe(true);
+      expect(getDashboardRouteForRole('admin')).toBe('/admin');
+    });
+
+    it('blocks null or undefined roles from accessing any protected route', () => {
+      expect(canAccessRoute(null, ['student', 'teacher', 'admin'])).toBe(false);
+      expect(canAccessRoute(undefined, ['student'])).toBe(false);
+      expect(getDashboardRouteForRole(null)).toBe('/');
+    });
   });
 
-  it('should permit teachers to access teaching and creator routes but block admin consoles', () => {
-    const teacherRole: UserRole = 'teacher';
+  describe('Tier 3: Domain Action & Operational Permissions', () => {
+    it('restricts assignment grading and lecture edits strictly away from students', () => {
+      expect(hasComponentPermission('student', 'assignment:grade')).toBe(false);
+      expect(hasComponentPermission('student', 'lecture:add')).toBe(false);
+      expect(hasComponentPermission('student', 'assignment:submit')).toBe(true);
+      expect(hasComponentPermission('student', 'community:post')).toBe(true);
 
-    expect(checkRoutePermission(teacherRole, ['teacher'])).toBe(true);
-    expect(checkRoutePermission(teacherRole, ['teacher', 'admin', 'student'])).toBe(true);
-    expect(checkRoutePermission(teacherRole, ['admin'])).toBe(false);
-    expect(getRedirectRoute(teacherRole)).toBe('/teacher');
-  });
+      expect(() => assertActionAuthorized('student', 'assignment:grade')).toThrow(AuthorizationError);
+      try {
+        assertActionAuthorized('student', 'assignment:grade');
+      } catch (e) {
+        expect(e).toBeInstanceOf(AuthorizationError);
+        expect((e as AuthorizationError).statusCode).toBe(403);
+        expect((e as AuthorizationError).code).toBe('ERR_INSUFFICIENT_PERMISSIONS');
+      }
+    });
 
-  it('should permit administrators to access admin governance consoles', () => {
-    const adminRole: UserRole = 'admin';
+    it('allows teachers to edit curriculum and grade assignments, but forbids financial verification', () => {
+      expect(hasComponentPermission('teacher', 'assignment:grade')).toBe(true);
+      expect(hasComponentPermission('teacher', 'course:edit')).toBe(true);
+      expect(hasComponentPermission('teacher', 'receipt:verify')).toBe(false);
+      expect(hasComponentPermission('teacher', 'payout:approve')).toBe(false);
 
-    expect(checkRoutePermission(adminRole, ['admin'])).toBe(true);
-    expect(checkRoutePermission(adminRole, ['teacher', 'admin', 'student'])).toBe(true);
-    expect(getRedirectRoute(adminRole)).toBe('/admin');
-  });
+      expect(() => assertActionAuthorized('teacher', 'payout:approve')).toThrow(AuthorizationError);
+    });
 
-  it('should strictly isolate grading console authorization to teacher and admin roles', () => {
-    const isGradingAuthorized = (role: UserRole): boolean => {
-      return role === 'teacher' || role === 'admin';
-    };
+    it('allows creators to request payouts and create courses, but isolates payout approvals', () => {
+      expect(hasComponentPermission('creator', 'course:create')).toBe(true);
+      expect(hasComponentPermission('creator', 'payout:request')).toBe(true);
+      expect(hasComponentPermission('creator', 'payout:approve')).toBe(false);
+      expect(hasComponentPermission('creator', 'receipt:verify')).toBe(false);
 
-    expect(isGradingAuthorized('student')).toBe(false);
-    expect(isGradingAuthorized('teacher')).toBe(true);
-    expect(isGradingAuthorized('admin')).toBe(true);
-  });
+      expect(() => assertActionAuthorized('creator', 'receipt:verify')).toThrow(AuthorizationError);
+    });
 
-  it('should isolate group creation and curriculum edit triggers to teacher and admin roles', () => {
-    const canCreateStudyGroup = (role: UserRole): boolean => {
-      return role === 'teacher' || role === 'admin';
-    };
+    it('empowers SuperAdmin with complete administrative governance powers', () => {
+      expect(hasComponentPermission('admin', 'receipt:verify')).toBe(true);
+      expect(hasComponentPermission('admin', 'payout:approve')).toBe(true);
+      expect(hasComponentPermission('admin', 'user:manage')).toBe(true);
+      expect(hasComponentPermission('admin', 'community:moderate')).toBe(true);
 
-    const canEditLecture = (role: UserRole): boolean => {
-      return role === 'teacher' || role === 'admin';
-    };
-
-    expect(canCreateStudyGroup('student')).toBe(false);
-    expect(canCreateStudyGroup('teacher')).toBe(true);
-    expect(canEditLecture('student')).toBe(false);
-    expect(canEditLecture('teacher')).toBe(true);
+      expect(() => assertActionAuthorized('admin', 'receipt:verify')).not.toThrow();
+      expect(() => assertActionAuthorized('admin', 'payout:approve')).not.toThrow();
+    });
   });
 });
