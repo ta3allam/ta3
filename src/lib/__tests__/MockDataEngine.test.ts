@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Simple in-memory localStorage mock for node environment
 const localStorageMock = (() => {
@@ -22,44 +22,143 @@ Object.defineProperty(globalThis, 'localStorage', {
   writable: true,
 });
 
-import { MockDataEngine } from '../MockDataEngine';
+import { MockDataEngine, localCourseRepository } from '../MockDataEngine';
 import { MockAuthEngine } from '../MockAuthEngine';
+import { ReceiptStore } from '../receiptStore';
+import { repositoryRegistry, ICourseRepository, IReceiptRepository } from '@/types/repository';
 
-describe('MockDataEngine & MockAuthEngine Unit Tests', () => {
+describe('MockDataEngine, ReceiptStore & Dynamic Repository Registry Suite', () => {
   beforeEach(() => {
     localStorage.clear();
+    // Ensure default implementations are registered
+    repositoryRegistry.registerCourseRepository(localCourseRepository);
+    repositoryRegistry.registerReceiptRepository(ReceiptStore);
   });
 
-  it('should authenticate valid mock student credentials', () => {
-    const user = MockAuthEngine.authenticateMock('student', '123');
-    expect(user).not.toBeNull();
-    expect(user?.role).toBe('student');
-    expect(user?.name).toBe('سامي الطالب');
-  });
-
-  it('should reject invalid passwords', () => {
-    const user = MockAuthEngine.authenticateMock('student', 'wrongpass');
-    expect(user).toBeNull();
-  });
-
-  it('should load initial course data', () => {
-    const data = MockDataEngine.loadCourses();
-    expect(data).toBeDefined();
-    expect(data[1]).toBeDefined();
-    expect(data[1].name).toBe('مبادئ البرمجة');
-  });
-
-  it('should persist new announcement to local storage', () => {
-    const initial = MockDataEngine.loadCourses();
-    const updated = MockDataEngine.addAnnouncement(initial, 1, {
-      title: 'إعلان تجريبي جديد',
-      content: 'محتوى الإعلان التجريبي',
-      date: '2026-08-04',
-      author: 'المعلم',
+  describe('Authentication Mocks', () => {
+    it('authenticates valid mock student credentials', () => {
+      const user = MockAuthEngine.authenticateMock('student', '123');
+      expect(user).not.toBeNull();
+      expect(user?.role).toBe('student');
+      expect(user?.name).toBe('سامي الطالب');
     });
 
-    expect(updated[1].announcements.length).toBeGreaterThan(initial[1].announcements.length);
-    const reloaded = MockDataEngine.loadCourses();
-    expect(reloaded[1].announcements.some((a) => a.title === 'إعلان تجريبي جديد')).toBe(true);
+    it('rejects invalid passwords', () => {
+      const user = MockAuthEngine.authenticateMock('student', 'wrongpass');
+      expect(user).toBeNull();
+    });
+  });
+
+  describe('Dynamic Course Repository Persistence & Zero Hardcoding', () => {
+    it('loads initial course data via repository interface', () => {
+      const repo = repositoryRegistry.getCourseRepository();
+      const data = repo.loadCourses();
+      expect(data).toBeDefined();
+      expect(data[1]).toBeDefined();
+      expect(data[1].name).toBe('مبادئ البرمجة');
+    });
+
+    it('generates monotonic dynamic announcement IDs without hardcoding', () => {
+      const repo = repositoryRegistry.getCourseRepository();
+      const initial = repo.loadCourses();
+      const initialAnnouncements = initial[1].announcements || [];
+
+      repo.addAnnouncement(1, {
+        title: 'إعلان ديناميكي جديد',
+        content: 'محتوى الإعلان بدون قيم مسبقة التحديد',
+        date: new Date().toISOString(),
+        author: 'د. خالد المعلم',
+      });
+
+      const updated = repo.loadCourses();
+      const announcements = updated[1].announcements || [];
+      expect(announcements.length).toBe(initialAnnouncements.length + 1);
+
+      const latest = announcements[announcements.length - 1];
+      expect(latest.title).toBe('إعلان ديناميكي جديد');
+      expect(latest.id).toBeGreaterThan(0);
+    });
+
+    it('generates dynamic lecture and assignment IDs with reactive subscription notification', () => {
+      const repo = repositoryRegistry.getCourseRepository();
+      const listenerSpy = vi.fn();
+      const unsubscribe = repo.subscribe(listenerSpy);
+
+      repo.addLecture(1, {
+        title: 'محاضرة تفاعلية جديدة',
+        duration: '18:30',
+        videoUrl: 'https://example.com/stream.m3u8',
+      });
+
+      expect(listenerSpy).toHaveBeenCalled();
+      const data = repo.loadCourses();
+      const lectures = data[1].lectures || [];
+      const addedLecture = lectures.find((l) => l.title === 'محاضرة تفاعلية جديدة');
+      expect(addedLecture).toBeDefined();
+      expect(addedLecture?.id).toBeGreaterThan(0);
+
+      unsubscribe();
+    });
+  });
+
+  describe('Dynamic Swappability via Repository Registry', () => {
+    it('allows hot-swapping CourseRepository with an external PostgREST adapter at runtime', () => {
+      const mockPostgrestRepo: ICourseRepository = {
+        loadCourses: vi.fn().mockReturnValue({
+          999: {
+            id: 999,
+            name: 'مساق سحابي من PostgREST',
+            code: 'CLOUD-999',
+            description: 'مساق قادم مباشرة من سيرفر قاعدة البيانات السحابي',
+            announcements: [],
+            lectures: [],
+            assignments: [],
+            submissions: [],
+          },
+        }),
+        saveCourses: vi.fn(),
+        addAnnouncement: vi.fn(),
+        addLecture: vi.fn(),
+        addAssignment: vi.fn(),
+        addSubmission: vi.fn(),
+        subscribe: vi.fn().mockReturnValue(() => {}),
+      };
+
+      // Hot swap repository
+      repositoryRegistry.registerCourseRepository(mockPostgrestRepo);
+
+      const activeRepo = repositoryRegistry.getCourseRepository();
+      const courses = activeRepo.loadCourses();
+
+      expect(mockPostgrestRepo.loadCourses).toHaveBeenCalled();
+      expect(courses[999]).toBeDefined();
+      expect(courses[999].name).toBe('مساق سحابي من PostgREST');
+
+      // Restore default local adapter
+      repositoryRegistry.registerCourseRepository(localCourseRepository);
+    });
+
+    it('allows hot-swapping ReceiptRepository with a remote verification client', () => {
+      const mockRemoteReceiptRepo: IReceiptRepository = {
+        loadReceipts: vi.fn().mockReturnValue([]),
+        saveReceipts: vi.fn(),
+        submitReceipt: vi.fn(),
+        approveReceipt: vi.fn(),
+        rejectReceipt: vi.fn(),
+        verifyReceiptChecksum: vi.fn().mockReturnValue(true),
+        subscribe: vi.fn().mockReturnValue(() => {}),
+      };
+
+      repositoryRegistry.registerReceiptRepository(mockRemoteReceiptRepo);
+
+      const activeRepo = repositoryRegistry.getReceiptRepository();
+      const receipts = activeRepo.loadReceipts();
+
+      expect(mockRemoteReceiptRepo.loadReceipts).toHaveBeenCalled();
+      expect(receipts).toEqual([]);
+
+      // Restore default ReceiptStore
+      repositoryRegistry.registerReceiptRepository(ReceiptStore);
+    });
   });
 });
