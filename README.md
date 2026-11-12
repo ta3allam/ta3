@@ -115,12 +115,14 @@ npm run build
 | | **Day 2** | **Classroom Tabs, Discussion Filters & Groups Responsive Mobile Layout** | ✅ **Completed (PR #229)** |
 | | **Day 3** | **Marketplace Tab Responsiveness, Chip Scrollbars & Community Sanitization** | ✅ **Completed (PR #230)** |
 | | **Day 4** | **Creator Analytics, Profile Monospace RTL Alignments & Sidebar Hardening** | ✅ **Completed (PR #231 - Polish Sprint Master)** |
+| **ASP Hardening** | **Day 1** | **Test Hardening, Dynamic Repository Abstraction & Registration Form Concealment** | ✅ **Completed (PR #233)** |
+| | **Day 2** | **Authentic Mastery Invariants, Concurrency Virtualization & Zero-Hardcoding Engine** | 🏆 **Completed (PR #234)** |
 
 ---
 
 ## 📜 Operating Rules & Quality Gates
 
 - **Git Branching Policy**: Strictly isolated feature branches (`feature/<agent>-<feature-name>` or `fix/<milestone>`). Never push directly to `main`.
-- **Activity Target**: Minimum **10 GitHub activities/commits per shift**.
-- **Quality Gate**: Every PR requires static typecheck `npx tsc --noEmit` and Vitest pass verification (`npx vitest run` — **52 test files / 291 tests passed 100%**).
+- **Activity Target**: Minimum **5 GitHub activities/commits per shift + 1 reviewed PR**.
+- **Quality Gate**: Every PR requires static typecheck `npx tsc --noEmit` and Vitest pass verification (`npm test` — **53 test files / 318 tests passed 100%**).
 - **Release Sequence**: Commits $\rightarrow$ PR Merge to `main` $\rightarrow$ `git push origin main` $\rightarrow$ `npm run git` (*GitHub Pages deploy*).
