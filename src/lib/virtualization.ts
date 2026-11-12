@@ -33,9 +33,9 @@ export function computeVirtualWindow(options: VirtualizationOptions): VirtualWin
   const visibleCount = Math.ceil(containerHeight / itemHeight);
   const rawEndIndex = rawStartIndex + visibleCount;
 
-  // Apply overscan buffer
-  const startIndex = Math.max(0, rawStartIndex - overscan);
+  // Apply overscan buffer and clamp to valid range
   const endIndex = Math.min(totalItems, rawEndIndex + overscan);
+  const startIndex = Math.min(endIndex, Math.max(0, rawStartIndex - overscan));
 
   // Compute padding offsets
   const topPadding = startIndex * itemHeight;
