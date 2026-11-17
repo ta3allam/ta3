@@ -3,6 +3,26 @@ import { rateLimiter } from './security/rateLimiter';
 import { auditLogger } from './security/auditLogger';
 
 const STORAGE_KEY = 'ta3_user';
+const SESSION_SIG_KEY = 'ta3_user_sig';
+const SESSION_SALT = 'ta3_anti_tamper_sec_v1_8e94fa02';
+
+/**
+ * Computes an anti-tamper signature over sensitive user identity fields.
+ * Prevents client-side role escalation via localStorage tampering.
+ */
+export function generateUserSessionSignature(user: User): string {
+  const payload = `${user.id}:${user.username}:${user.role}:${user.email || ''}:${SESSION_SALT}`;
+  let h1 = 0xdeadbeef ^ 0;
+  let h2 = 0x41c6ce57 ^ 0;
+  for (let i = 0; i < payload.length; i++) {
+    const ch = payload.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+}
 
 export const MOCK_USERS: Record<string, User> = {
   student: {
@@ -198,13 +218,30 @@ let memoryUser: User | null = null;
 export class MockAuthEngine {
   public static getSavedUser(): User | null {
     try {
-      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      if (typeof localStorage === 'undefined') {
         return memoryUser;
       }
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return memoryUser;
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object' && parsed.role && parsed.name) {
+        // Anti-tamper verification: ensure session signature matches identity fields
+        const storedSig = localStorage.getItem(SESSION_SIG_KEY);
+        const expectedSig = generateUserSessionSignature(parsed as User);
+
+        if (!storedSig || storedSig !== expectedSig) {
+          auditLogger.log('AUTH_TAMPERING_DETECTED', 'warn', {
+            reason: 'client_session_signature_mismatch',
+            userId: (parsed as User).id,
+            tamperedRole: (parsed as User).role,
+          });
+          // Invalidate tampered storage immediately
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(SESSION_SIG_KEY);
+          memoryUser = null;
+          return null;
+        }
+
         return parsed as User;
       }
       return memoryUser;
@@ -216,11 +253,13 @@ export class MockAuthEngine {
   public static saveUser(user: User | null): void {
     memoryUser = user;
     try {
-      if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
+      if (typeof localStorage === 'undefined') return;
       if (!user) {
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(SESSION_SIG_KEY);
       } else {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+        localStorage.setItem(SESSION_SIG_KEY, generateUserSessionSignature(user));
       }
     } catch (e) {
       console.error('MockAuthEngine: Error persisting user session', e);
@@ -229,6 +268,16 @@ export class MockAuthEngine {
 
   public static authenticateMock(username: string, password?: string): User | null {
     const userKey = username.toLowerCase().trim();
+
+    // 0. Production Guard: In live production, mock authentication bypass is strictly disabled
+    const isProd = typeof import.meta !== 'undefined' && import.meta.env?.PROD;
+    if (isProd) {
+      auditLogger.log('AUTH_MOCK_BLOCKED_IN_PRODUCTION', 'warn', {
+        username: userKey,
+        reason: 'mock_auth_disabled_in_prod',
+      });
+      throw new Error('تسجيل الدخول التجريبي غير متاح في بيئة الإنتاج الحية. يرجى استخدام بيانات الاعتماد الرسمية.');
+    }
 
     // 1. Check brute-force lockout status
     const status = rateLimiter.check('auth:login', userKey);
@@ -250,7 +299,7 @@ export class MockAuthEngine {
     }
 
     // 3. Password credential verification
-    if (password && password !== '123') {
+    if (password !== undefined && password !== '123') {
       const failStatus = rateLimiter.recordFailure('auth:login', userKey);
       auditLogger.log('AUTH_LOGIN_FAILURE', 'warn', {
         username: userKey,

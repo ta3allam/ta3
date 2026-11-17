@@ -11,10 +11,10 @@ import { toast } from "sonner";
 import { Helmet } from "react-helmet-async";
 import RoleQuickSelector from "@/components/layout/RoleQuickSelector";
 import { LogIn, UserPlus } from "lucide-react";
+import { AUTH_CONFIG } from "@/config/authConfig";
 
 export default function Login() {
-    // Feature flag: Conceal new user registration temporarily without deleting underlying implementation
-    const ENABLE_REGISTRATION = false;
+    const ENABLE_REGISTRATION = AUTH_CONFIG.ENABLE_REGISTRATION;
     const { user, login, register } = useAuth();
     const navigate = useNavigate();
 

@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useMemo, R
 import { supabase } from '../lib/supabase';
 import { UserProfile, UserRole, Certificate, UserSession, UserStats } from '../types/user';
 import { MockAuthEngine } from '../lib/MockAuthEngine';
+import { AUTH_CONFIG } from '@/config/authConfig';
 
 export type { UserRole, Certificate, UserSession, UserStats };
 
@@ -68,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: username,
-          password: password || '123',
+          password: password || '',
         });
         if (!error && data.user) {
           const role: UserRole = (data.user.user_metadata?.role as UserRole) || 'student';
@@ -101,6 +102,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const register = useCallback(async (email: string, password: string, name: string, role: UserRole) => {
+    // 1. Governance Policy Check: Ensure registration is explicitly permitted
+    if (!AUTH_CONFIG.ENABLE_REGISTRATION) {
+      return {
+        success: false,
+        message: 'التسجيل الذاتي مغلق حالياً بقرار من إدارة المنصة لحين اكتمال مرحلة الإطلاق التجريبي.',
+      };
+    }
+
+    // 2. Privilege Escalation Defense: Public users can never self-register as admin or educator
+    if (role !== 'student') {
+      return {
+        success: false,
+        message: 'غير مصرح بإنشاء حسابات إدارية أو تدريسية عبر التسجيل الذاتي. يتطلب ذلك اعتماداً رسمياً من إدارة المنصة.',
+      };
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -109,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           data: {
             full_name: name,
             name: name,
-            role: role,
+            role: 'student',
           }
         }
       });
@@ -123,10 +140,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: data.user.id,
           username: email,
           email: email,
-          role: role,
+          role: 'student',
           name: name,
           enrolledCourses: [1, 2],
-          title: role === 'teacher' ? 'معلم أكاديمي' : role === 'admin' ? 'مشرف النظام' : 'طالب مسجل',
+          title: 'طالب مسجل',
           organization: 'منصة تعلّـم',
           joinDate: 'سبتمبر 2026',
           twoFactorEnabled: false,
@@ -142,15 +159,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.warn('Supabase signup fallback to mock registration', e);
     }
 
-    // Local fallback mock registration
+    // Local fallback mock registration (strictly enforced as student)
     const newUser: User = {
       id: `user-${Date.now()}`,
       username: email,
       email: email,
       name: name,
-      role: role,
+      role: 'student',
       enrolledCourses: [1, 2],
-      title: role === 'teacher' ? 'معلم أكاديمي' : role === 'admin' ? 'مشرف النظام' : 'طالب مسجل',
+      title: 'طالب مسجل',
       organization: 'منصة تعلّـم',
       joinDate: 'سبتمبر 2026',
       twoFactorEnabled: false,

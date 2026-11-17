@@ -59,6 +59,9 @@ export default function UserProfilePage() {
   // Certificate Viewer Modal
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
 
+  // File input ref for avatar upload
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   if (!user) {
     return null;
   }
@@ -121,9 +124,6 @@ export default function UserProfilePage() {
     setNewPassword('');
     setConfirmPassword('');
   };
-
-  // File input ref for avatar upload
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAvatarUpload = () => {
     fileInputRef.current?.click();

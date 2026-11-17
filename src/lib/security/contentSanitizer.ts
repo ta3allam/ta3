@@ -48,6 +48,7 @@ export function isSafeUrl(url: string | undefined | null): boolean {
   const trimmed = url.trim();
 
   // Strip control characters
+  // eslint-disable-next-line no-control-regex
   const sanitized = trimmed.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
 
   if (DANGEROUS_PROTOCOLS.test(sanitized)) {

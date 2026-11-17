@@ -1,4 +1,28 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+// Node environment localStorage mock
+const localStorageMock = (() => {
+  let store: Record<string, string> = {};
+  return {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
+      store[key] = value.toString();
+    },
+    removeItem: (key: string) => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    },
+  };
+})();
+
+if (typeof globalThis.localStorage === 'undefined') {
+  Object.defineProperty(globalThis, 'localStorage', {
+    value: localStorageMock,
+    writable: true,
+  });
+}
 import {
   sanitizePlainText,
   sanitizeRichText,
@@ -23,10 +47,12 @@ import {
 import { buildCspString, getHardenedSecurityHeaders } from '@/lib/security/cspConfig';
 import { auditLogger } from '@/lib/security/auditLogger';
 import { ReceiptStore } from '@/lib/receiptStore';
-import { MockAuthEngine } from '@/lib/MockAuthEngine';
+import { MockAuthEngine, generateUserSessionSignature } from '@/lib/MockAuthEngine';
+import { AUTH_CONFIG } from '@/config/authConfig';
 
 describe('🔒 Day 4: Backend Integration, Security & Zero-Trust Governance Suite', () => {
   beforeEach(() => {
+    localStorage.clear();
     rateLimiter.clearAll();
     auditLogger.clear();
     ReceiptStore.clearMemory();
@@ -262,6 +288,67 @@ describe('🔒 Day 4: Backend Integration, Security & Zero-Trust Governance Suit
       expect(badUser).toBeNull();
       const failureEvents = auditLogger.getEvents({ type: 'AUTH_LOGIN_FAILURE' });
       expect(failureEvents.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('8. Session Integrity & Anti-Tamper Protection', () => {
+    it('should generate valid anti-tamper signature for authenticated sessions', () => {
+      const user = MockAuthEngine.authenticateMock('student', '123');
+      expect(user).not.toBeNull();
+      const sig = localStorage.getItem('ta3_user_sig');
+      expect(sig).toBeDefined();
+      expect(typeof sig).toBe('string');
+      expect(sig).toBe(generateUserSessionSignature(user!));
+    });
+
+    it('should detect and reject client-side role tampering via localStorage', () => {
+      // 1. Authenticate as regular student
+      const user = MockAuthEngine.authenticateMock('student', '123');
+      expect(user?.role).toBe('student');
+
+      // 2. Simulate malicious client editing localStorage to escalate role to admin
+      const rawUser = localStorage.getItem('ta3_user');
+      expect(rawUser).not.toBeNull();
+      const tampered = JSON.parse(rawUser!);
+      tampered.role = 'admin';
+      localStorage.setItem('ta3_user', JSON.stringify(tampered));
+
+      // 3. Attempt to retrieve user - must detect signature mismatch, log warning, and return null
+      const recoveredUser = MockAuthEngine.getSavedUser();
+      expect(recoveredUser).toBeNull();
+
+      // 4. Verify storage was wiped upon detecting tampering
+      expect(localStorage.getItem('ta3_user')).toBeNull();
+      expect(localStorage.getItem('ta3_user_sig')).toBeNull();
+
+      const tamperEvents = auditLogger.getEvents({ type: 'AUTH_TAMPERING_DETECTED' });
+      expect(tamperEvents.length).toBeGreaterThan(0);
+      expect(tamperEvents[0].details).toMatchObject({
+        reason: 'client_session_signature_mismatch',
+        tamperedRole: 'admin',
+      });
+    });
+
+    it('should reject sessions with missing signature', () => {
+      MockAuthEngine.authenticateMock('student', '123');
+      localStorage.removeItem('ta3_user_sig'); // Signature deleted
+
+      const recoveredUser = MockAuthEngine.getSavedUser();
+      expect(recoveredUser).toBeNull();
+      expect(localStorage.getItem('ta3_user')).toBeNull();
+    });
+  });
+
+  describe('9. Registration Governance & Role Escalation Defense', () => {
+    it('should maintain registration closed by default policy', () => {
+      expect(AUTH_CONFIG.ENABLE_REGISTRATION).toBe(false);
+    });
+
+    it('should only permit student role for self-registration policy', () => {
+      expect(AUTH_CONFIG.ALLOWED_SELF_REGISTER_ROLES).toEqual(['student']);
+      expect(AUTH_CONFIG.ALLOWED_SELF_REGISTER_ROLES).not.toContain('admin');
+      expect(AUTH_CONFIG.ALLOWED_SELF_REGISTER_ROLES).not.toContain('teacher');
+      expect(AUTH_CONFIG.ALLOWED_SELF_REGISTER_ROLES).not.toContain('creator');
     });
   });
 });

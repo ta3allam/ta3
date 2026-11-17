@@ -63,6 +63,9 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
   // Certificate Viewer Modal
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
 
+  // File input ref for avatar upload
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   if (!user) return null;
 
   const getRoleBadge = (role: string) => {
@@ -123,9 +126,6 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
     setNewPassword('');
     setConfirmPassword('');
   };
-
-  // File input ref for avatar upload
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAvatarUpload = () => {
     fileInputRef.current?.click();
